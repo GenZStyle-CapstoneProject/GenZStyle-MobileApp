@@ -10,6 +10,7 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
+        navigation.navigate("HomeScreen");
     };
     const [fontsLoaded] = useFonts({
         'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
