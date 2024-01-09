@@ -1,27 +1,25 @@
 import { View, Text, Pressable, Image, Linking } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
-
-import * as GoogleSignIn from 'expo-google-app-auth';
+import * as Google from 'expo-auth-session/providers/google';
 const Welcome = ({ navigation }) => {
 
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        androidClientId: '480442253942-kn791oae3hf8jfgue8v7hmqeja6i3ct1.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+    });
+
     const handleGoogleLogin = async () => {
+        console.log('Google Sign In Result:', result);
+
         try {
-            const { type, accessToken, user } = await GoogleSignIn.logInAsync({
+            console.log('Google Sign In Result:', result);
 
-                androidClientId: '480442253942-kn791oae3hf8jfgue8v7hmqeja6i3ct1.apps.googleusercontent.com',
-                scopes: ['profile', 'email'],
-            });
-
-            if (type === 'success') {
-                // Successfully signed in
-                console.log('Access Token:', accessToken);
-                console.log('User:', user);
-            }
-        } catch (error) {
-            console.error('Google Sign-In Error:', error);
+            await promptAsync();
+        } catch (e) {
+            console.error('Error with Google Sign In:', e);
         }
     };
 
