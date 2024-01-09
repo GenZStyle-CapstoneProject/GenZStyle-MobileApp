@@ -6,11 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import products from '../data/Products';
 import Cart from '../components/Cart'
 import { useNavigation } from '@react-navigation/native';
-// import CartDetail from '../screens/CartDetail'
-// import { createStackNavigator } from '@react-navigation/stack';
 
-
-// const Stack = createStackNavigator();
 
 const ForYouScreen = () => {
     const [showGenderOptions, setShowGenderOptions] = useState(false);
