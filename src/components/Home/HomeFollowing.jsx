@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 const HomeFollowing = () => {
     const navigation = useNavigation();
     const navigateToCartDetail = (item) => {
-        // Chuyển đến màn hình CartDetail và truyền postId
+
         navigation.navigate('CartDetail', { item });
     };
     return (

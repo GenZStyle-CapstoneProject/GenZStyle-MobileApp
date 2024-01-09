@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { Avatar, Button } from "react-native-elements";
-import Cart from './CartHomeFollowing';
-import images from '../../data/Image';
+import { View, Text, StyleSheet } from 'react-native';
+
 
 
 

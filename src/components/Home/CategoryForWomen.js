@@ -6,7 +6,7 @@ const CategoryForWomen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Danh mục cho Nữ</Text>
-            {/* Thêm các phần tử và logic cho danh mục nữ tại đây */}
+
         </View>
     );
 };
