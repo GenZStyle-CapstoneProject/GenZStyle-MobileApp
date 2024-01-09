@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Avatar, Button } from "react-native-elements";
 import CartHomeFollowing from './CartHomeFollowing';
-import images from '../data/Image';
+import images from '../../data/Image';
 import { useNavigation } from '@react-navigation/native';
 
 const HomeFollowing = () => {

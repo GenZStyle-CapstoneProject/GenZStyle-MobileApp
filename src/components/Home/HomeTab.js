@@ -4,8 +4,8 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import ForYouScreen from "../screens/ForYouScreen";
-import FollowingScreen from "../screens/FollowingScreen";
+import ForYouScreen from "../../screens/ForYouScreen";
+import FollowingScreen from "../../screens/FollowingScreen";
 
 const Tab = createMaterialTopTabNavigator();
 

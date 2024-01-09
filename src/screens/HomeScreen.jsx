@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { View, ScrollView, Button } from 'react-native';
-import HomeTab from '../components/HomeTab';
+import HomeTab from '../components/Home/HomeTab';
 
 import { useNavigation } from '@react-navigation/native';
 

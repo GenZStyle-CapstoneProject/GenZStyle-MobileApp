@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, FlatList } from 'react-native';
-import CategoryForMen from '../components/CategoryForMen';
-import CategoryForWomen from '../components/CategoryForWomen';
+import CategoryForMen from '../components/Home/CategoryForMen';
+import CategoryForWomen from '../components/Home/CategoryForWomen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import products from '../data/Products';
-import Cart from '../components/Cart'
+import Cart from '../components/Home/Cart'
 import { useNavigation } from '@react-navigation/native';
 
 

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import BottomTabNavigator from './BottomTabNavigator/BottomTabNavigator'
-import { Welcome } from '../screens'
+
 import HomeNavigator from './HomeNavigator/HomeNavigator'
 const Stack = createNativeStackNavigator()
 const AppNavigator = () => {

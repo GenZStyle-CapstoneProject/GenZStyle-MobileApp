@@ -1,9 +1,9 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import MyPostsScreen from '../screens/Profile/MyPostsScreen';
-import FavoritesScreen from '../screens/Profile/FavoritesScreen';
-import SavedScreen from '../screens/Profile/SavedScreen';
-import MyClothesScreen from '../screens/Profile/MyClothesScreen';
+import MyPostsScreen from '../../screens/Profile/MyPostsScreen';
+import FavoritesScreen from '../../screens/Profile/FavoritesScreen';
+import SavedScreen from '../../screens/Profile/SavedScreen';
+import MyClothesScreen from '../../screens/Profile/MyClothesScreen';
 
 const Tab = createMaterialTopTabNavigator();
 

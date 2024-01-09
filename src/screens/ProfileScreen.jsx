@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Image } from 'react-native';
-import HeaderProfile from '../components/HeaderProfile';
-import ProfileTab from '../components/ProfileTab';
+import { View, StyleSheet } from 'react-native';
+import HeaderProfile from '../components/Profile/HeaderProfile';
+import ProfileTab from '../components/Profile/ProfileTab';
 
 const ProfileScreen = () => {
 

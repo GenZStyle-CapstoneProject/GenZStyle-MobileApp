@@ -20,7 +20,7 @@ const HeaderProfile = () => {
             <View style={styles.topRow}>
                 <View style={styles.avatarContainer}>
                     <Image
-                        source={require('../../assets/avatar.jpg')}
+                        source={require('../../../assets/avatar.jpg')}
                         style={styles.profileImage}
                     />
                 </View>

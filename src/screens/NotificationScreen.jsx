@@ -1,9 +1,8 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View, TouchableOpacity } from 'react-native';
-import ActivityTab from '../components/ActivityTab';
-import NotificationTab from '../components/NotificationTab';
-import NotiTab from '../components/NotiTab';
+import { View } from 'react-native';
+
+import NotiTab from '../components/Noti/NotiTab';
 
 const Tab = createMaterialTopTabNavigator();
 
