@@ -39,13 +39,13 @@ const Signup = ({ navigation }) => {
 
 
     };
-    const [fontsLoaded] = useFonts({
-        'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
-    });
+    // const [fontsLoaded] = useFonts({
+    //     'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
+    // });
 
-    useEffect(() => {
-        console.log('Fonts Loaded:', fontsLoaded);
-    }, [fontsLoaded]);
+    // useEffect(() => {
+    //     console.log('Fonts Loaded:', fontsLoaded);
+    // }, [fontsLoaded]);
 
     return (
         <LinearGradient
@@ -60,7 +60,7 @@ const Signup = ({ navigation }) => {
                         style={{
                             fontSize: 50,
                             color: COLORS.black,
-                            fontFamily: 'AmitaRegular',
+                            // fontFamily: 'AmitaRegular',
                         }}
                     >
                         StyleGenZ

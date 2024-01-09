@@ -7,7 +7,7 @@ import Button from '../components/Button';
 import { useFonts } from '@use-expo/font';
 const Start = ({ navigation }) => {
     const [fontsLoaded] = useFonts({
-        'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
+        'AmitaRegular': require('../../assets/fonts/Amita-Regular.ttf'),
     });
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const Start = ({ navigation }) => {
             <View style={{ flex: 1 }}>
                 <View>
                     <Image
-                        source={require("../assets/hero1.jpg")}
+                        source={require("../../assets/hero1.jpg")}
                         style={{
                             height: 290,
                             width: 210,
@@ -44,7 +44,7 @@ const Start = ({ navigation }) => {
 
 
                     <Image
-                        source={require("../assets/hero2.jpg")}
+                        source={require("../../assets/hero2.jpg")}
                         style={{
                             height: 290,
                             width: 200,
