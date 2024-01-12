@@ -1,8 +1,13 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useNavigation } from '@react-navigation/native';
 const HeaderProfile = () => {
+    const navigation = useNavigation();
+    const handleSetting = () => {
+        // Chuyển đến trang Setting khi người dùng nhấn vào icon Setting
+        navigation.navigate('Setting');
+    };
     return (
         <View style={styles.header}>
             <View style={styles.iconContainer}>
@@ -12,7 +17,7 @@ const HeaderProfile = () => {
                 <TouchableOpacity>
                     <Ionicons name="share-social-outline" size={24} color="black" style={styles.icon} />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleSetting}>
                     <Ionicons name="settings-outline" size={24} color="black" style={styles.icon} />
                 </TouchableOpacity>
             </View>

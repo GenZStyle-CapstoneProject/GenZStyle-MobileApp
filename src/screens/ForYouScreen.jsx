@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, FlatList } from 'react-native';
 import CategoryForMen from '../components/Home/CategoryForMen';
 import CategoryForWomen from '../components/Home/CategoryForWomen';
@@ -6,9 +6,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import products from '../data/Products';
 import Cart from '../components/Home/Cart'
 import { useNavigation } from '@react-navigation/native';
-
-
+import { LogBox } from 'react-native';
 const ForYouScreen = () => {
+    useEffect(() => {
+        LogBox.ignoreLogs(["VirtualizedLists should never be nested"])
+    }, [])
     const [showGenderOptions, setShowGenderOptions] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [categoryButtonText, setCategoryButtonText] = useState('Tất cả');
@@ -56,7 +58,8 @@ const ForYouScreen = () => {
             {selectedCategory === 'Nữ' && <CategoryForWomen />}
 
 
-            <ScrollView
+            <ScrollView nestedScrollEnabled={true}
+                // nestedScrollEnabled={true}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.imageScrollView}
@@ -68,7 +71,8 @@ const ForYouScreen = () => {
 
                     </View>
                 ))}
-            </ScrollView>
+            </ScrollView >
+
             <View style={styles.bottomHorizontalLine} />
 
             {/* Phần Bộ lọc và Sắp xếp */}
@@ -105,7 +109,9 @@ const ForYouScreen = () => {
 
 
 
-        </View>
+
+
+        </View >
     );
 };
 

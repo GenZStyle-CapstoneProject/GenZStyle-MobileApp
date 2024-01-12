@@ -11,6 +11,10 @@ const ROUTES = {
     NOTIFICATION_NAVIGATOR: 'NotificationNavigator',
     PROFILE: 'Profile',
     PROFILE_NAVIGATOR: 'ProfileNavigator',
+    SETTING: 'Setting',
+    SETTING_NAVIGATOR: 'SettingNavigator',
+    UPDATEPROFILE: 'UpdateProfile',
+    UPDATEPROFILE_NAVIGATOR: 'UpdateProfileNavigator',
     CARTDETAIL: 'CartDetail',
     CARTDETAIL_NAVIGATOR: 'CartDetailNavigator',
 
