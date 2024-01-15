@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, FlatList, Linking, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
+import products from '../data/Products';
+import Cart from '../components/Home/Cart'
 const CartDetail = ({ route }) => {
     const navigation = useNavigation();
     const { item } = route.params;
@@ -19,7 +21,7 @@ const CartDetail = ({ route }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {/* Back button */}
             <TouchableOpacity
                 style={styles.backButton}
@@ -76,13 +78,43 @@ const CartDetail = ({ route }) => {
                 </TouchableOpacity>
             </View>
 
+            {/* Link sản phẩm */}
+            <Text style={styles.linkSPText} >
+                Link sản phẩm:
+            </Text>
+            <Text style={styles.linkText} onPress={() => Linking.openURL('https://www.fptshop.com')}>
+                www.fptshop.com
+            </Text>
+
+            {/* Các sản phẩm liên quan */}
+            <View style={styles.relatedProductsContainer}>
+                <Text style={styles.relatedProductsTitle}>Các sản phẩm liên quan:</Text>
+                {/* Hiển thị danh sách sản phẩm liên quan */}
+                {/* <FlatList
+                    data={products}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity >
+                            <Image source={{ uri: item.image }} style={styles.relatedProductImage} />
+                        </TouchableOpacity>
+                    )}
+
+                    numColumns={2}
+                    showsHorizontalScrollIndicator={false}
+                /> */}
+                <FlatList
+                    data={products}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => <TouchableOpacity onPress={() => navigateToCartDetail(item)}>
+                        <Cart item={item} />
+                    </TouchableOpacity>}
+                    numColumns={2}
+                />
+            </View>
 
 
 
-
-
-
-        </View>
+        </ScrollView>
     );
 };
 
@@ -165,6 +197,32 @@ const styles = StyleSheet.create({
     iconText: {
         marginLeft: 5,
     },
+    linkText: {
+        color: 'blue',
+        marginTop: 10,
+        marginBottom: 10,
+        fontSize: 16,
+        textDecorationLine: 'underline',
+    },
+    linkSPText: {
+        color: 'black',
+        marginTop: 20,
+        marginBottom: 10,
+        fontSize: 16,
+        // textDecorationLine: 'underline',
+    },
+
+    relatedProductsContainer: {
+        marginTop: 20,
+    },
+
+    relatedProductsTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+
+
 
 });
 

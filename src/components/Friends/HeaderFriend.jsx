@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'column',
         paddingHorizontal: 20,
-        marginTop: 70,
+        marginTop: 50,
     },
     iconContainer: {
         flexDirection: 'row',
