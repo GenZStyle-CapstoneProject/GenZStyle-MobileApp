@@ -17,6 +17,10 @@ const ROUTES = {
     UPDATEPROFILE_NAVIGATOR: 'UpdateProfileNavigator',
     CARTDETAIL: 'CartDetail',
     CARTDETAIL_NAVIGATOR: 'CartDetailNavigator',
+    FRIENDS: 'Friends',
+    FRIENDS_NAVIGATOR: 'FriendsNavigator',
+    SETTINGFRIENDS: 'SettingFriends',
+    SETTINGFRIENDS_NAVIGATOR: 'SettingFriendsNavigator',
 
 }
 export default ROUTES;

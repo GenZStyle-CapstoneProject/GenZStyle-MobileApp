@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import BottomTabNavigator from '../BottomTabNavigator/BottomTabNavigator'
 import CartDetail from '../../screens/CartDetail'
+import FriendScreen from '../../screens/FriendScreen'
+import SettingFriends from '../../screens/Friends/SettingFriends'
 import ROUTES from '../../constants/routes'
 const Stack = createNativeStackNavigator()
 const HomeNavigator = () => {
@@ -20,6 +22,8 @@ const HomeNavigator = () => {
 
             <Stack.Screen name='nam' component={BottomTabNavigator} options={{ headerShown: false }} />
             <Stack.Screen name={ROUTES.CARTDETAIL} component={CartDetail} options={{ headerShown: false, }} />
+            <Stack.Screen name={ROUTES.FRIENDS} component={FriendScreen} options={{ headerShown: false, }} />
+            <Stack.Screen name={ROUTES.SETTINGFRIENDS} component={SettingFriends} options={{ headerShown: false, }} />
         </Stack.Navigator>
     )
 }

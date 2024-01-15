@@ -145,8 +145,8 @@ const styles = StyleSheet.create({
     },
 
     headerTitle: {
-        flex: 1, // Đảm bảo chữ "Cài đặt" chiếm hết phần còn lại
-        textAlign: 'center', // Căn giữa
+        flex: 1,
+        textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',
     },

@@ -12,6 +12,13 @@ const HomeFollowing = () => {
 
         navigation.navigate('CartDetail', { item });
     };
+    const navigateToFriend = () => {
+
+        navigation.navigate('Friends');
+    };
+
+
+
     return (
 
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -25,7 +32,7 @@ const HomeFollowing = () => {
                         iconStyle={{}}
                         imageProps={{}}
                         onLongPress={() => alert("onLongPress")}
-                        onPress={() => alert("onPress")}
+                        onPress={() => navigateToFriend()}
                         overlayContainerStyle={{}}
                         placeholderStyle={{}}
                         rounded
