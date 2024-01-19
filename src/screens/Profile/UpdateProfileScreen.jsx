@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, TouchableWithoutFeedback } from 'react-native'; import Icon from 'react-native-vector-icons/MaterialIcons';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, TouchableWithoutFeedback, Alert } from 'react-native'; import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
-// import ImagePicker from 'react-native-image-picker';
+
 import * as ImagePicker from 'expo-image-picker';
 
 const UpdateProfileScreen = () => {
@@ -11,10 +11,49 @@ const UpdateProfileScreen = () => {
         navigation.goBack();
     };
 
-    // const handleChangeAvatar = () => {
 
-    // };
     const handleChangeAvatar = async () => {
+        Alert.alert(
+            'Chọn hình ảnh',
+            'Bạn muốn chọn hình ảnh từ đâu?',
+            [
+                {
+                    text: 'Hủy',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Camera',
+                    onPress: () => pickImageFromCamera(),
+                },
+                {
+                    text: 'Thư viện',
+                    onPress: () => pickImageFromLibrary(),
+                },
+            ],
+            { cancelable: false }
+        );
+    };
+
+
+    const pickImageFromCamera = async () => {
+        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            alert('Permission to access the camera is required!');
+            return;
+        }
+
+        const pickerResult = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+
+        if (!pickerResult.cancelled) {
+            setImage(pickerResult.uri);
+        }
+    };
+
+    const pickImageFromLibrary = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (permissionResult.granted === false) {
