@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Modal, TouchableWithoutFeedback } from 'react-native'; import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+// import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 const UpdateProfileScreen = () => {
     const navigation = useNavigation();
@@ -9,8 +11,25 @@ const UpdateProfileScreen = () => {
         navigation.goBack();
     };
 
-    const handleChangeAvatar = () => {
+    // const handleChangeAvatar = () => {
 
+    // };
+    const handleChangeAvatar = async () => {
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (permissionResult.granted === false) {
+            alert('Permission to access camera roll is required!');
+            return;
+        }
+
+        const pickerResult = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+
+        if (!pickerResult.cancelled) {
+            setImage(pickerResult.uri);
+        }
     };
     const [genderModalVisible, setGenderModalVisible] = useState(false);
     const [selectedGender, setSelectedGender] = useState('Nam');

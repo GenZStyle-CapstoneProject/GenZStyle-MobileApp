@@ -8,6 +8,15 @@ const HeaderProfile = () => {
         // Chuyển đến trang Setting khi người dùng nhấn vào icon Setting
         navigation.navigate('Setting');
     };
+    const handleFollowers = () => {
+
+        navigation.navigate('ListFollow', { screen: 'Người theo dõi' });
+    };
+
+    const handleFollowing = () => {
+
+        navigation.navigate('ListFollow', { screen: 'Đang theo dõi' });
+    };
     return (
         <View style={styles.header}>
             <View style={styles.iconContainer}>
@@ -36,18 +45,23 @@ const HeaderProfile = () => {
             </View>
             <Text style={styles.bioContent}>Just do it</Text>
 
+
             <View style={styles.bioContainer}>
                 <View style={styles.bioColumn}>
-                    <Text style={styles.bioCount}>0</Text>
-                    <Text style={styles.bioText}>Người theo dõi</Text>
+                    <TouchableOpacity onPress={handleFollowers}>
+                        <Text style={styles.bioCount}>200</Text>
+                        <Text style={styles.bioText}>Người theo dõi</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.bioColumn}>
-                    <Text style={styles.bioCount}>5</Text>
-                    <Text style={styles.bioText}>Đang theo dõi</Text>
+                    <TouchableOpacity onPress={handleFollowing}>
+                        <Text style={styles.bioCount}>1200</Text>
+                        <Text style={styles.bioText}>Đang theo dõi</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.addBioButton}>
+                {/* <TouchableOpacity style={styles.addBioButton}>
                     <Text style={styles.addBioButtonText}>Thêm tiểu sử</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         </View>
     );
@@ -102,6 +116,7 @@ const styles = StyleSheet.create({
     bioCount: {
         fontSize: 20,
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     bioText: {
         fontSize: 14,

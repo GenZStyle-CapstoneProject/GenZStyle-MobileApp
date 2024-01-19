@@ -21,6 +21,7 @@ const ROUTES = {
     FRIENDS_NAVIGATOR: 'FriendsNavigator',
     SETTINGFRIENDS: 'SettingFriends',
     SETTINGFRIENDS_NAVIGATOR: 'SettingFriendsNavigator',
-
+    LISTFOLLOW: 'ListFollow',
+    LISTFOLLOW_NAVIGATOR: 'ListFollowNavigator',
 }
 export default ROUTES;
