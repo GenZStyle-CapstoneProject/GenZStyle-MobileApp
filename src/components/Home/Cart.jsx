@@ -1,42 +1,47 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
 
+const Cart = ({ item }) => {
+    const navigation = useNavigation();
 
-const Cart = ({ item }) => (
+    const navigateToListLike = () => {
+        // Navigate to ListLikeScreen when the heart icon or the number is clicked
+        navigation.navigate('ListLike');
+    };
 
-    <View style={styles.postContainer}>
-        <Image source={{ uri: item.image }} style={styles.postImage} />
-        <View style={styles.postFooter}>
+    return (
+        <View style={styles.postContainer}>
+            <Image source={{ uri: item.image }} style={styles.postImage} />
+            <View style={styles.postFooter}>
 
-            <View style={styles.iconContainer}>
-                <TouchableOpacity style={styles.icon}>
-                    <Icon name="heart-outline" size={24} color="black" />
-                    <Text style={styles.iconText}>(10)</Text>
+                <View style={styles.iconContainer}>
+                    <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
+                        <Icon name="heart-outline" size={24} color="black" />
+                        <Text style={styles.iconText}>(10)</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.icon}>
+                        <Icon name="chat-outline" size={24} color="black" />
+                        <Text style={styles.iconText}></Text>
+                    </TouchableOpacity>
 
+                </View>
+                <View style={styles.textContainer}>
+                    <View style={styles.textRow}>
+                        <Text style={styles.titleText}>Denisa  Elena Aboaice</Text>
+                    </View>
+                    <View style={styles.textRow}>
+                        <Text style={styles.hashtagText}>{item.hashtag}</Text>
+                    </View>
+                </View>
 
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.icon}>
-                    <Icon name="chat-outline" size={24} color="black" />
-                    <Text style={styles.iconText}></Text>
-                </TouchableOpacity>
 
             </View>
-            <View style={styles.textContainer}>
-                <View style={styles.textRow}>
-                    <Text style={styles.titleText}>Denisa  Elena Aboaice</Text>
-                </View>
-                <View style={styles.textRow}>
-                    <Text style={styles.hashtagText}>{item.hashtag}</Text>
-                </View>
-            </View>
-
-
         </View>
-    </View>
-);
+    );
 
-
+};
 
 const styles = StyleSheet.create({
     postContainerScrollView: {

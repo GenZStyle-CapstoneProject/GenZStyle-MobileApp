@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import BottomTabNavigator from '../BottomTabNavigator/BottomTabNavigator'
 import CartDetail from '../../screens/CartDetail'
+import ListLike from '../../components/Home/ListLike'
 import FriendScreen from '../../screens/FriendScreen'
 import SettingFriends from '../../screens/Friends/SettingFriends'
 import ROUTES from '../../constants/routes'
@@ -24,6 +25,7 @@ const HomeNavigator = () => {
             <Stack.Screen name={ROUTES.CARTDETAIL} component={CartDetail} options={{ headerShown: false, }} />
             <Stack.Screen name={ROUTES.FRIENDS} component={FriendScreen} options={{ headerShown: false, }} />
             <Stack.Screen name={ROUTES.SETTINGFRIENDS} component={SettingFriends} options={{ headerShown: false, }} />
+            <Stack.Screen name={ROUTES.LISTLIKE} component={ListLike} options={{ headerShown: false, }} />
         </Stack.Navigator>
     )
 }
