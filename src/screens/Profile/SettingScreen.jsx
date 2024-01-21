@@ -1,12 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ROUTES from '../../constants/routes';
 const SettingScreen = () => {
     const navigation = useNavigation();
     const handleEditProfile = () => {
         // Chuyển đến trang UpdateProfileScreen
         navigation.navigate('UpdateProfile');
+    };
+
+    const navigateToSettingPackage = () => {
+        // Chuyển đến màn hình mong muốn khi TouchableOpacity được nhấn
+        navigation.navigate(ROUTES.SETTINGPACKAGE);
     };
     return (
         <View style={styles.container}>
@@ -49,9 +55,9 @@ const SettingScreen = () => {
 
 
             <View style={styles.settingItem}>
-                <Text style={styles.settingText}>
-                    Gói thành viên
-                </Text>
+                <TouchableOpacity onPress={navigateToSettingPackage}>
+                    <Text style={styles.settingText}>Gói thành viên</Text>
+                </TouchableOpacity>
 
                 <Text style={styles.settingText1}>
                     Yearly

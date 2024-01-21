@@ -6,6 +6,7 @@ import ProfileScreen from '../../../screens/ProfileScreen'
 import SettingScreen from '../../../screens/Profile/SettingScreen'
 import UpdateProfileScreen from '../../../screens/Profile/UpdateProfileScreen'
 import ListFollowScreen from '../../../screens/Profile/ListFollowScreen'
+import SettingPackage from '../../../screens/SettingPackage/SettingPackage'
 const Stack = createNativeStackNavigator()
 const ProfileNavigator = () => {
   return (
@@ -14,6 +15,7 @@ const ProfileNavigator = () => {
       <Stack.Screen name={ROUTES.SETTING} component={SettingScreen} options={{ headerShown: false, }} />
       <Stack.Screen name={ROUTES.UPDATEPROFILE} component={UpdateProfileScreen} options={{ headerShown: false, }} />
       <Stack.Screen name={ROUTES.LISTFOLLOW} component={ListFollowScreen} options={{ headerShown: false, }} />
+      <Stack.Screen name={ROUTES.SETTINGPACKAGE} component={SettingPackage} options={{headerShown: false,}}/>
     </Stack.Navigator>
   )
 }

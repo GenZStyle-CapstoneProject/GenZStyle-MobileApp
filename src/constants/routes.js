@@ -26,5 +26,12 @@ const ROUTES = {
 
     LISTLIKE: 'ListLike',
     LISTLIKE_NAVIGATOR: 'ListLikeNavigator',
+
+    HASHTAGVIEW: 'HashtagView',
+    HASHTAGVIEW_NAVIGATOR: 'HashtagViewNavigator',
+    SETTINGPACKAGE: 'SettingPackage',
+    SETTINGPACKAGE_NAVIGATOR: 'SettingPackageNavigator',
+    CHAT: 'Chat',
+    CHAT_NAVIGATOR: 'ChatNavigator',
 }
 export default ROUTES;
