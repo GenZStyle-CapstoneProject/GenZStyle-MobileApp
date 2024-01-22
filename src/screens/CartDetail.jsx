@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, FlatList, Linking, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, TextInput, FlatList, Linking, ScrollView, Modal, TouchableWithoutFeedback, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import products from '../data/Products';
@@ -7,7 +7,7 @@ import Cart from '../components/Home/Cart'
 const CartDetail = ({ route }) => {
     const navigation = useNavigation();
     const { item } = route.params;
-
+    const [reportModalVisible, setReportModalVisible] = useState(false);
 
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
@@ -19,6 +19,26 @@ const CartDetail = ({ route }) => {
             setComment('');
         }
     };
+    const openReportModal = () => {
+        setReportModalVisible(true);
+    };
+
+    const closeReportModal = () => {
+        setReportModalVisible(false);
+    };
+
+    const handleReportOptionPress = () => {
+
+        console.log('Reported');
+        closeReportModal();
+    };
+    const handleReporPost = () => {
+
+        closeReportModal();
+        navigation.navigate('ReportPost');
+
+    };
+
 
     return (
         <ScrollView style={styles.container}>
@@ -47,7 +67,29 @@ const CartDetail = ({ route }) => {
                     <Icon name="chat-outline" size={24} color="black" />
                     <Text style={styles.iconText}></Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.moreOptionsIcon} onPress={openReportModal}>
+                    <Icon name="dots-horizontal" size={24} color="black" />
+                </TouchableOpacity>
             </View>
+            {/* Report Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={reportModalVisible}
+                onRequestClose={closeReportModal}
+            >
+                <TouchableWithoutFeedback onPress={closeReportModal}>
+                    <View style={styles.modalOverlay} />
+                </TouchableWithoutFeedback>
+                <View style={styles.reportModal}>
+                    <Text style={styles.reportOption} onPress={handleReporPost}>
+                        Báo Cáo
+                    </Text>
+                    <Text style={styles.closeReportModal} onPress={closeReportModal}>
+                        Cancel
+                    </Text>
+                </View>
+            </Modal>
             <View style={styles.textRow}>
                 <Text style={styles.titleText}>Denisa  Elena Aboaice</Text>
             </View>
@@ -89,19 +131,7 @@ const CartDetail = ({ route }) => {
             {/* Các sản phẩm liên quan */}
             <View style={styles.relatedProductsContainer}>
                 <Text style={styles.relatedProductsTitle}>Các sản phẩm liên quan:</Text>
-                {/* Hiển thị danh sách sản phẩm liên quan */}
-                {/* <FlatList
-                    data={products}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity >
-                            <Image source={{ uri: item.image }} style={styles.relatedProductImage} />
-                        </TouchableOpacity>
-                    )}
 
-                    numColumns={2}
-                    showsHorizontalScrollIndicator={false}
-                /> */}
                 <FlatList
                     data={products}
                     keyExtractor={(item) => item.id.toString()}
@@ -221,7 +251,32 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
     },
+    moreOptionsIcon: {
+        position: 'absolute',
 
+        right: 10,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    reportModal: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        alignItems: 'center',
+    },
+    reportOption: {
+        fontSize: 18,
+        marginBottom: 10,
+        color: 'black',
+    },
+    closeReportModal: {
+        fontSize: 18,
+        color: 'red',
+        marginTop: 10,
+    },
 
 
 });

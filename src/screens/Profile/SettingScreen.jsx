@@ -60,7 +60,7 @@ const SettingScreen = () => {
                 </TouchableOpacity>
 
                 <Text style={styles.settingText1}>
-                    Yearly
+                    Premium
                 </Text>
 
             </View>

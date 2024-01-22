@@ -33,5 +33,9 @@ const ROUTES = {
     SETTINGPACKAGE_NAVIGATOR: 'SettingPackageNavigator',
     CHAT: 'Chat',
     CHAT_NAVIGATOR: 'ChatNavigator',
+    REPORTUSER: 'ReportUser',
+    REPORTUSER_NAVIGATOR: 'ReportUserNavigator',
+    REPORTPOST: 'ReportPost',
+    REPORTPOST_NAVIGATOR: 'ReportPostNavigator',
 }
 export default ROUTES;

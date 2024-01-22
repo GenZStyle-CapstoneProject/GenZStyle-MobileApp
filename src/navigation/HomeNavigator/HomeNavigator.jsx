@@ -7,6 +7,7 @@ import ListLike from '../../components/Home/ListLike'
 import FriendScreen from '../../screens/FriendScreen'
 import SettingFriends from '../../screens/Friends/SettingFriends'
 import ROUTES from '../../constants/routes'
+import ReportPost from '../../screens/ReportPost'
 const Stack = createNativeStackNavigator()
 const HomeNavigator = () => {
     const [isAuth, setIsAuth] = useState(false);
@@ -26,6 +27,7 @@ const HomeNavigator = () => {
             <Stack.Screen name={ROUTES.FRIENDS} component={FriendScreen} options={{ headerShown: false, }} />
             <Stack.Screen name={ROUTES.SETTINGFRIENDS} component={SettingFriends} options={{ headerShown: false, }} />
             <Stack.Screen name={ROUTES.LISTLIKE} component={ListLike} options={{ headerShown: false, }} />
+            <Stack.Screen name={ROUTES.REPORTPOST} component={ReportPost} options={{ headerShown: false, }} />
         </Stack.Navigator>
     )
 }

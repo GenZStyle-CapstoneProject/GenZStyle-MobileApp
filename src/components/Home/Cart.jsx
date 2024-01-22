@@ -26,6 +26,7 @@ const Cart = ({ item }) => {
                         <Text style={styles.iconText}></Text>
                     </TouchableOpacity>
 
+
                 </View>
                 <View style={styles.textContainer}>
                     <View style={styles.textRow}>
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
         color: 'black',
         marginTop: 5,
     },
+
 
 
 });

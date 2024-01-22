@@ -68,7 +68,7 @@ const LibraryScreen = () => {
   const fetchLibraryImages = async () => {
     const { assets } = await MediaLibrary.getAssetsAsync({
       mediaType: MediaLibrary.MediaType.photo,
-      first: 20, // adjust the number based on your needs
+      first: 20,
     });
 
     setLibraryImages(assets);

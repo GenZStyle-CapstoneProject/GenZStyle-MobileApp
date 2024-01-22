@@ -4,10 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const SettingFriends = () => {
     const navigation = useNavigation();
-    // const handleEditProfile = () => {
-    //     // Chuyển đến trang UpdateProfileScreen
-    //     navigation.navigate('UpdateProfile');
-    // };
+    const handleReportPress = () => {
+
+        navigation.navigate('ReportUser');
+    };
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
@@ -23,7 +23,7 @@ const SettingFriends = () => {
                 </Text>
             </View>
 
-            <TouchableOpacity >
+            <TouchableOpacity onPress={handleReportPress}>
                 <Text style={styles.settingText}>
                     Báo Cáo
                 </Text>

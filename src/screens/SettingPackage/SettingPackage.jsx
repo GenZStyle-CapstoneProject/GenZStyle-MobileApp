@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, Image, Dim
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import * as Payments from 'react-native-payments';
 const SettingPackage = () => {
     const navigation = useNavigation();
 
@@ -13,22 +13,62 @@ const SettingPackage = () => {
         VIP: 'This is the VIP subscription description:\n- Save time + storage space.\n- Premium manual + automatic edit tools in the GenZ mobile app.\n- Unlimited cloud storage of your GenZ footage at original post (unlimited)',
         Premium: 'This is the Premium subscription description:\n- Save time + storage space.\n- Premium manual + automatic edit tools in the GenZ mobile app.\n- Unlimited cloud storage of your GenZ footage at original post (10post/1day)',
     };
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
 
-    const handleSubscriptionPress = (subscription) => {
-        setSelectedSubscription(subscription);
-        setLastSelectedButton(subscription);
-    };
+
 
     const closeModal = () => {
         setSelectedSubscription(null);
     };
-    const goBack = () => {
-        // Sử dụng navigation.goBack() để quay lại trang trước
-        navigation.goBack();
+
+    const subscriptionPrices = {
+        VIP: 39.0,
+        Premium: 99.0,
     };
 
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
+    const handleSubscriptionPress = (subscription) => {
+        setSelectedSubscription(subscription);
+    };
+
+    const handlePayment = async () => {
+        // Ensure a subscription is selected
+        if (!selectedSubscription) {
+            Alert.alert('Please select a subscription first.');
+            return;
+        }
+
+        // TODO: Implement Momo payment logic here
+        try {
+            // Replace with your Momo payment integration logic
+            // This is a placeholder, you need to replace it with the actual payment flow
+            const paymentResult = await MomoPayment.requestPayment({
+                "partnerCode": "MOMO_PARTNER_A",
+                "orderId": "0123456789",
+                "requestId": "1234567891",
+                "amount": 0,
+                "responseTime": 1645170502966,
+                "message": "Successful.",
+                "resultCode": 0,
+                "payUrl": "https://test-payment.momo.vn/v2/gateway/pay?t=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==",
+                "deeplink": "momo://?action=subscription&isScanQR=false&sid=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==&v=2.1",
+                "qrCodeUrl": "https://test-payment.momo.vn/v2/gateway/app?isScanQr=true&t=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==",
+                "partnerClientId": "user123456"
+            });
+
+            // Process the payment result
+            if (paymentResult && paymentResult.status === 'success') {
+                Alert.alert('Payment successful!');
+            } else {
+                Alert.alert('Payment failed!');
+            }
+        } catch (error) {
+            console.error('Payment error:', error);
+            Alert.alert('Payment failed!');
+        }
+
+        setSelectedSubscription(null);
+    };
 
     return (
         <View style={{ flex: 1 }}>
@@ -36,7 +76,7 @@ const SettingPackage = () => {
                 {/* Header */}
                 <View style={{ flex: 1, justifyContent: 'flex-start', marginTop: 40 }}>
                     <View style={styles.header}>
-                        <TouchableOpacity onPress={goBack}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} >
                             <MaterialIcons name="arrow-back" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
@@ -72,7 +112,7 @@ const SettingPackage = () => {
                             <Text style={styles.buttonText}>Premium</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.subscribeButton}>
+                    <TouchableOpacity style={styles.subscribeButton} onPress={handlePayment}>
                         <Text style={styles.buttonText}>Subscribe to StyleGenZ</Text>
                     </TouchableOpacity>
 
