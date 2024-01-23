@@ -12,7 +12,14 @@ const CartDetail = ({ route }) => {
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
 
-
+    const [isLiked, setIsLiked] = useState(false);
+    const handleLikePress = () => {
+        setIsLiked(!isLiked);
+    };
+    const navigateToListLike = () => {
+        // Navigate to ListLikeScreen when the heart icon or the number is clicked
+        navigation.navigate('ListLike');
+    };
     const handleAddComment = () => {
         if (comment.trim() !== '') {
             setComments([...comments, comment]);
@@ -57,11 +64,16 @@ const CartDetail = ({ route }) => {
 
             {/* Icon trái tim và bình luận */}
             <View style={styles.iconContainer}>
-                <TouchableOpacity style={styles.icon}>
-                    <Icon name="heart-outline" size={24} color="black" />
+                <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
+                    <Icon
+                        name={isLiked ? 'heart' : 'heart-outline'}
+                        size={24}
+                        color={isLiked ? 'red' : 'black'}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
+
                     <Text style={styles.iconText}>(10)</Text>
-
-
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.icon}>
                     <Icon name="chat-outline" size={24} color="black" />

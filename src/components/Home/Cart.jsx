@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 
 const Cart = ({ item }) => {
     const navigation = useNavigation();
-
+    const [isLiked, setIsLiked] = useState(false);
+    const handleLikePress = () => {
+        setIsLiked(!isLiked);
+    };
     const navigateToListLike = () => {
         // Navigate to ListLikeScreen when the heart icon or the number is clicked
         navigation.navigate('ListLike');
@@ -17,8 +20,15 @@ const Cart = ({ item }) => {
             <View style={styles.postFooter}>
 
                 <View style={styles.iconContainer}>
+                    <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
+                        <Icon
+                            name={isLiked ? 'heart' : 'heart-outline'}
+                            size={24}
+                            color={isLiked ? 'red' : 'black'}
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
-                        <Icon name="heart-outline" size={24} color="black" />
+
                         <Text style={styles.iconText}>(10)</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.icon}>
