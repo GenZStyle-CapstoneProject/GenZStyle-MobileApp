@@ -37,5 +37,7 @@ const ROUTES = {
     REPORTUSER_NAVIGATOR: 'ReportUserNavigator',
     REPORTPOST: 'ReportPost',
     REPORTPOST_NAVIGATOR: 'ReportPostNavigator',
+    UPPOST: 'UpPost',
+    UPPOST_NAVIGATOR: 'UpPostNavigator',
 }
 export default ROUTES;
