@@ -1,6 +1,8 @@
 const ROUTES = {
     WELCOME: 'Welcome',
     WELCOME_NAVIGATOR: 'WelcomeNavigator',
+    MOREINFO: 'MoreInfo',
+    MOREINFO_NAVIGATOR: 'MoreInfoNavigator',
     HOME: 'Home',
     HOME_NAVIGATOR: 'HomeNavigator',
     SEARCH: 'Search',
