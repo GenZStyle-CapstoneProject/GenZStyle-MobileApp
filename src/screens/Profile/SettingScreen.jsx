@@ -14,6 +14,11 @@ const SettingScreen = () => {
         // Chuyển đến màn hình mong muốn khi TouchableOpacity được nhấn
         navigation.navigate(ROUTES.SETTINGPACKAGE);
     };
+
+    const navigateToPackageHistory = () => {
+        navigation.navigate(ROUTES.PACKAGEHISTORY);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
@@ -43,13 +48,9 @@ const SettingScreen = () => {
                 <View style={styles.hr} />
             </View>
             <View style={styles.settingItem}>
-                <Text style={styles.settingText}>
-                    Quốc gia/Khu vực cư trú
-                </Text>
-                <Text style={styles.settingText1}>
-                    VietNam
-                </Text>
-
+                <TouchableOpacity onPress={navigateToPackageHistory}>
+                    <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.hr} />
 
@@ -146,7 +147,6 @@ const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-
         marginLeft: 15,
     },
 

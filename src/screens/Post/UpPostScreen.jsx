@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Alert } from 'react-native';
+import ROUTES from '../../constants/routes';
 
 const UpPostScreen = () => {
     const navigation = useNavigation();
@@ -154,10 +156,22 @@ const UpPostScreen = () => {
             </Modal>
 
             <View style={styles.buttonContainer}>
-                <TouchableOpacity style={[styles.button, styles.draftButton]}>
+                <TouchableOpacity
+                    style={[styles.button, styles.draftButton]}
+                    onPress={() => {
+                        Alert.alert('Thông báo', 'Bản nháp đã được tạo thành công.');
+                        navigation.navigate(ROUTES.PROFILE_NAVIGATOR);
+                    }}
+                >
                     <Text style={styles.buttonText}>Bản nháp</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.postButton]}>
+                <TouchableOpacity
+                    style={[styles.button, styles.postButton]}
+                    onPress={() => {
+                        Alert.alert('Thông báo', 'Bài đăng đã được đăng thành công.');
+                        navigation.navigate(ROUTES.HOME_NAVIGATOR);
+                    }}
+                >
                     <Text style={styles.buttonText}>Đăng</Text>
                 </TouchableOpacity>
             </View>
@@ -251,9 +265,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 20,
-      },
-      
-      button: {
+    },
+
+    button: {
         flex: 1,
         height: 40,
         borderRadius: 8,
@@ -261,21 +275,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginLeft: 5,
         marginRight: 5,
-      },
-      
-      draftButton: {
+    },
+
+    draftButton: {
         backgroundColor: 'gray', // Màu nền cho nút "Bản nháp"
-      },
-      
-      postButton: {
-        backgroundColor: 'blue', // Màu nền cho nút "Đăng"
-      },
-      
-      buttonText: {
+    },
+
+    postButton: {
+        backgroundColor: '#99A1E8', // Màu nền cho nút "Đăng"
+    },
+
+    buttonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
-      },
+    },
 });
 
 export default UpPostScreen;

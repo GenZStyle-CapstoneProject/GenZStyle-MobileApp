@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import ROUTES from '../../../constants/routes'
 import PostScreen from '../../../screens/PostScreen'
 import UpPostScreen from '../../../screens/Post/UpPostScreen'
+import NotificationScreen from '../../../screens/NotificationScreen'
+import FollowingScreen from '../../../screens/FollowingScreen'
 
 const Stack = createNativeStackNavigator()
 const PostNavigator = () => {
@@ -11,6 +13,8 @@ const PostNavigator = () => {
     <Stack.Navigator>
         <Stack.Screen name={ROUTES.POST} component={PostScreen} options={{headerShown: false,}}/>
         <Stack.Screen name={ROUTES.UPPOST} component={UpPostScreen} options={{headerShown: false,}}/>
+        <Stack.Screen name={ROUTES.NOTIFICATION} component={NotificationScreen} options={{headerShown: false,}}/>
+        <Stack.Screen name={ROUTES.FOLLOWING} component={FollowingScreen} options={{headerShown: false,}}/>
     </Stack.Navigator>
   )
 }

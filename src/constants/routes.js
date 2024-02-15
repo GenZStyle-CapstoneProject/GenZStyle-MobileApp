@@ -3,6 +3,8 @@ const ROUTES = {
     WELCOME_NAVIGATOR: 'WelcomeNavigator',
     HOME: 'Home',
     HOME_NAVIGATOR: 'HomeNavigator',
+    FOLLOWING: 'Following',
+
     SEARCH: 'Search',
     SEARCH_NAVIGATOR: 'SearchNavigator',
     POST: 'Post',
@@ -31,6 +33,9 @@ const ROUTES = {
     HASHTAGVIEW_NAVIGATOR: 'HashtagViewNavigator',
     SETTINGPACKAGE: 'SettingPackage',
     SETTINGPACKAGE_NAVIGATOR: 'SettingPackageNavigator',
+
+    PACKAGEHISTORY: 'PackageHistory',
+
     CHAT: 'Chat',
     CHAT_NAVIGATOR: 'ChatNavigator',
     REPORTUSER: 'ReportUser',
@@ -39,5 +44,8 @@ const ROUTES = {
     REPORTPOST_NAVIGATOR: 'ReportPostNavigator',
     UPPOST: 'UpPost',
     UPPOST_NAVIGATOR: 'UpPostNavigator',
+
+    CONVERSATIONS: 'ConversationsScreens',
+    MESSAGESSCREEN: 'MessagesScreen',
 }
 export default ROUTES;
