@@ -8,16 +8,25 @@ import FriendScreen from '../../screens/FriendScreen'
 import SettingFriends from '../../screens/Friends/SettingFriends'
 import ROUTES from '../../constants/routes'
 import ReportPost from '../../screens/ReportPost'
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { loadAuthState } from "../../features/userSlice";
+
 const Stack = createNativeStackNavigator()
 const HomeNavigator = () => {
-    const [isAuth, setIsAuth] = useState(false);
-    const fetchData = async () => {
-        // get Data
-    }
-    useEffect(() => {
-        fetchData()
-        console.log('Trang đầu tiên');
-    }, []);
+    // const [isAuth, setIsAuth] = useState(false);
+    // const fetchData = async () => {
+    //     // get Data
+    // }
+    // useEffect(() => {
+    //     fetchData()
+    //     console.log('Trang đầu tiên');
+    // }, []);
+
+  //   const dispatch = useAppDispatch();
+
+  // useEffect(() => {
+  //   dispatch(loadAuthState());
+  // }, [dispatch]);
 
     return (
         <Stack.Navigator>
