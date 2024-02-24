@@ -1,10 +1,10 @@
 const ROUTES = {
     WELCOME: 'Welcome',
     WELCOME_NAVIGATOR: 'WelcomeNavigator',
-    MOREINFO: 'MoreInfo',
-    MOREINFO_NAVIGATOR: 'MoreInfoNavigator',
     HOME: 'Home',
     HOME_NAVIGATOR: 'HomeNavigator',
+    FOLLOWING: 'Following',
+
     SEARCH: 'Search',
     SEARCH_NAVIGATOR: 'SearchNavigator',
     POST: 'Post',
@@ -33,11 +33,19 @@ const ROUTES = {
     HASHTAGVIEW_NAVIGATOR: 'HashtagViewNavigator',
     SETTINGPACKAGE: 'SettingPackage',
     SETTINGPACKAGE_NAVIGATOR: 'SettingPackageNavigator',
+
+    PACKAGEHISTORY: 'PackageHistory',
+
     CHAT: 'Chat',
     CHAT_NAVIGATOR: 'ChatNavigator',
     REPORTUSER: 'ReportUser',
     REPORTUSER_NAVIGATOR: 'ReportUserNavigator',
     REPORTPOST: 'ReportPost',
     REPORTPOST_NAVIGATOR: 'ReportPostNavigator',
+    UPPOST: 'UpPost',
+    UPPOST_NAVIGATOR: 'UpPostNavigator',
+
+    CONVERSATIONS: 'ConversationsScreens',
+    MESSAGESSCREEN: 'MessagesScreen',
 }
 export default ROUTES;

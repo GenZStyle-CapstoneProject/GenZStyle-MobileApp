@@ -60,7 +60,7 @@ const SearchScreen = () => {
                     icon="chat"
                     color="#000"
                     // onPress={() => console.log('Chat button pressed')}
-                    onPress={() => navigation.navigate(ROUTES.CHAT)}
+                    onPress={() => navigation.navigate(ROUTES.CONVERSATIONS)}
                 />
             </View>
             <View style={{ flex: 1 }}>

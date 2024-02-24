@@ -1,30 +1,35 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import axios from 'axios';
 
 const NotificationTab = () => {
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('https://genzstyleappapi20240126141439.azurewebsites.net/odata/Notification');
+                setNotifications(response.data.value);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     return (
         <View style={styles.container}>
-            <View>
-                <Text style={styles.activityText}>
-                    <Text style={styles.boldText}>Huy </Text> đã bình luận bài viết : “Well !”
-                </Text>
-                <View style={styles.hr} />
-            </View>
+            {notifications.map(notification => (
+                <View key={notification.NotificationId}>
+                    <Text style={styles.activityText}>
+                        <Text style={styles.boldText}>{notification.Message} </Text>
 
-            <View>
-                <Text style={styles.activityText}>
-                    <Text style={styles.boldText}>Hùng</Text>  vừa mới đăng bài viết mới hãy cũng vào xem nhé !
-                </Text>
-                <View style={styles.hr} />
-            </View>
-
-            <View>
-                <Text style={styles.activityText}>
-                    <Text style={styles.boldText}> Nguyen Huu Phuc</Text>  đã theo dõi bạn
-                </Text>
-                <View style={styles.hr} />
-            </View>
+                    </Text>
+                    <View style={styles.hr} />
+                </View>
+            ))}
         </View>
     );
 };

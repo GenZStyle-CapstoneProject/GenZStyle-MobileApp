@@ -5,8 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import COLORS from '../constants/colors';
 import { useFonts } from '@use-expo/font';
 import PhoneInput from 'react-native-phone-input';
-import { FontAwesome } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Signup = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -15,17 +13,12 @@ const Signup = ({ navigation }) => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [showPassword1, setShowPassword1] = useState(false);
     const [showPassword2, setShowPassword2] = useState(false);
-    const [email, setEmail] = useState('');
-    const [dob, setDob] = useState('');
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+
     const handleSignup = () => {
         console.log('Username:', username);
         console.log('Phone Number:', phoneNumber);
         console.log('Password:', password);
         console.log('Confirm Password:', password2);
-        console.log('Email:', email);
-        console.log('Date of Birth:', dob);
 
 
         const phoneNumberDigits = phoneNumber.replace(/[^0-9]/g, '');
@@ -42,13 +35,10 @@ const Signup = ({ navigation }) => {
 
         setTimeout(() => {
             alert('Đăng ký thành công!');
-            navigation.navigate('MoreInfo');
         }, 500);
 
 
     };
-
-
     // const [fontsLoaded] = useFonts({
     //     'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
     // });
@@ -56,21 +46,6 @@ const Signup = ({ navigation }) => {
     // useEffect(() => {
     //     console.log('Fonts Loaded:', fontsLoaded);
     // }, [fontsLoaded]);
-
-    const handleDateChange = (event, date) => {
-        if (Platform.OS === 'android') {
-            setShowDatePicker(false);
-        }
-        if (date) {
-            setSelectedDate(date);
-            const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-            setDob(formattedDate);
-        }
-    };
-
-    const showDatepicker = () => {
-        setShowDatePicker(true);
-    };
 
     return (
         <LinearGradient
@@ -120,7 +95,7 @@ const Signup = ({ navigation }) => {
                             }}
                             placeholder="Tên tài khoản"
                             value={username}
-                            onChangeText={(text) => setUsername(text)}
+
                         />
                     </View>
 
@@ -150,39 +125,6 @@ const Signup = ({ navigation }) => {
                                 setPhoneNumber(number);
                             }}
                         />
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, paddingVertical: 10, borderRadius: 50, marginBottom: 12, paddingHorizontal: 10 }}>
-                        <Ionicons name="mail" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
-                        <TextInput
-                            style={{ flex: 1, fontSize: 16 }}
-                            placeholder="Email"
-                            value={email}
-                            onChangeText={(text) => setEmail(text)}
-                        />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, paddingVertical: 10, borderRadius: 50, marginBottom: 12, paddingHorizontal: 10 }}>
-                        <FontAwesome name="birthday-cake" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
-                        <TextInput
-                            style={{ flex: 1, fontSize: 16 }}
-                            placeholder="Ngày sinh"
-                            value={dob}
-                            onChangeText={(text) => setDob(text)}
-                        />
-                        <Pressable onPress={showDatepicker} style={{ flex: 1, alignItems: 'flex-end' }}>
-                            <FontAwesome name="calendar" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
-                        </Pressable>
-                        {showDatePicker && (
-                            <DateTimePicker
-                                testID="dateTimePicker"
-                                value={selectedDate}
-                                mode="date"
-                                is24Hour={true}
-                                display="default"
-                                onChange={handleDateChange}
-                            />
-                        )}
-
                     </View>
 
 

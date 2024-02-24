@@ -1,40 +1,72 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import BottomTabNavigator from '../BottomTabNavigator/BottomTabNavigator'
-import CartDetail from '../../screens/CartDetail'
-import ListLike from '../../components/Home/ListLike'
-import FriendScreen from '../../screens/FriendScreen'
-import SettingFriends from '../../screens/Friends/SettingFriends'
-import ROUTES from '../../constants/routes'
-import ReportPost from '../../screens/ReportPost'
-const Stack = createNativeStackNavigator()
-const HomeNavigator = () => {
-    const [isAuth, setIsAuth] = useState(false);
-    const fetchData = async () => {
-        // get Data
-    }
-    useEffect(() => {
-        fetchData()
-        console.log('Trang đầu tiên');
-    }, []);
+import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import BottomTabNavigator from "../BottomTabNavigator/BottomTabNavigator";
+import CartDetail from "../../screens/CartDetail";
+import ListLike from "../../components/Home/ListLike";
+import FriendScreen from "../../screens/FriendScreen";
+import SettingFriends from "../../screens/Friends/SettingFriends";
+import ROUTES from "../../constants/routes";
+import ReportPost from "../../screens/ReportPost";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { loadAuthState } from "../../features/userSlice";
 
-    return (
-        <Stack.Navigator>
+const Stack = createNativeStackNavigator();
+const HomeNavigator = ({ authenticated }) => {
+  // const [isAuth, setIsAuth] = useState(false);
+  // const fetchData = async () => {
+  //     // get Data
+  // }
+  // useEffect(() => {
+  //     fetchData()
+  //     console.log('Trang đầu tiên');
+  // }, []);
 
-            <Stack.Screen name='nam' component={BottomTabNavigator} options={{ headerShown: false }} />
-            <Stack.Screen name={ROUTES.CARTDETAIL} component={CartDetail} options={{ headerShown: false, }} />
-            <Stack.Screen name={ROUTES.FRIENDS} component={FriendScreen} options={{ headerShown: false, }} />
-            <Stack.Screen name={ROUTES.SETTINGFRIENDS} component={SettingFriends} options={{ headerShown: false, }} />
-            <Stack.Screen name={ROUTES.LISTLIKE} component={ListLike} options={{ headerShown: false, }} />
-            <Stack.Screen name={ROUTES.REPORTPOST} component={ReportPost} options={{ headerShown: false, }} />
-        </Stack.Navigator>
-    )
-}
+  //   const dispatch = useAppDispatch();
 
-export default HomeNavigator
+  // useEffect(() => {
+  //   dispatch(loadAuthState());
+  // }, [dispatch]);
+  console.log(authenticated);
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="nam"
+        children={() => <BottomTabNavigator authenticated={authenticated} />}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.CARTDETAIL}
+        component={CartDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.FRIENDS}
+        component={FriendScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.SETTINGFRIENDS}
+        component={SettingFriends}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.LISTLIKE}
+        component={ListLike}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.REPORTPOST}
+        component={ReportPost}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default HomeNavigator;
+
+const styles = StyleSheet.create({});
 // import React from 'react';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import AuthTabNavigator from './AuthTabNavigator';

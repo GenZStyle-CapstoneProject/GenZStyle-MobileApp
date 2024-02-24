@@ -1,57 +1,92 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Cart = ({ item }) => {
+
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     const [isLiked, setIsLiked] = useState(false);
+
     const handleLikePress = () => {
         setIsLiked(!isLiked);
     };
     const navigateToListLike = () => {
-        // Navigate to ListLikeScreen when the heart icon or the number is clicked
         navigation.navigate('ListLike');
     };
 
+    const fetchAllPosts = async () => {
+        try {
+            const response = await axios.get('https://genzstyleappapi20240126141439.azurewebsites.net/odata/Posts/Active/Post');
+            console.log('Axios Response:', response.data);
+
+            if (Array.isArray(response.data)) {
+                setPosts(response.data);
+            } else if (Array.isArray(response.data.value)) {
+                setPosts(response.data.value);
+            } else {
+                console.error('Invalid response format. Expected an array.');
+            }
+
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            console.error('Error details:', error.response?.data);
+        }
+    };
+
+
+
+    useEffect(() => {
+        fetchAllPosts();
+    }, []);
+
     return (
-        <View style={styles.postContainer}>
-            <Image source={{ uri: item.image }} style={styles.postImage} />
-            <View style={styles.postFooter}>
-
-                <View style={styles.iconContainer}>
-                    <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
-                        <Icon
-                            name={isLiked ? 'heart' : 'heart-outline'}
-                            size={24}
-                            color={isLiked ? 'red' : 'black'}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
-
-                        <Text style={styles.iconText}>(10)</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.icon}>
-                        <Icon name="chat-outline" size={24} color="black" />
-                        <Text style={styles.iconText}></Text>
-                    </TouchableOpacity>
-
-
+        <View>
+            {loading ? (
+                <ActivityIndicator size="large" color="black" />
+            ) : (
+                <View>
+                    {posts.map((post) => (
+                        <View key={post.id} style={styles.postContainer}>
+                            <Image source={{ uri: post.image }} style={styles.postImage} />
+                            <View style={styles.postFooter}>
+                                <View style={styles.iconContainer}>
+                                    <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
+                                        <Icon
+                                            name={isLiked ? 'heart' : 'heart-outline'}
+                                            size={24}
+                                            color={isLiked ? 'red' : 'black'}
+                                        />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
+                                        <Text style={styles.iconText}>24</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.icon}>
+                                        <Icon name="chat-outline" size={24} color="black" />
+                                        <Text style={styles.iconText}></Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <View style={styles.textRow}>
+                                        <Text style={styles.titleText}>
+                                            {post.content}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.textRow}>
+                                        <Text style={styles.hashtagText}>{post.hashtag}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    ))}
                 </View>
-                <View style={styles.textContainer}>
-                    <View style={styles.textRow}>
-                        <Text style={styles.titleText}>Denisa  Elena Aboaice</Text>
-                    </View>
-                    <View style={styles.textRow}>
-                        <Text style={styles.hashtagText}>{item.hashtag}</Text>
-                    </View>
-                </View>
-
-
-            </View>
+            )}
         </View>
     );
-
 };
 
 const styles = StyleSheet.create({
@@ -114,7 +149,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
 
-
-
 });
+
 export default Cart;

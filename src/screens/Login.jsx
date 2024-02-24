@@ -4,14 +4,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import COLORS from '../constants/colors';
 import { useFonts } from '@use-expo/font';
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import Spinner from "react-native-loading-spinner-overlay";
+import { login } from "../features/userSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        navigation.navigate("HomeScreen");
-    };
+    // const handleLogin = () => {
+    //     navigation.navigate("HomeScreen");
+    // };
     // const [fontsLoaded] = useFonts({
     //     'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
     // });
@@ -19,6 +21,31 @@ const Login = ({ navigation }) => {
     // useEffect(() => {
     //     console.log('Fonts Loaded:', fontsLoaded);
     // }, [fontsLoaded]);
+    const dispatch = useAppDispatch();
+
+
+    const isLoading = useAppSelector((state) => state.product.loading);
+
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const handleLogin = async () => {
+        console.log("username: " + username, "password: " + password);
+        await dispatch(login({ userName: username, passwordHash: password })).then(
+            (res) => {
+                console.log(JSON.stringify(res, null, 2));
+            }
+        );
+    };
+    const getAccessToken = async () => {
+        const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+        console.log("AccessToken: " + "<< " + accessToken + " >>");
+    };
+
+    useEffect(() => {
+        getAccessToken();
+    }, [getAccessToken]);
+
 
     return (
         <LinearGradient
@@ -27,6 +54,7 @@ const Login = ({ navigation }) => {
             }}
             colors={[COLORS.white, COLORS.secondary]}
         >
+            <Spinner visible={isLoading} />
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <View>
                     <Text

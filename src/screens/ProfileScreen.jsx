@@ -2,15 +2,16 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import HeaderProfile from '../components/Profile/HeaderProfile';
 import ProfileTab from '../components/Profile/ProfileTab';
-
+import { useSelector } from 'react-redux';
 const ProfileScreen = () => {
+    const userInfo = useSelector((state) => state.user.userInfo);
 
 
     return (
         <View style={styles.container}>
-            <HeaderProfile />
+            <HeaderProfile userInfo={userInfo} />
             <View style={styles.hr} />
-            <ProfileTab />
+            <ProfileTab userInfo={userInfo} />
 
         </View>
     );

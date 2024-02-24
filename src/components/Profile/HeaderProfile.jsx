@@ -1,24 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-const HeaderProfile = () => {
+
+
+const HeaderProfile = ({ userInfo }) => {
     const navigation = useNavigation();
+
     const handleSetting = () => {
-        // Chuyển đến trang Setting khi người dùng nhấn vào icon Setting
         navigation.navigate('Setting');
     };
-    const handleFollowers = () => {
 
+    const handleFollowers = () => {
         navigation.navigate('ListFollow', { screen: 'Người theo dõi' });
     };
 
     const handleFollowing = () => {
-
         navigation.navigate('ListFollow', { screen: 'Đang theo dõi' });
     };
+
     return (
         <View style={styles.header}>
+            {/* Rest of your component code */}
             <View style={styles.iconContainer}>
                 <TouchableOpacity>
                     <Ionicons name="chatbox-ellipses-outline" size={24} color="black" style={styles.icon} />
@@ -30,7 +33,6 @@ const HeaderProfile = () => {
                     <Ionicons name="settings-outline" size={24} color="black" style={styles.icon} />
                 </TouchableOpacity>
             </View>
-
             <View style={styles.topRow}>
                 <View style={styles.avatarContainer}>
                     <Image
@@ -39,33 +41,33 @@ const HeaderProfile = () => {
                     />
                 </View>
                 <View style={styles.userInfo}>
-                    <Text style={styles.username}>Thanh Phu</Text>
-                    <Text style={styles.account}>@phungu</Text>
+                    <Text style={styles.username}>{userInfo.fullName}</Text>
+                    <Text style={styles.account}>{userInfo.email}</Text>
+                    <Text style={styles.account}>{userInfo.accountId}</Text>
                 </View>
             </View>
-            <Text style={styles.bioContent}>Just do it</Text>
-
+            <Text style={styles.bioContent}>Just do it </Text>
 
             <View style={styles.bioContainer}>
                 <View style={styles.bioColumn}>
                     <TouchableOpacity onPress={handleFollowers}>
-                        <Text style={styles.bioCount}>200</Text>
+                        <Text style={styles.bioCount}>222</Text>
                         <Text style={styles.bioText}>Người theo dõi</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.bioColumn}>
                     <TouchableOpacity onPress={handleFollowing}>
-                        <Text style={styles.bioCount}>1200</Text>
+                        <Text style={styles.bioCount}>222</Text>
                         <Text style={styles.bioText}>Đang theo dõi</Text>
                     </TouchableOpacity>
                 </View>
-                {/* <TouchableOpacity style={styles.addBioButton}>
-                    <Text style={styles.addBioButtonText}>Thêm tiểu sử</Text>
-                </TouchableOpacity> */}
             </View>
+            {/* Rest of your component code */}
         </View>
     );
 };
+
+
 
 const styles = StyleSheet.create({
     header: {

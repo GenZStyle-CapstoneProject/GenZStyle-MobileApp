@@ -6,6 +6,8 @@ import SearchScreen from '../../../screens/SearchScreen'
 import HashtagView from '../../../screens/Search/HashtagView'
 import Chat from '../../../screens/Search/Chat'
 import ReportUser from '../../../screens/Friends/ReportUser'
+import MessagesScreen from '../../../screens/MessagesScreen'
+import ConversationsScreen from '../../../screens/ConversationsScreen'
 
 const Stack = createNativeStackNavigator()
 const SearchNavigator = () => {
@@ -13,7 +15,9 @@ const SearchNavigator = () => {
     <Stack.Navigator initialRouteName={ROUTES.SEARCH}>
       <Stack.Screen name={ROUTES.SEARCH} component={SearchScreen} options={{ headerShown: false, }} />
       <Stack.Screen name={ROUTES.HASHTAGVIEW} component={HashtagView} options={{ headerShown: false, }} />
-      <Stack.Screen name={ROUTES.CHAT} component={Chat} options={{ headerShown: false, }} />
+      {/* <Stack.Screen name={ROUTES.CHAT} component={Chat} options={{ headerShown: false, }} /> */}
+      <Stack.Screen name={ROUTES.CONVERSATIONS} component={ConversationsScreen} options={{ headerShown: false, }} />
+      <Stack.Screen name={ROUTES.MESSAGESSCREEN} component={MessagesScreen} options={{ headerShown: false, }} />
       <Stack.Screen name={ROUTES.REPORTUSER} component={ReportUser} options={{ headerShown: false, }} />
     </Stack.Navigator>
   )
