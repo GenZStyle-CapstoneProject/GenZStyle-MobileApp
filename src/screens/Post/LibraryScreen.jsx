@@ -47,7 +47,7 @@ const LibraryScreen = () => {
       navigation.navigate(ROUTES.UPPOST, { selectedImage });
     }
   };
-
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>

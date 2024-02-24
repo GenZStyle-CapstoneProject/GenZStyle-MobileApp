@@ -7,6 +7,8 @@ const initialState = {
   userInfo: null,
   accessToken: "",
   authenticated: false,
+  isExitIntro: false,
+  loadingIntro: false,
 };
 export const login = createAsyncThunk(
   "user/login",
@@ -43,6 +45,36 @@ export const loadAuthState = createAsyncThunk(
     try {
       const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
       if (accessToken) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const setExitIntro = createAsyncThunk(
+  "user/setExitIntro",
+  async (_, { rejectWithValue }) => {
+    try {
+      await AsyncStorage.setItem("Intro", "ádljalsdlkajslkd");
+
+      return true;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const checkExitIntro = createAsyncThunk(
+  "user/checkExitIntro",
+  async (_, { rejectWithValue }) => {
+    try {
+      const data = await AsyncStorage.getItem("Intro");
+      if (data) {
         return true;
       }
       return false;
@@ -92,6 +124,27 @@ export const userSlice = createSlice({
       })
       .addCase(loadAuthState.rejected, (state, action) => {
         state.loading = false;
+      })
+
+      .addCase(setExitIntro.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(setExitIntro.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isExitIntro = action.payload;
+      })
+      .addCase(setExitIntro.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(checkExitIntro.pending, (state, action) => {
+        state.loadingIntro = true;
+      })
+      .addCase(checkExitIntro.fulfilled, (state, action) => {
+        state.loadingIntro = false;
+        state.isExitIntro = action.payload;
+      })
+      .addCase(checkExitIntro.rejected, (state, action) => {
+        state.loadingIntro = false;
       });
   },
 });
