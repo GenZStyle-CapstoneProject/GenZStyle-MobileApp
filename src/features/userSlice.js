@@ -5,10 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialState = {
   userInfo: null,
+  profile: null,
   accessToken: "",
   authenticated: false,
   isExitIntro: false,
   loadingIntro: false,
+  accountId: "", // Add accountId to the initial state
 };
 export const login = createAsyncThunk(
   "user/login",
@@ -85,6 +87,36 @@ export const checkExitIntro = createAsyncThunk(
   }
 );
 
+export const getProfile = createAsyncThunk(
+  "user/getProfile",
+  async (key, { rejectWithValue }) => {
+    try {
+      const response = await userService.getProfile(key);
+      console.log("<UserSlice - updateProfile>: " + response?.data);
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk(
+  "user/updateProfile",
+  async ({ userId, updatedProfile }, { rejectWithValue }) => {
+    try {
+      const response = await userService.updateProfile(userId, updatedProfile);
+      console.log("<UserSlice - updateProfile>: " + response?.data);
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -99,6 +131,7 @@ export const userSlice = createSlice({
         state.userInfo = action.payload;
         state.loading = false;
         state.authenticated = true;
+        state.accountId = action.payload.accountId; // Assuming accountId is a property in the user data
         // Save userInfo to AsyncStorage
         AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
       })
@@ -110,9 +143,11 @@ export const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(logout.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
+        state.userInfo = null;
+        state.profile = null;
         state.loading = false;
         state.authenticated = false;
+        state.accountId = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.loading = false;
@@ -153,6 +188,28 @@ export const userSlice = createSlice({
       })
       .addCase(checkExitIntro.rejected, (state, action) => {
         state.loadingIntro = false;
+      })
+      .addCase(getProfile.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getProfile.fulfilled, (state, action) => {
+        state.profile = action.payload;
+        state.loading = false;
+      })
+      .addCase(getProfile.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(updateProfile.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
+        state.profile = action.payload;
+        state.loading = false;
+        state.accountId = action.payload.accountId; // Assuming accountId is a property in the user data
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
       });
   },
 });

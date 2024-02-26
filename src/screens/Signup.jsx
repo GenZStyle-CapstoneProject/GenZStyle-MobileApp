@@ -5,40 +5,73 @@ import { Ionicons } from '@expo/vector-icons';
 import COLORS from '../constants/colors';
 import { useFonts } from '@use-expo/font';
 import PhoneInput from 'react-native-phone-input';
+import { FontAwesome } from '@expo/vector-icons';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
 const Signup = ({ navigation }) => {
     const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [passwordHash, setPasswordHash] = useState('');
     const [password2, setPassword2] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phone, setPhone] = useState('');
     const [showPassword1, setShowPassword1] = useState(false);
-    const [showPassword2, setShowPassword2] = useState(false);
-
-    const handleSignup = () => {
-        console.log('Username:', username);
-        console.log('Phone Number:', phoneNumber);
-        console.log('Password:', password);
-        console.log('Confirm Password:', password2);
+    // const [showPassword2, setShowPassword2] = useState(false);
+    const [email, setEmail] = useState('');
+    const [dob, setDob] = useState('');
+    // const [showDatePicker, setShowDatePicker] = useState(false);
+    // const [selectedDate, setSelectedDate] = useState(new Date());
 
 
-        const phoneNumberDigits = phoneNumber.replace(/[^0-9]/g, '');
-        if (phoneNumberDigits.length !== 11) {
-            alert('Số điện thoại phải có đúng 11 chữ số');
-            return;
+    const handleSignup = async () => {
+        try {
+            const phoneDigits = phone.replace(/[^0-9]/g, '');
+            if (phoneDigits.length !== 11) {
+                alert('Số điện thoại phải có đúng 11 chữ số');
+                return;
+            }
+
+            if (!username || !phone || !passwordHash || !email || !dob) {
+                alert('Vui lòng điền đầy đủ thông tin');
+                return;
+            }
+
+            const data = {
+                UserName: username,
+                PasswordHash: passwordHash,
+                Phone: phone,
+                Email: email,
+                Dob: dob,
+            };
+
+            const response = await axios.post('https://genzstyleappapi20240126141439.azurewebsites.net/api/Users/Post/odata/Users/Register', data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers if needed
+                },
+            });
+
+            if (response.status === 200) {
+                alert('Đăng ký thành công!');
+                navigation.navigate('MoreInfo');
+            } else {
+                alert('Đăng ký không thành công. Vui lòng thử lại.');
+            }
+        } catch (error) {
+            console.error('Error during signup:', error);
+            if (error.response) {
+                console.error('Server responded with:', error.response.data);
+                console.error('Status code:', error.response.status);
+                alert('Server responded with an error. Please check the console for details.');
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+                alert('No response received from the server. Please check your network connection.');
+            } else {
+                console.error('Error setting up the request:', error.message);
+                alert('An error occurred during the request setup. Please check the console for details.');
+            }
         }
-
-        if (!username || !phoneNumber || !password || !password2) {
-            alert('Vui lòng điền đầy đủ thông tin');
-            return;
-        }
-
-
-        setTimeout(() => {
-            alert('Đăng ký thành công!');
-        }, 500);
-
-
     };
+
     // const [fontsLoaded] = useFonts({
     //     'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
     // });
@@ -46,6 +79,21 @@ const Signup = ({ navigation }) => {
     // useEffect(() => {
     //     console.log('Fonts Loaded:', fontsLoaded);
     // }, [fontsLoaded]);
+
+    // const handleDateChange = (event, date) => {
+    //     if (Platform.OS === 'android') {
+    //         setShowDatePicker(false);
+    //     }
+    //     if (date) {
+    //         setSelectedDate(date);
+    //         const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    //         setDob(formattedDate);
+    //     }
+    // };
+
+    // const showDatepicker = () => {
+    //     setShowDatePicker(true);
+    // };
 
     return (
         <LinearGradient
@@ -60,7 +108,7 @@ const Signup = ({ navigation }) => {
                         style={{
                             fontSize: 50,
                             color: COLORS.black,
-                            // fontFamily: 'AmitaRegular',
+                            fontFamily: 'AmitaRegular',
                         }}
                     >
                         StyleGenZ
@@ -95,7 +143,8 @@ const Signup = ({ navigation }) => {
                             }}
                             placeholder="Tên tài khoản"
                             value={username}
-
+                            onChangeText={(text) => setUsername(text)}
+                            required={true}
                         />
                     </View>
 
@@ -119,12 +168,48 @@ const Signup = ({ navigation }) => {
                             }}
                             textStyle={{ fontSize: 16 }}
                             initialCountry="vn"
-                            value={phoneNumber}
+                            value={phone}
                             onChangePhoneNumber={(number) => {
                                 console.log('Phone Number Changed:', number);
-                                setPhoneNumber(number);
+                                setPhone(number);
                             }}
+                            required={true}
                         />
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, paddingVertical: 10, borderRadius: 50, marginBottom: 12, paddingHorizontal: 10 }}>
+                        <Ionicons name="mail" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
+                        <TextInput
+                            style={{ flex: 1, fontSize: 16 }}
+                            placeholder="Email"
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}
+                            required={true}
+                        />
+                    </View>
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, paddingVertical: 10, borderRadius: 50, marginBottom: 12, paddingHorizontal: 10 }}>
+                        <FontAwesome name="birthday-cake" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
+                        <TextInput
+                            style={{ flex: 1, fontSize: 16 }}
+                            placeholder="Ngày sinh"
+                            value={dob}
+                            onChangeText={(text) => setDob(text)}
+                            required={true}
+                        />
+                        {/* <Pressable onPress={showDatepicker} style={{ flex: 1, alignItems: 'flex-end' }}>
+                            <FontAwesome name="calendar" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
+                        </Pressable>
+                        {showDatePicker && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={selectedDate}
+                                mode="date"
+                                is24Hour={true}
+                                display="default"
+                                onChange={handleDateChange}
+                            />
+                        )} */}
+
                     </View>
 
 
@@ -148,8 +233,9 @@ const Signup = ({ navigation }) => {
                             }}
                             placeholder="Mật khẩu"
                             secureTextEntry={!showPassword1}
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
+                            value={passwordHash}
+                            onChangeText={(text) => setPasswordHash(text)}
+                            required={true}
                         />
                         <Pressable
                             onPress={() => setShowPassword1(!showPassword1)}
@@ -160,7 +246,7 @@ const Signup = ({ navigation }) => {
                     </View>
 
                     {/* Ô nhập lại mật khẩu */}
-                    <View
+                    {/* <View
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -188,7 +274,7 @@ const Signup = ({ navigation }) => {
                         >
                             <Ionicons name={showPassword2 ? 'eye-off' : 'eye'} size={24} color={COLORS.grey} />
                         </Pressable>
-                    </View>
+                    </View> */}
 
                     {/* Nút Đăng ký */}
                     <Pressable

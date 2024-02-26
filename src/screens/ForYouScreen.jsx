@@ -77,8 +77,7 @@ const ForYouScreen = () => {
 
             {/* Phần Bộ lọc và Sắp xếp */}
             <View style={styles.filterSortContainer}>
-                {/* Thêm các thành phần bộ lọc và sắp xếp tại đây */}
-                {/* Ví dụ: Nút Bộ lọc và Nút Sắp xếp */}
+
                 <TouchableOpacity style={styles.filterButton}>
                     <Text style={styles.buttonText}>Bộ lọc(19)</Text>
                 </TouchableOpacity>
@@ -92,7 +91,7 @@ const ForYouScreen = () => {
 
             <View style={styles.bottomHorizontalLine} />
 
-            <ScrollView
+            {/* <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.postContainerScrollView}
@@ -105,7 +104,7 @@ const ForYouScreen = () => {
                     </TouchableOpacity>}
                     numColumns={2}
                 />
-            </ScrollView>
+            </ScrollView> */}
 
 
 
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         alignSelf: 'center',
-        // marginTop: 10,
+
         alignSelf: 'flex-start',
     },
     categoryButtonText: {

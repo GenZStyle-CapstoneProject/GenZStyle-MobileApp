@@ -1,18 +1,30 @@
-import React from "react";
+import React, { userState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ROUTES from "../../constants/routes";
 import { useAppDispatch } from "../../app/hooks";
 import { logout } from "../../features/userSlice";
 const SettingScreen = () => {
+  const route = useRoute();
+
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+  const userInfo = route.params?.userInfo;
+
+
   const handleEditProfile = () => {
     // Chuyển đến trang UpdateProfileScreen
-    navigation.navigate("UpdateProfile");
+    console.log("userInfo before navigating:", userInfo);
+
+    navigation.navigate('UpdateProfile', { userInfo });
+
   };
 
+
+  useEffect(() => {
+    console.log("userInfo in SettingScreen: ", userInfo);
+  }, [userInfo]);
   const navigateToSettingPackage = () => {
     // Chuyển đến màn hình mong muốn khi TouchableOpacity được nhấn
     navigation.navigate(ROUTES.SETTINGPACKAGE);
@@ -22,26 +34,26 @@ const SettingScreen = () => {
     navigation.navigate(ROUTES.PACKAGEHISTORY);
   };
 
-  // const handleLogout = async () => {
-  //   await dispatch(logout());
-  //   navigation.navigate('Login');
-  // };
-
   const handleLogout = async () => {
-    try {
-      const result = await dispatch(logout());
-      console.log('Logout result:', result);
-
-
-      if (result === true) {
-        navigation.navigate('Login');
-      } else {
-        console.error('Logout failed:', result);
-      }
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
+    await dispatch(logout());
+    navigation.navigate('Login');
   };
+
+  // const handleLogout = async () => {
+  //   try {
+  //     const result = await dispatch(logout());
+  //     console.log('Logout result:', result);
+
+
+  //     if (result === true) {
+  //       navigation.navigate('Login');
+  //     } else {
+  //       console.error('Logout failed:', result);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during logout:', error);
+  //   }
+  // };
 
 
   return (

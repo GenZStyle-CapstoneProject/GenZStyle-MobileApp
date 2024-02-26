@@ -1,35 +1,50 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import HeaderProfile from '../components/Profile/HeaderProfile';
-import ProfileTab from '../components/Profile/ProfileTab';
-import { useSelector } from 'react-redux';
+
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
+import HeaderProfile from "../components/Profile/HeaderProfile";
+import ProfileTab from "../components/Profile/ProfileTab";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../app/hooks";
+import { getProfile } from "../features/userSlice";
+
 const ProfileScreen = () => {
-    const userInfo = useSelector((state) => state.user.userInfo);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [username, setUsername] = useState(null);
+  const accountId = useSelector((state) => state.user.accountId);
+  const profile = useSelector((state) => state.user.profile);
 
 
-    return (
-        <View style={styles.container}>
-            <HeaderProfile userInfo={userInfo} />
-            <View style={styles.hr} />
-            <ProfileTab userInfo={userInfo} />
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(getProfile(accountId ?? null)).then((res) => {
+        console.log(JSON.stringify(res, null, 2));
+      });
+    };
+    fetchData();
+  }, [accountId]);
 
-        </View>
-    );
+  console.log("object");
+  return (
+    <View style={styles.container}>
+      <HeaderProfile userInfo={userData} username={username} profile={profile} />
+      <View style={styles.hr} />
+      <ProfileTab userData={userData} />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white',
-    },
-    hr: {
-        borderBottomColor: 'lightgray',
-        borderBottomWidth: 1,
-        marginTop: 20,
-
-    },
-
-
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  hr: {
+    borderBottomColor: "lightgray",
+    borderBottomWidth: 1,
+    marginTop: 20,
+  },
 });
 
 export default ProfileScreen;

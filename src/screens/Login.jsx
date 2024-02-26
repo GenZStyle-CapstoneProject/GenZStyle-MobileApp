@@ -29,13 +29,25 @@ const Login = ({ navigation }) => {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+
     const handleLogin = async () => {
-        console.log("username: " + username, "password: " + password);
-        await dispatch(login({ userName: username, passwordHash: password })).then(
-            (res) => {
-                console.log(JSON.stringify(res, null, 2));
-            }
-        );
+        try {
+            console.log("username: " + username, "password: " + password);
+            await dispatch(login({ userName: username, passwordHash: password })).then(
+                (res) => {
+                    console.log(JSON.stringify(res.meta.requestStatus, null, 2));
+                    if (res?.meta?.requestStatus === "fulfilled") {
+                        alert("Dang nhap thanh cong")
+                    } else {
+                        alert("Dang nhap that bai")
+
+                    }
+                }
+            );
+        } catch (error) {
+            console.log(error);
+        }
     };
     const getAccessToken = async () => {
         const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");

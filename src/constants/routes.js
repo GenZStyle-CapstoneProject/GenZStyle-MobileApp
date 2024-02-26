@@ -33,7 +33,8 @@ const ROUTES = {
     HASHTAGVIEW_NAVIGATOR: 'HashtagViewNavigator',
     SETTINGPACKAGE: 'SettingPackage',
     SETTINGPACKAGE_NAVIGATOR: 'SettingPackageNavigator',
-
+    MOREINFO: 'MoreInfo',
+    MOREINFO_NAVIGATOR: 'MoreInfoNavigator',
     PACKAGEHISTORY: 'PackageHistory',
 
     CHAT: 'Chat',
