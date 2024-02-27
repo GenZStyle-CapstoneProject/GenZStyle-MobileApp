@@ -22,11 +22,11 @@ export const productSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllProduct.pending, (state, action) => {})
+      .addCase(getAllProduct.pending, (state, action) => { })
       .addCase(getAllProduct.fulfilled, (state, action) => {
         state.list = action.payload;
       })
-      .addCase(getAllProduct.rejected, (state, action) => {});
+      .addCase(getAllProduct.rejected, (state, action) => { });
   },
 });
 export default productSlice.reducer;

@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { productService } from "../services/productService";
 import { userService } from "../services/userSevice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const initialState = {
   userInfo: null,
   profile: null,
@@ -10,7 +9,7 @@ const initialState = {
   authenticated: false,
   isExitIntro: false,
   loadingIntro: false,
-  accountId: "", // Add accountId to the initial state
+  accountId: "",
 };
 export const login = createAsyncThunk(
   "user/login",
@@ -102,11 +101,13 @@ export const getProfile = createAsyncThunk(
   }
 );
 
+
+
 export const updateProfile = createAsyncThunk(
   "user/updateProfile",
-  async ({ userId, updatedProfile }, { rejectWithValue }) => {
+  async ({ key, City, Address, Height, Phone, Gender, Dob }, { rejectWithValue }) => {
     try {
-      const response = await userService.updateProfile(userId, updatedProfile);
+      const response = await userService.updateProfile(key, City, Address, Height, Phone, Gender, Dob);
       console.log("<UserSlice - updateProfile>: " + response?.data);
 
       return response.data;
@@ -116,6 +117,7 @@ export const updateProfile = createAsyncThunk(
     }
   }
 );
+
 
 export const userSlice = createSlice({
   name: "user",
@@ -202,15 +204,65 @@ export const userSlice = createSlice({
       .addCase(updateProfile.pending, (state, action) => {
         state.loading = true;
       })
+      // .addCase(updateProfile.fulfilled, (state, action) => {
+      //   state.userInfo = action.payload;
+      //   state.profile = action.payload;
+      //   state.loading = false;
+      //   state.accountId = action.payload.accountId;
+
+      //   console.log("Cập nhật thông tin người dùng thành công");
+
+      //   // Assuming you want to navigate to 'Profile' after successful update
+      //   // navigation.navigate(ROUTES.PROFILE);
+      //   // Save userInfo to AsyncStorage
+      //   AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
+      // })
+      // .addCase(updateProfile.fulfilled, async (state, action) => {
+      //   try {
+      //     if (action.payload) {
+      //       // Return a new state object
+      //       return {
+      //         ...state,
+      //         userInfo: action.payload,
+      //         profile: action.payload,
+      //         loading: false,
+      //         accountId: action.payload.accountId,
+      //       };
+      //     }
+      //   } catch (error) {
+      //     console.error("Error updating profile:", error);
+      //   }
+      // })
       .addCase(updateProfile.fulfilled, (state, action) => {
-        state.userInfo = action.payload;
-        state.profile = action.payload;
-        state.loading = false;
-        state.accountId = action.payload.accountId; // Assuming accountId is a property in the user data
+        if (action.payload && action.payload.data) {
+          // Assuming that the data structure is nested under 'data' property
+          const updatedProfileData = action.payload.data;
+
+          // Update the state to indicate that the profile has been updated
+          // state.userInfo = updatedProfileData;
+          state.profile = updatedProfileData;
+          state.loading = false;
+          state.accountId = updatedProfileData.accountId;
+          state.userProfile = action.payload;
+        } else {
+          console.error('Invalid or missing payload structure:', action.payload);
+        }
       })
+
+
+
       .addCase(updateProfile.rejected, (state, action) => {
         state.loading = false;
-      });
+
+        // Check if action has an error property before accessing its message
+        const errorMessage = action.error ? action.error.message : 'Unknown error';
+
+        console.error("Cập nhật thông tin người dùng thất bại:", errorMessage);
+      })
   },
 });
 export default userSlice.reducer;
+
+
+
+

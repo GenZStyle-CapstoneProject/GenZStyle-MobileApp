@@ -4,7 +4,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const HeaderProfile = ({ userInfo, username, profile }) => {
+const HeaderProfile = ({ userInfo, profile }) => {
 
   const navigation = useNavigation();
 
