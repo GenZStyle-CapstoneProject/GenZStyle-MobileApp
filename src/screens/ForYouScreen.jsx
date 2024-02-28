@@ -91,7 +91,7 @@ const ForYouScreen = () => {
 
             <View style={styles.bottomHorizontalLine} />
 
-            <ScrollView
+            {/* <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.postContainerScrollView}
@@ -104,7 +104,7 @@ const ForYouScreen = () => {
                     </TouchableOpacity>}
                     numColumns={2}
                 />
-            </ScrollView>
+            </ScrollView> */}
 
 
 

@@ -90,8 +90,10 @@ export const getProfile = createAsyncThunk(
   "user/getProfile",
   async (key, { rejectWithValue }) => {
     try {
-      const response = await userService.getProfile(key);
-      console.log("<UserSlice - updateProfile>: " + response?.data);
+      // const response = await userService.getProfile(key);
+      const response = await userService.getProfile(key || '');
+
+      console.log("<UserSlice - getProfile>: " + response?.data);
 
       return response.data;
     } catch (error) {
@@ -103,17 +105,43 @@ export const getProfile = createAsyncThunk(
 
 
 
+// export const updateProfile = createAsyncThunk(
+//   "user/updateProfile",
+//   async ({ key, City, Address, Height, Phone, Gender, Dob }, { rejectWithValue }) => {
+//     try {
+//       const response = await userService.updateProfile(key, City, Address, Height, Phone, Gender, Dob);
+//       console.log("<UserSlice - updateProfile>: " + response?.data);
+
+//       return response.data;
+//     } catch (error) {
+//       console.log(error);
+//       return rejectWithValue(error.response?.data);
+//     }
+//   }
+// );
 export const updateProfile = createAsyncThunk(
-  "user/updateProfile",
-  async ({ key, City, Address, Height, Phone, Gender, Dob }, { rejectWithValue }) => {
+  'user/updateProfile',
+  async ({ key, City, Address, Height, Phone, Gender, Dob }, { rejectWithValue, dispatch }) => {
     try {
       const response = await userService.updateProfile(key, City, Address, Height, Phone, Gender, Dob);
-      console.log("<UserSlice - updateProfile>: " + response?.data);
+      console.log('<UserSlice - updateProfile>: ' + response?.data);
+
+      // After successfully updating, dispatch getProfile to fetch the updated profile
+      // Make sure to pass the correct key, which should be the accountId or the identifier needed
+      console.log('Before dispatching getProfile');
+      await dispatch(getProfile(key));
+      console.log('After dispatching getProfile');
 
       return response.data;
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(error.response?.data);
+      console.error('Error in updateProfile:', error);
+
+      if (error.response?.status === 400) {
+        // Handle validation errors
+        return rejectWithValue(error.response?.data.errors);
+      } else {
+        return rejectWithValue(error.response?.data);
+      }
     }
   }
 );
@@ -197,26 +225,28 @@ export const userSlice = createSlice({
       .addCase(getProfile.fulfilled, (state, action) => {
         state.profile = action.payload;
         state.loading = false;
+        // state.userInfo = action.payload;
+        // state.accountId = action.payload.accountId;
       })
       .addCase(getProfile.rejected, (state, action) => {
         state.loading = false;
+
       })
       .addCase(updateProfile.pending, (state, action) => {
         state.loading = true;
       })
-      // .addCase(updateProfile.fulfilled, (state, action) => {
-      //   state.userInfo = action.payload;
-      //   state.profile = action.payload;
-      //   state.loading = false;
-      //   state.accountId = action.payload.accountId;
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
+        state.profile = action.payload;
+        state.loading = false;
+        state.accountId = action.payload.accountId;
 
-      //   console.log("Cập nhật thông tin người dùng thành công");
+        console.log("Cập nhật thông tin người dùng thành công");
 
-      //   // Assuming you want to navigate to 'Profile' after successful update
-      //   // navigation.navigate(ROUTES.PROFILE);
-      //   // Save userInfo to AsyncStorage
-      //   AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
-      // })
+
+        // Save userInfo to AsyncStorage
+        AsyncStorage.setItem("PROFILE", JSON.stringify(action.payload));
+      })
       // .addCase(updateProfile.fulfilled, async (state, action) => {
       //   try {
       //     if (action.payload) {
@@ -233,21 +263,21 @@ export const userSlice = createSlice({
       //     console.error("Error updating profile:", error);
       //   }
       // })
-      .addCase(updateProfile.fulfilled, (state, action) => {
-        if (action.payload && action.payload.data) {
-          // Assuming that the data structure is nested under 'data' property
-          const updatedProfileData = action.payload.data;
+      // .addCase(updateProfile.fulfilled, (state, action) => {
+      //   if (action.payload && action.payload.data) {
+      //     // Assuming that the data structure is nested under 'data' property
+      //     const updatedProfileData = action.payload.data;
 
-          // Update the state to indicate that the profile has been updated
-          // state.userInfo = updatedProfileData;
-          state.profile = updatedProfileData;
-          state.loading = false;
-          state.accountId = updatedProfileData.accountId;
-          state.userProfile = action.payload;
-        } else {
-          console.error('Invalid or missing payload structure:', action.payload);
-        }
-      })
+      //     // Update the state to indicate that the profile has been updated
+      //     state.userInfo = updatedProfileData;
+      //     state.profile = updatedProfileData;
+      //     state.loading = false;
+      //     state.accountId = updatedProfileData.accountId;
+      //     state.userProfile = action.payload;
+      //   } else {
+      //     console.error('Invalid or missing payload structure:', action.payload);
+      //   }
+      // })
 
 
 

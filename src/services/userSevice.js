@@ -30,6 +30,14 @@ export const userService = {
       },
     };
 
-    return axiosClient.put(url, formData, config);
+    return axiosClient.put(url, formData, config)
+      .then((response) => {
+        // Xử lý response nếu cần
+        return response.data;
+      })
+      .catch((error) => {
+        // Xử lý lỗi nếu cần
+        throw error;
+      });
   },
 };

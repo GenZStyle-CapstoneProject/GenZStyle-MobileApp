@@ -460,7 +460,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useSelector } from "react-redux";
 
 import { useAppDispatch } from "../../app/hooks";
-import { updateProfile } from '../../features/userSlice';
+import { updateProfile, getProfile } from '../../features/userSlice';
 const UpdateProfileScreen = () => {
     const dispatch = useAppDispatch();
     const userProfile = useSelector((state) => state.user.profile);
@@ -513,7 +513,57 @@ const UpdateProfileScreen = () => {
 
 
 
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     const { City, Address, Height, Phone, Gender, Dob } = formData;
+
+    //     // Log the userProfile for debugging
+    //     console.log('userProfile:', userProfile);
+
+    //     // Check if userProfile, data, accounts, and the first account exist before accessing accountId
+    //     const key = userProfile?.data?.accounts?.[0]?.accountId || '';
+
+    //     // Log the key for debugging
+    //     console.log('key:', key);
+
+    //     if (!key) {
+    //         console.error('Invalid key value');
+    //         return;
+    //     }
+
+    //     // Dispatch the updateProfile action with the correct parameters
+    //     dispatch(
+    //         updateProfile({
+    //             key,
+    //             City,
+    //             Address,
+    //             Height,
+    //             Phone,
+    //             Gender: Gender === 'Nam',
+    //             Dob,
+    //         })
+    //     )
+
+    //         .unwrap()
+    //         .then(() => {
+    //             console.log('Profile updated successfully');
+
+
+    //             Alert.alert('Success', 'Profile updated successfully', [
+    //                 {
+    //                     text: 'OK',
+    //                     onPress: () => {
+
+    //                         navigation.navigate("Profile");
+    //                     },
+    //                 },
+    //             ]);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Failed to update profile', error);
+    //         });
+    // };
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const { City, Address, Height, Phone, Gender, Dob } = formData;
 
@@ -531,36 +581,36 @@ const UpdateProfileScreen = () => {
             return;
         }
 
-        // Dispatch the updateProfile action with the correct parameters
-        dispatch(
-            updateProfile({
-                key,
-                City,
-                Address,
-                Height,
-                Phone,
-                Gender: Gender === 'Nam',
-                Dob,
-            })
-        )
-            .unwrap()
-            .then(() => {
-                console.log('Profile updated successfully');
+        try {
+            // Dispatch the updateProfile action with the correct parameters
+            await dispatch(
+                updateProfile({
+                    key,
+                    City,
+                    Address,
+                    Height,
+                    Phone,
+                    Gender: Gender === 'Nam',
+                    Dob,
+                })
+            );
 
+            // After successfully updating, dispatch getProfile to fetch the updated profile
+            await dispatch(getProfile(key));
 
-                Alert.alert('Success', 'Profile updated successfully', [
-                    {
-                        text: 'OK',
-                        onPress: () => {
+            console.log('Profile updated successfully');
 
-                            navigation.navigate('Profile');
-                        },
+            Alert.alert('Success', 'Profile updated successfully', [
+                {
+                    text: 'OK',
+                    onPress: () => {
+                        navigation.navigate('Profile');
                     },
-                ]);
-            })
-            .catch((error) => {
-                console.error('Failed to update profile', error);
-            });
+                },
+            ]);
+        } catch (error) {
+            console.error('Failed to update profile', error);
+        }
     };
 
     const handleGoBack = () => {

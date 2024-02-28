@@ -46,19 +46,22 @@ const HeaderProfile = ({ userInfo, profile }) => {
         </View>
         <View style={styles.userInfo}>
           <Text style={styles.username}>
-            {profile?.data?.accounts[0]?.firstname &&
+            {/* {profile?.data?.accounts[0]?.firstname &&
               profile?.data?.accounts[0]?.lastname
               ? profile?.data?.accounts[0]?.firstname +
               " " +
               profile?.data?.accounts[0]?.lastname
-              : "Thông tin cá nhân"}
+              : "Thông tin cá nhân"} */}
+            <Text style={styles.username}>
+              {`${profile?.data?.accounts[0]?.firstname || ''} ${profile?.data?.accounts[0]?.lastname || ''}`}
+            </Text>
           </Text>
           <Text style={styles.account}>
-            {profile?.data?.accounts[0]?.email !== null
-              ? profile?.data?.accounts[0]?.email
-              : "user@gmail.com"}
+            <Text style={styles.account}>
+              {profile?.data?.accounts[0]?.email}
+            </Text>
           </Text>
-          <Text style={styles.account}>Chiều cao</Text>
+          <Text style={styles.account}>  {profile?.data?.height}</Text>
         </View>
       </View>
       <Text style={styles.bioContent}>Just do it </Text>
@@ -76,7 +79,7 @@ const HeaderProfile = ({ userInfo, profile }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={styles.notLoggedInContainer}>
+      {/* <View style={styles.notLoggedInContainer}>
         {profile === null && (
           <TouchableOpacity onPress={() => handleSignin()}>
             <View style={styles.loginButton}>
@@ -84,7 +87,7 @@ const HeaderProfile = ({ userInfo, profile }) => {
             </View>
           </TouchableOpacity>
         )}
-      </View>
+      </View> */}
     </View>
   );
 };
