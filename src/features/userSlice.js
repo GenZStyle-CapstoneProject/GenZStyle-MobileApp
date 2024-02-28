@@ -10,6 +10,7 @@ const initialState = {
   isExitIntro: false,
   loadingIntro: false,
   accountId: "",
+  loading: false,
 };
 export const login = createAsyncThunk(
   "user/login",
@@ -196,7 +197,7 @@ export const userSlice = createSlice({
         }
       })
       .addCase(loadAuthState.rejected, (state, action) => {
-        state.loading = false;
+        state.loading = true;
       })
 
       .addCase(setExitIntro.pending, (state, action) => {

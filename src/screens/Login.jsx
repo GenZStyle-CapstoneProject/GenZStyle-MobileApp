@@ -24,13 +24,27 @@ const Login = ({ navigation }) => {
     const dispatch = useAppDispatch();
 
 
-    const isLoading = useAppSelector((state) => state.product.loading);
+    const isLoading = useAppSelector((state) => state.post.loading);
 
+    //   const fetchProduct = async () => {
+    //     await dispatch(getAllProduct()).then((res) => {
+    //       console.log(JSON.stringify(res, null, 2));
+    //     });
+    //   };
+
+    //   const fetchDetailProduct = async (id) => {
+    //     await dispatch(getDetailProduct(id)).then((res) => {
+    //       console.log(JSON.stringify(res, null, 2));
+    //     });
+    //   };
+
+    //   const [data, setData] = useState("");
+    //   const onChange = () => {
+    //     setData("123123");
+    //   };
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-
     const handleLogin = async () => {
         try {
             console.log("username: " + username, "password: " + password);

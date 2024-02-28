@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, TextInput, Modal, FlatList } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
 import ROUTES from '../../constants/routes';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { createnewpost, getDetailHashtag } from '../../features/postSlice';
+import * as FileSystem from 'expo-file-system';
+import { Button } from 'react-native-elements';
 
 const UpPostScreen = () => {
+
+
     const navigation = useNavigation();
     const route = useRoute();
 
@@ -19,30 +25,73 @@ const UpPostScreen = () => {
     // State để lưu nội dung nhập vào ô input
     const [inputText, setInputText] = useState('');
 
-    // State cho Modal "Chiều cao"
-    const [heightModalVisible, setHeightModalVisible] = useState(false);
-    const [selectedHeight, setSelectedHeight] = useState(null);
+    const dispatch = useAppDispatch();
+    const hashtagList = useAppSelector((state) => state.post.hashtagList)
+    const [hashtagData, setHashtagData] = useState([]);
+    useEffect(() => {
+        fetchDetailHashtag();
+    }, []);
+    const fetchDetailHashtag = async () => {
+        try {
+            await dispatch(getDetailHashtag()).then((res) => {
+                console.log(JSON.stringify(res, null, 2))
+            });
 
-    // State cho Modal "Giới tính"
-    const [genderModalVisible, setGenderModalVisible] = useState(false);
-    const [selectedGender, setSelectedGender] = useState(null);
 
-    // Mảng các lựa chọn cho "Chiều cao" và "Giới tính"
-    const heightOptions = ['Dưới 150cm', 'Từ 150cm đến 170cm', 'Trên 170cm'];
-    const genderOptions = ['Nam', 'Nữ', 'Khác'];
-
-    // Hàm để chọn lựa cho "Chiều cao"
-    const handleHeightPress = (height) => {
-        setSelectedHeight(height);
-        setHeightModalVisible(false);
+        } catch (error) {
+            console.log('Error fetching hashtag data:', error);
+        }
     };
 
-    // Hàm để chọn lựa cho "Giới tính"
-    const handleGenderPress = (gender) => {
-        setSelectedGender(gender);
-        setGenderModalVisible(false);
-    };
 
+
+    // const fetchDetailHashtag = async () => {
+    //     await dispatch(getDetailHashtag()).then((res) => {
+    //         console.log(JSON.stringify(res, null, 2));
+    //     });
+    // };
+
+    const imageurl = "https://firebasestorage.googleapis.com/v0/b/bmos-image-prn.appspot.com/o/Post%2F3fc2af03-d780-47ee-ad40-152d87124620?alt=media&token=a98651a0-6204-489b-be02-b3ce8671a798"
+
+    const [content, setContent] = useState("");
+    const [image, setImage] = useState("");
+    const [hashtags, setHashtags] = useState([]);
+
+    const selectHashtag = (hashtagName) => {
+        const index = hashtagData.indexOf(hashtagName);
+        console.log(index)
+        if (hashtagData.includes(hashtagName)) {
+            const updatedArray = hashtagData.splice(index, 1)
+            setHashtags(updatedArray);
+        } else {
+            setHashtags(hashtagData.push(hashtagName));
+        }
+
+    }
+    console.log(hashtagData)
+    FileSystem.readAsStringAsync(selectedImage?.uri).then((res) =>
+        setImage(res))
+    const handlePost = async () => {
+        try {
+            // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);
+
+            await dispatch(createnewpost({ Content: content, Image: { uri: selectedImage.uri, type: "image/jpg", name: selectedImage.filename }, Hashtags: hashtagData })).then(
+                (res) => {
+                    console.log(JSON.stringify(res, null, 2));
+                    if (res?.meta?.requestStatus === "fulfilled") {
+                        alert(`Dang bai thanh cong ${res?.payload}`)
+                        Alert.alert('Thông báo', 'Bài đăng đã được đăng thành công.');
+                        navigation.navigate(ROUTES.HOME_NAVIGATOR);
+                    } else {
+                        alert(`Dang bai that bai ${res?.payload?.message}`)
+
+                    }
+                }
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <View style={{ flex: 1, padding: 10 }}>
             <View>
@@ -73,92 +122,42 @@ const UpPostScreen = () => {
                     placeholder="Chia sẻ các mẹo tạo kiểu của bạn, như kết hợp màu sắc, tỷ lệ kích thước và nhiều mẹo khác."
                     placeholderTextColor="gray"
                     multiline
-                    value={inputText}
-                    onChangeText={setInputText}
+                    value={content}
+                    onChangeText={(text) => setContent(text)}
                 />
             </View>
+            <Text style={styles.title}>#Hashtag</Text>
 
-            {/* Các ô thông tin */}
-            <View style={styles.infoContainer}>
-                {/* Ô "Chiều cao" */}
-                <View style={styles.infoItem}>
-                    <Text style={styles.infoTitle}>Chiều cao</Text>
-                    <TouchableOpacity onPress={() => setHeightModalVisible(true)}>
-                        <MaterialIcons name="navigate-next" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-                {/* Hiển thị thông tin đã chọn (nếu có) */}
-                <Text style={styles.selectedInfo}>{selectedHeight || 'Chọn chiều cao'}</Text>
+            <View style={styles.inputContainer}>
+                {/* <TextInput
+                    style={styles.input}
+                    placeholder="Hãy nhập Hashtag để phân loại cụ thể trang phục của bạn."
+                    placeholderTextColor="gray"
+                    multiline
+                    value={hashtags}
+                    onChangeText={(text) => setHashtags(text)}
+                /> */}
+                {/* <Text>
+                    goi y:
 
-                {/* Ô "Giới tính" */}
-                <View style={styles.infoItem}>
-                    <Text style={styles.infoTitle}>Giới tính</Text>
-                    <TouchableOpacity onPress={() => setGenderModalVisible(true)}>
-                        <MaterialIcons name="navigate-next" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-                {/* Hiển thị thông tin đã chọn (nếu có) */}
-                <Text style={styles.selectedInfo}>{selectedGender || 'Chọn giới tính'}</Text>
-
-                {/* Ô "Vị trí" */}
-                <View style={styles.infoItem}>
-                    <Text style={styles.infoTitle}>Vị trí</Text>
-                    <TouchableOpacity>
-                        <MaterialIcons name="navigate-next" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-
-                {/* Ô "Link" */}
-                <View style={styles.infoItem}>
-                    <Text style={styles.infoTitle}>Link</Text>
-                    <TouchableOpacity>
-                        <MaterialIcons name="navigate-next" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
+                    <Button title="Get data" onPress={() => fetchDetailHashtag(2)} />
+                </Text> */}
+                <FlatList data={hashtagData} renderItem={({ item }) => {
+                    return <TouchableOpacity onPress={() => selectHashtag(item)} style={{ marginRight: 10, padding: 5, borderWidth: 2, borderColor: "gray", borderRadius: 10, backgroundColor: "#99A1E8" }}><Text>{item}</Text></TouchableOpacity>
+                }} horizontal />
             </View>
-
-            {/* Modal cho "Chiều cao" */}
-            <Modal visible={heightModalVisible} animationType="slide">
-                <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Chọn Chiều Cao</Text>
-                    <FlatList
-                        data={heightOptions}
-                        keyExtractor={(item) => item}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => handleHeightPress(item)}>
-                                <Text style={styles.modalItem}>{item}</Text>
-                            </TouchableOpacity>
-                        )}
-                    />
-                    <TouchableOpacity onPress={() => setHeightModalVisible(false)}>
-                        <Text style={styles.closeButton}>Đóng</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
-
-            {/* Modal cho "Giới tính" */}
-            <Modal visible={genderModalVisible} animationType="slide">
-                <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Chọn Giới Tính</Text>
-                    <FlatList
-                        data={genderOptions}
-                        keyExtractor={(item) => item}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity onPress={() => handleGenderPress(item)}>
-                                <Text style={styles.modalItem}>{item}</Text>
-                            </TouchableOpacity>
-                        )}
-                    />
-                    <TouchableOpacity onPress={() => setGenderModalVisible(false)}>
-                        <Text style={styles.closeButton}>Đóng</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
+            <View style={styles.inputContainer}>
+                <Text>Hãy chọn những #Hashtag có sẵn bạn nhé !!!</Text>
+                <FlatList data={hashtagList} renderItem={({ item }) => {
+                    return <TouchableOpacity onPress={() => selectHashtag(item?.name)} style={{ marginRight: 10, marginTop:10, padding: 5, borderWidth: 2, borderColor: "gray", borderRadius: 10, backgroundColor: "#99A1E8" }}><Text>{item?.name}</Text></TouchableOpacity>
+                }} horizontal />
+            </View>
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[styles.button, styles.draftButton]}
                     onPress={() => {
+                        F
                         Alert.alert('Thông báo', 'Bản nháp đã được tạo thành công.');
                         navigation.navigate(ROUTES.PROFILE_NAVIGATOR);
                     }}
@@ -167,10 +166,7 @@ const UpPostScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[styles.button, styles.postButton]}
-                    onPress={() => {
-                        Alert.alert('Thông báo', 'Bài đăng đã được đăng thành công.');
-                        navigation.navigate(ROUTES.HOME_NAVIGATOR);
-                    }}
+                    onPress={handlePost}
                 >
                     <Text style={styles.buttonText}>Đăng</Text>
                 </TouchableOpacity>

@@ -9,7 +9,7 @@ export const userService = {
     const url = `/api/Users/Get/odata/Users/${key}/GetUserByAccountId`;
     return axiosClient.get(url);
   },
-  updateProfile: (key, City, Address, Height, Phone, Gender, Dob) => {
+  updateProfile: async (key, City, Address, Height, Phone, Gender, Dob) => {
     const formData = new FormData();
 
     // Append accountId to the form data
@@ -23,21 +23,19 @@ export const userService = {
 
     const url = `/api/Users/Put/User/${key}/UpdateUser`;
 
-    // Make sure to include headers for form data
+
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     };
 
-    return axiosClient.put(url, formData, config)
-      .then((response) => {
-        // Xử lý response nếu cần
-        return response.data;
-      })
-      .catch((error) => {
-        // Xử lý lỗi nếu cần
-        throw error;
-      });
+    try {
+      const response = await axiosClient.put(url, formData, config);
+      return response.data;
+    } catch (error) {
+      // Xử lý lỗi nếu cần
+      throw error;
+    }
   },
 };
