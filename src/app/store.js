@@ -3,6 +3,7 @@ import productReducer from "../features/productSlice";
 import userSlice from "../features/userSlice";
 import activePostReducer from "../app/ActivePost/slice";
 
+import postReducer from "../features/postSlice";
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
@@ -11,8 +12,8 @@ export const store = configureStore({
     });
   },
   reducer: {
-    product: productReducer,
+    post: postReducer,
     user: userSlice,
-    actionPost: activePostReducer,
+    activePost: activePostReducer,
   },
 });

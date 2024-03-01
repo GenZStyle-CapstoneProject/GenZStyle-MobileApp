@@ -66,8 +66,9 @@ const ForYouScreen = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.imageScrollView}
+        mt={10}
       >
-        {products.map((item) => (
+        {products?.map((item) => (
           <View key={item.id} style={styles.imageContainer}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <Text style={styles.hashtagText1}>{item.hashtag}</Text>
@@ -92,18 +93,21 @@ const ForYouScreen = () => {
 
       <View style={styles.bottomHorizontalLine} />
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.postContainerScrollView}
-      >
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Cart item={item} />}
-          numColumns={2}
-        />
-      </ScrollView>
+      {/* <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.postContainerScrollView}
+            >
+                <FlatList
+                    data={products}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => <TouchableOpacity onPress={() => navigateToCartDetail(item)}>
+                        <Cart item={item} />
+                    </TouchableOpacity>}
+                    numColumns={2}
+                />
+            </ScrollView> */}
+      <Cart />
     </View>
   );
 };

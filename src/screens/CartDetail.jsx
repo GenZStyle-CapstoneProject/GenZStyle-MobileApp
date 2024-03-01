@@ -114,9 +114,9 @@ const CartDetail = ({ route }) => {
         <Text style={styles.titleText}>{item.content}</Text>
       </View>
       <View style={styles.textRow}>
-        {item?.hashPosts.map((itemDetail) => (
+        {item?.hashPosts?.map((itemDetail) => (
           <Text key={itemDetail.hashtag.id} style={styles.hashtagText}>
-            {itemDetail?.hashtag?.name}
+            {itemDetail?.hashtag.name}
           </Text>
         ))}
       </View>

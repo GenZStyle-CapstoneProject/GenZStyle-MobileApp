@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fecthActivePost } from "../../app/ActivePost/action";
 import { FlatList } from "react-native";
 
@@ -20,6 +20,7 @@ const Cart = ({ item }) => {
   const navigation = useNavigation();
   const [isLiked, setIsLiked] = useState(false);
   const [dataActivePost, setDataActivePost] = useState();
+  const dataActive = useSelector((state) => state.activePost.dataActivePost);
 
   const handleLikePress = () => {
     setIsLiked(!isLiked);
@@ -48,21 +49,32 @@ const Cart = ({ item }) => {
   //         console.error('Error details:', error.response?.data);
   //     }
   // };
-  useEffect(() => {
-    dispatch(fecthActivePost()).then((result) => {
-      if (result.payload) {
-        console.log("Data received:", result.payload);
-        const data = result.payload;
-        setDataActivePost(data);
-      } else {
-        console.log("Error received");
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fecthActivePost()).then((result) => {
+  //     if (result.payload) {
+  //       console.log("Data received:", result.payload);
+  //       const data = result.payload;
+  //       setDataActivePost(data);
+  //     } else {
+  //       console.log("Error received");
+  //     }
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    console.log("Data state", dataActivePost);
-  }, [dataActivePost]);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fecthActivePost()).then((result) => {
+        if (result.payload) {
+          console.log("Data received:", result.payload);
+          const data = result.payload;
+          setDataActivePost(data);
+        } else {
+          console.log("Error received");
+        }
+      });
+    }, [])
+  );
+
   const renderItem = ({ item }) => (
     <View key={item.postId} style={styles.postContainer}>
       <TouchableOpacity
@@ -102,7 +114,8 @@ const Cart = ({ item }) => {
   return (
     <View>
       <FlatList
-        data={dataActivePost}
+        height={"90%"}
+        data={dataActive}
         keyExtractor={(item) => item.postId.toString()}
         renderItem={renderItem}
       />
@@ -120,8 +133,9 @@ const styles = StyleSheet.create({
   },
   postContainer: {
     margin: 10,
-
-    overflow: "hidden",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   postImage: {
     width: 185,

@@ -13,15 +13,15 @@ const activePostSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fecthActivePost.pending, (state) => {
-        state.loading = "pending";
+        state.loadingActivePost = "pending";
       })
       .addCase(fecthActivePost.fulfilled, (state, action) => {
-        state.loading = "fulfilled";
-        state.data = action.payload;
+        state.loadingActivePost = "fulfilled";
+        state.dataActivePost = action.payload;
       })
       .addCase(fecthActivePost.rejected, (state, action) => {
-        state.loading = "rejected";
-        state.error = action.error.message;
+        state.loadingActivePost = "rejected";
+        state.errorActivePost = action.error.message;
       });
   },
 });

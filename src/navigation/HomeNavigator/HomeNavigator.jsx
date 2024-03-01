@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loadAuthState } from "../../features/userSlice";
 import Login from "../../screens/Login";
 import HomeFollowing from "../../components/Home/HomeFollowing";
+import Signup from "../../screens/Signup";
 
 const Stack = createNativeStackNavigator();
 const HomeNavigator = ({ authenticated }) => {
@@ -42,6 +43,7 @@ const HomeNavigator = ({ authenticated }) => {
         component={Login}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name={ROUTES.CARTDETAIL}
         component={CartDetail}

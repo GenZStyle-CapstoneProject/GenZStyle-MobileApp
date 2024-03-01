@@ -22,8 +22,6 @@ const Login = ({ navigation }) => {
   // }, [fontsLoaded]);
   const dispatch = useAppDispatch();
 
-  const isLoading = useAppSelector((state) => state.product.loading);
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -61,7 +59,6 @@ const Login = ({ navigation }) => {
       }}
       colors={[COLORS.white, COLORS.secondary]}
     >
-      <Spinner visible={isLoading} />
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View>
           <Text
