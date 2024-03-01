@@ -8,6 +8,7 @@ import { checkExitIntro, loadAuthState } from "../features/userSlice";
 import HomeNavigator from "../navigation/HomeNavigator/HomeNavigator";
 import IntroTabNavigator from "./IntroTabNavigator/IntroTabNavigator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HomeTab from "../components/Home/HomeTab";
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
   const dispatch = useAppDispatch();
@@ -43,6 +44,11 @@ const AppNavigator = () => {
           options={{ headerShown: false }}
         />
       )}
+      <Stack.Screen
+        name="Home"
+        component={HomeNavigator}
+        options={{ headerShown: false }}
+      />
 
       {/* <Stack.Screen name="Profile" component={ProfileNavigator} /> */}
     </Stack.Navigator>

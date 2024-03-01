@@ -22,12 +22,12 @@ const BottomTabNavigator = ({ authenticated }) => {
         },
         tabBarStyle: {
           backgroundColor: "white",
-          height: 55
+          height: 55,
         },
         tabBarActiveTintColor: "#99A1E8",
         tabBarLabelStyle: {
           marginBottom: 5,
-          fontSize: 12
+          fontSize: 12,
         },
       }}
     >

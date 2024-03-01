@@ -10,6 +10,8 @@ import ROUTES from "../../constants/routes";
 import ReportPost from "../../screens/ReportPost";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loadAuthState } from "../../features/userSlice";
+import Login from "../../screens/Login";
+import HomeFollowing from "../../components/Home/HomeFollowing";
 
 const Stack = createNativeStackNavigator();
 const HomeNavigator = ({ authenticated }) => {
@@ -33,6 +35,11 @@ const HomeNavigator = ({ authenticated }) => {
       <Stack.Screen
         name="nam"
         children={() => <BottomTabNavigator authenticated={authenticated} />}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"Login"}
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen

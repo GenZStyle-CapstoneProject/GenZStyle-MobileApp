@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import productReducer from "../features/productSlice";
 import userSlice from "../features/userSlice";
+import activePostReducer from "../app/ActivePost/slice";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
@@ -12,5 +13,6 @@ export const store = configureStore({
   reducer: {
     product: productReducer,
     user: userSlice,
+    actionPost: activePostReducer,
   },
 });

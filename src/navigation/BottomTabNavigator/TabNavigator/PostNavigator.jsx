@@ -12,7 +12,7 @@ import AuthTabNavigator from "../../AuthTabNavigator/AuthTabNavigator";
 
 const Stack = createNativeStackNavigator();
 const PostNavigator = ({ authenticated }) => {
-  return authenticated ? (
+  return (
     <Stack.Navigator>
       <Stack.Screen
         name={ROUTES.POST}
@@ -35,8 +35,6 @@ const PostNavigator = ({ authenticated }) => {
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
-  ) : (
-    <AuthTabNavigator />
   );
 };
 
