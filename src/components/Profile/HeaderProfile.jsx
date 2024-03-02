@@ -1,11 +1,9 @@
-
 import React, { useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const HeaderProfile = ({ userInfo, profile }) => {
-
   const navigation = useNavigation();
 
   const handleSetting = () => {
@@ -23,7 +21,6 @@ const HeaderProfile = ({ userInfo, profile }) => {
   const handleFollowing = () => {
     navigation.navigate("ListFollow", { screen: "Đang theo dõi" });
   };
-
 
   return (
     <View style={styles.header}>
@@ -53,7 +50,14 @@ const HeaderProfile = ({ userInfo, profile }) => {
               profile?.data?.accounts[0]?.lastname
               : "Thông tin cá nhân"} */}
             <Text style={styles.username}>
-              {`${profile?.data?.accounts[0]?.firstname || ''} ${profile?.data?.accounts[0]?.lastname || ''}`}
+              {`${profile?.data?.accounts[0]?.firstname || ""} ${
+                profile?.data?.accounts[0]?.lastname || ""
+              }`}
+            </Text>
+          </Text>
+          <Text style={styles.account}>
+            <Text style={styles.account}>
+              {profile?.data?.accounts[0]?.username}
             </Text>
           </Text>
           <Text style={styles.account}>
@@ -61,7 +65,7 @@ const HeaderProfile = ({ userInfo, profile }) => {
               {profile?.data?.accounts[0]?.email}
             </Text>
           </Text>
-          <Text style={styles.account}>  {profile?.data?.height}</Text>
+          <Text style={styles.account}> {profile?.data?.height}</Text>
         </View>
       </View>
       <Text style={styles.bioContent}>Just do it </Text>

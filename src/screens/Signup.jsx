@@ -15,9 +15,11 @@ const Signup = ({ navigation }) => {
   const [password2, setPassword2] = useState("");
   const [phone, setPhone] = useState("");
   const [showPassword1, setShowPassword1] = useState(false);
-  // const [showPassword2, setShowPassword2] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
   const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
+  const [heightPerson, setHeightPersion] = useState("");
+  const [gender, setGender] = useState("");
   // const [showDatePicker, setShowDatePicker] = useState(false);
   // const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -40,6 +42,7 @@ const Signup = ({ navigation }) => {
         Phone: phone,
         Email: email,
         Dob: dob,
+        Height: heightPerson,
       };
 
       const formData = new FormData();
@@ -49,6 +52,8 @@ const Signup = ({ navigation }) => {
       formData.append("Phone", phone);
       formData.append("Email", email);
       formData.append("Dob", dob);
+      formData.append("Height", heightPerson);
+      formData.append("Gender", gender);
       console.log("Data to Server", formData);
 
       const response = await axios.post(
@@ -61,7 +66,7 @@ const Signup = ({ navigation }) => {
 
       if (response.status === 200) {
         alert("Đăng ký thành công!");
-        navigation.navigate("MoreInfo");
+        navigation.navigate("Home");
       } else {
         alert("Đăng ký không thành công. Vui lòng thử lại.");
       }
@@ -168,6 +173,78 @@ const Signup = ({ navigation }) => {
             />
           </View>
 
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
+            }}
+          >
+            <Ionicons
+              name="lock-closed"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{
+                flex: 1,
+                fontSize: 16,
+              }}
+              placeholder="Mật khẩu"
+              secureTextEntry={!showPassword1}
+              value={passwordHash}
+              onChangeText={(text) => setPasswordHash(text)}
+              required={true}
+            />
+            <Pressable onPress={() => setShowPassword1(!showPassword1)}>
+              <Ionicons
+                name={showPassword1 ? "eye-off" : "eye"}
+                size={24}
+                color={COLORS.grey}
+              />
+            </Pressable>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
+            }}
+          >
+            <Ionicons
+              name="lock-closed"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{
+                flex: 1,
+                fontSize: 16,
+              }}
+              placeholder="Nhập lại mật khẩu"
+              secureTextEntry={!showPassword2}
+              value={password2}
+              onChangeText={(text) => setPassword2(text)}
+            />
+            <Pressable onPress={() => setShowPassword2(!showPassword2)}>
+              <Ionicons
+                name={showPassword2 ? "eye-off" : "eye"}
+                size={24}
+                color={COLORS.grey}
+              />
+            </Pressable>
+          </View>
+
           {/* Ô nhập số điện thoại với biểu tượng */}
           <View
             style={{
@@ -268,8 +345,6 @@ const Signup = ({ navigation }) => {
                             />
                         )} */}
           </View>
-
-          {/* Ô nhập mật khẩu */}
           <View
             style={{
               flexDirection: "row",
@@ -281,62 +356,49 @@ const Signup = ({ navigation }) => {
               paddingHorizontal: 10,
             }}
           >
-            <Ionicons
-              name="lock-closed"
+            <FontAwesome
+              name="birthday-cake"
               size={24}
               color={COLORS.grey}
               style={{ marginRight: 10 }}
             />
             <TextInput
-              style={{
-                flex: 1,
-                fontSize: 16,
-              }}
-              placeholder="Mật khẩu"
-              secureTextEntry={!showPassword1}
-              value={passwordHash}
-              onChangeText={(text) => setPasswordHash(text)}
+              style={{ flex: 1, fontSize: 16 }}
+              placeholder="Chiều cao"
+              value={heightPerson}
+              onChangeText={(text) => setHeightPersion(text)}
               required={true}
             />
-            <Pressable onPress={() => setShowPassword1(!showPassword1)}>
-              <Ionicons
-                name={showPassword1 ? "eye-off" : "eye"}
-                size={24}
-                color={COLORS.grey}
-              />
-            </Pressable>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
+            }}
+          >
+            <FontAwesome
+              name="birthday-cake"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{ flex: 1, fontSize: 16 }}
+              placeholder="Giới tính"
+              value={gender}
+              onChangeText={(text) => setGender(text)}
+              required={true}
+            />
           </View>
 
-          {/* Ô nhập lại mật khẩu */}
-          {/* <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            backgroundColor: COLORS.white,
-                            paddingVertical: 10,
-                            borderRadius: 50,
-                            marginBottom: 12,
-                            paddingHorizontal: 10,
-                        }}
-                    >
-                        <Ionicons name="lock-closed" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
-                        <TextInput
-                            style={{
-                                flex: 1,
-                                fontSize: 16,
-                            }}
-                            placeholder="Nhập lại mật khẩu"
-                            secureTextEntry={!showPassword2}
-                            value={password2}
-                            onChangeText={(text) => setPassword2(text)}
-                        />
-                        <Pressable
-                            onPress={() => setShowPassword2(!showPassword2)}
+          {/* Ô nhập mật khẩu */}
 
-                        >
-                            <Ionicons name={showPassword2 ? 'eye-off' : 'eye'} size={24} color={COLORS.grey} />
-                        </Pressable>
-                    </View> */}
+          {/* Ô nhập lại mật khẩu */}
 
           {/* Nút Đăng ký */}
           <Pressable

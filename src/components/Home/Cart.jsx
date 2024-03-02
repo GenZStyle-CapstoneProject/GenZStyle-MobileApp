@@ -26,8 +26,8 @@ const Cart = ({ item }) => {
     setIsLiked(!isLiked);
   };
   const dispatch = useDispatch();
-  const navigateToListLike = () => {
-    navigation.navigate("ListLike");
+  const navigateToListLike = (item) => {
+    navigation.navigate("ListLike", { dataLike: item });
   };
 
   // const fetchAllPosts = async () => {
@@ -90,8 +90,11 @@ const Cart = ({ item }) => {
                 color={isLiked ? "red" : "black"}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
-              <Text style={styles.iconText}>24</Text>
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => navigateToListLike(item)}
+            >
+              <Text style={styles.iconText}>{item.likes.length}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.icon}>
               <Icon name="chat-outline" size={24} color="black" />
@@ -118,6 +121,7 @@ const Cart = ({ item }) => {
         data={dataActive}
         keyExtractor={(item) => item.postId.toString()}
         renderItem={renderItem}
+        numColumns={2}
       />
     </View>
   );
@@ -132,10 +136,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   postContainer: {
-    margin: 10,
+    padding: 10,
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
   },
   postImage: {
     width: 185,

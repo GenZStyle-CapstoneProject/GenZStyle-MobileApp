@@ -11,6 +11,7 @@ const initialState = {
   loadingIntro: false,
   accountId: "",
   loading: false,
+  error: null,
 };
 export const login = createAsyncThunk(
   "user/login",
@@ -290,11 +291,7 @@ export const userSlice = createSlice({
         state.loading = false;
 
         // Check if action has an error property before accessing its message
-        const errorMessage = action.error
-          ? action.error.message
-          : "Unknown error";
-
-        console.error("Cập nhật thông tin người dùng thất bại:", errorMessage);
+        state.error = action.error ? action.error.message : "Unknown error";
       });
   },
 });

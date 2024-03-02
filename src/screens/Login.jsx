@@ -33,7 +33,7 @@ const Login = ({ navigation }) => {
       ).then((res) => {
         console.log(JSON.stringify(res.meta.requestStatus, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
-          alert("Dang nhap thanh cong");
+          alert("Đăng nhập thành công");
           navigation.navigate("Home");
         } else {
           alert("Dang nhap that bai");

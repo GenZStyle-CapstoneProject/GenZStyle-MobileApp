@@ -9,7 +9,7 @@ import DraftScreen from "./Post/DraftScreen";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { loadAuthState } from "../features/userSlice";
 
-const Tab = createMaterialTopTabNavigator(); 
+const Tab = createMaterialTopTabNavigator();
 
 const PostScreen = () => {
   // const dispatch = useAppDispatch();
@@ -25,22 +25,22 @@ const PostScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-        <Tab.Navigator
-            tabBarPosition="bottom"
-            screenOptions={{
-                style: { backgroundColor: 'white' },
-                labelStyle: { fontSize: 24 },
-                indicatorStyle: { backgroundColor: 'black' },
-                headerStyle: { backgroundColor: 'white' },
-                tabBarIndicatorStyle: { backgroundColor: 'black' },
-            }}
-        >
-            <Tab.Screen name="Thư viện" component={LibraryScreen} />
-            <Tab.Screen name="Máy ảnh" component={CameraScreen} />
-            <Tab.Screen name="Bản nháp" component={DraftScreen} />
-        </Tab.Navigator>
+      <Tab.Navigator
+        tabBarPosition="bottom"
+        screenOptions={{
+          style: { backgroundColor: "white" },
+          labelStyle: { fontSize: 24 },
+          indicatorStyle: { backgroundColor: "black" },
+          headerStyle: { backgroundColor: "white" },
+          tabBarIndicatorStyle: { backgroundColor: "black" },
+        }}
+      >
+        <Tab.Screen name="Thư viện" component={LibraryScreen} />
+        <Tab.Screen name="Máy ảnh" component={CameraScreen} />
+        <Tab.Screen name="Bản nháp" component={DraftScreen} />
+      </Tab.Navigator>
     </View>
-);
+  );
 };
 
 // const navigation = useNavigation();

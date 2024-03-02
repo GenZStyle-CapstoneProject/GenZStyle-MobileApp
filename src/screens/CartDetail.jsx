@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -17,13 +17,17 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import products from "../data/Products";
 import Cart from "../components/Home/Cart";
+import { fecthActivePost } from "../app/ActivePost/action";
+import { fetchCommentPost } from "../app/CommentPost/action";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAddCommentPost } from "../app/AddComment/action";
 const CartDetail = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
   const [reportModalVisible, setReportModalVisible] = useState(false);
 
   const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState();
 
   const [isLiked, setIsLiked] = useState(false);
   const handleLikePress = () => {
@@ -33,10 +37,31 @@ const CartDetail = ({ route }) => {
     // Navigate to ListLikeScreen when the heart icon or the number is clicked
     navigation.navigate("ListLike");
   };
-  const handleAddComment = () => {
+  // const handleAddComment = () => {
+  //   if (comment.trim() !== "") {
+  //     setComments([...comments, comment]);
+  //     console.log("Added comment", comment);
+  //     setComment("");
+  //   }
+  // };
+
+  const handleAddComment = async () => {
     if (comment.trim() !== "") {
-      setComments([...comments, comment]);
-      setComment("");
+      try {
+        await dispatch(
+          fetchAddCommentPost({
+            postId: item.postId,
+            createAt: new Date().toISOString(),
+            content: comment,
+          })
+        );
+
+        console.log("Added comment", comment);
+        setComment("");
+      } catch (error) {
+        // Handle any errors if the Redux thunk fails
+        console.error("Error dispatching fetchAddCommentPost:", error.message);
+      }
     }
   };
   const openReportModal = () => {
@@ -55,6 +80,20 @@ const CartDetail = ({ route }) => {
     closeReportModal();
     navigation.navigate("ReportPost");
   };
+  const dispatch = useDispatch();
+  console.log("Item id", item.postId);
+  useEffect(() => {
+    dispatch(fetchCommentPost(item.postId)).then((result) => {
+      if (result.payload) {
+        console.log("Data Comment:", result.payload);
+        const data = result.payload.map((item) => item.content);
+        console.log("Data Comment 2:", data);
+        setComments(data);
+      } else {
+        console.log("Error received");
+      }
+    });
+  }, [comment]);
 
   return (
     <ScrollView style={styles.container}>
@@ -78,7 +117,7 @@ const CartDetail = ({ route }) => {
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
-          <Text style={styles.iconText}>(10)</Text>
+          <Text style={styles.iconText}>({item.likes.length})</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon}>
           <Icon name="chat-outline" size={24} color="black" />
@@ -153,7 +192,7 @@ const CartDetail = ({ route }) => {
         www.fptshop.com
       </Text>
 
-      {/* Các sản phẩm liên quan */}
+      {/* Các sản phẩm liên quan 
       <View style={styles.relatedProductsContainer}>
         <Text style={styles.relatedProductsTitle}>Các sản phẩm liên quan:</Text>
 
@@ -167,7 +206,7 @@ const CartDetail = ({ route }) => {
           )}
           numColumns={2}
         />
-      </View>
+      </View>*/}
     </ScrollView>
   );
 };
