@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const HeaderProfile = ({ userInfo, profile }) => {
+const HeaderProfile = ({ userInfo, profile, followersData }) => {
   const navigation = useNavigation();
 
   const handleSetting = () => {
@@ -15,11 +15,11 @@ const HeaderProfile = ({ userInfo, profile }) => {
     navigation.navigate("LoginInProfile");
   };
   const handleFollowers = () => {
-    navigation.navigate("ListFollow", { screen: "Người theo dõi" });
+    navigation.navigate("ListFollow", { screen: "Người theo dõi", profile });
   };
 
   const handleFollowing = () => {
-    navigation.navigate("ListFollow", { screen: "Đang theo dõi" });
+    navigation.navigate("ListFollow", { screen: "Đang theo dõi", profile });
   };
 
   return (
@@ -43,21 +43,12 @@ const HeaderProfile = ({ userInfo, profile }) => {
         </View>
         <View style={styles.userInfo}>
           <Text style={styles.username}>
-            {/* {profile?.data?.accounts[0]?.firstname &&
-              profile?.data?.accounts[0]?.lastname
-              ? profile?.data?.accounts[0]?.firstname +
-              " " +
-              profile?.data?.accounts[0]?.lastname
-              : "Thông tin cá nhân"} */}
+
             <Text style={styles.username}>
-              Thông tin cá nhân
+              {profile?.data?.accounts[0]?.username || "Thông tin cá nhân"}
             </Text>
           </Text>
-          <Text style={styles.account}>
-            <Text style={styles.account}>
-              {profile?.data?.accounts[0]?.username || "username"}
-            </Text>
-          </Text>
+
           <Text style={styles.account}>
             <Text style={styles.account}>
               {profile?.data?.accounts[0]?.email || "exmaple@gmail.com"}
@@ -69,14 +60,14 @@ const HeaderProfile = ({ userInfo, profile }) => {
       <Text style={styles.bioContent}>Just do it </Text>
       <View style={styles.bioContainer}>
         <View style={styles.bioColumn}>
-          <TouchableOpacity>
-            <Text style={styles.bioCount}>0</Text>
+          <TouchableOpacity onPress={handleFollowers}>
+            <Text style={styles.bioCount}>{followersData?.follower || "0"}</Text>
             <Text style={styles.bioText}>Người theo dõi</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.bioColumn}>
-          <TouchableOpacity>
-            <Text style={styles.bioCount}>0</Text>
+          <TouchableOpacity onPress={handleFollowing}>
+            <Text style={styles.bioCount}>{followersData?.followering || "0"}</Text>
             <Text style={styles.bioText}>Đang theo dõi</Text>
           </TouchableOpacity>
         </View>
