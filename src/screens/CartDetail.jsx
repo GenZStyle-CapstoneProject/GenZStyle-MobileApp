@@ -21,21 +21,75 @@ import { fecthActivePost } from "../app/ActivePost/action";
 import { fetchCommentPost } from "../app/CommentPost/action";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAddCommentPost } from "../app/AddComment/action";
+import { fetchLikePost, fetchNumberLikeOfPost } from "../app/LikePost/action";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const CartDetail = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
   const [reportModalVisible, setReportModalVisible] = useState(false);
-
+  const dispatch = useDispatch();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState();
+  const [getIdAccount, setAccountId] = useState();
 
   const [isLiked, setIsLiked] = useState(false);
-  const handleLikePress = () => {
+  console.log("Data loaded: ", item);
+  const likes = useSelector((state) => state.likePost.numberLikeOfPost)
+  useEffect(() => {
+    const getAccountId = async () => {
+      try {
+        const accountId2 = await AsyncStorage.getItem("ACCOUNT_ID");
+        console.log("Account loaded: ", accountId2);
+        setAccountId(accountId2);
+        const hasAccountWithIdOne = item.likes.some(
+          (like) => like.isLike && like.likeBy == accountId2
+        );
+        const filteredLikes = item.likes.filter(
+          (like) => like.isLike && like.likeBy == accountId2
+        );
+        console.log("Filtered data: ", filteredLikes);
+        console.log("hasAccountWithIdOne", hasAccountWithIdOne);
+        if (hasAccountWithIdOne === true) {
+          setIsLiked(true);
+        } else {
+          setIsLiked(false);
+        }
+      } catch (error) {
+        console.error("Error getting access accountId:", error);
+        throw error;
+      }
+    };
+    getAccountId();
+  }, []);
+
+  console.log(likes)
+
+  // const fetchNumberLikeOfPost = async () => {
+  //   await dispatch(fetchNumberLikeOfPost({postId: item?.postId})).then((res) => {
+  //     console.log("Length like: ", JSON.stringify(res, null, 2))
+  //   })
+  // }
+  // useEffect(() => {
+  //   fetchNumberLikeOfPost();
+  // },[likes])
+
+  const handleLikePress = async () => {
     setIsLiked(!isLiked);
-  };
-  const navigateToListLike = () => {
-    // Navigate to ListLikeScreen when the heart icon or the number is clicked
-    navigation.navigate("ListLike");
+
+    try {
+      await dispatch(
+        fetchLikePost({
+          postId: item?.postId,
+        })
+      ).then( async (res)=> {
+        console.log("Data like: ", JSON.stringify(res, null, 2))
+        await dispatch(fetchNumberLikeOfPost({postId: item?.postId})).then((res) => {
+          console.log("Length like: ", JSON.stringify(res, null, 2))
+        })
+      });
+    } catch (error) {
+      console.error("Error dispatching likePost:", error.message);
+    }
   };
   // const handleAddComment = () => {
   //   if (comment.trim() !== "") {
@@ -44,6 +98,12 @@ const CartDetail = ({ route }) => {
   //     setComment("");
   //   }
   // };
+
+  const navigateToListLike = (item) => {
+    navigation.navigate("ListLike", {
+      dataLike: item,
+    });
+  };
 
   const handleAddComment = async () => {
     if (comment.trim() !== "") {
@@ -64,6 +124,7 @@ const CartDetail = ({ route }) => {
       }
     }
   };
+
   const openReportModal = () => {
     setReportModalVisible(true);
   };
@@ -80,13 +141,13 @@ const CartDetail = ({ route }) => {
     closeReportModal();
     navigation.navigate("ReportPost");
   };
-  const dispatch = useDispatch();
+
   console.log("Item id", item.postId);
   useEffect(() => {
     dispatch(fetchCommentPost(item.postId)).then((result) => {
       if (result.payload) {
         console.log("Data Comment:", result.payload);
-        const data = result.payload.map((item) => item.content);
+        const data = result.payload?.map((item) => item.content);
         console.log("Data Comment 2:", data);
         setComments(data);
       } else {
@@ -116,8 +177,14 @@ const CartDetail = ({ route }) => {
             color={isLiked ? "red" : "black"}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.icon} onPress={navigateToListLike}>
-          <Text style={styles.iconText}>({item.likes.length})</Text>
+        <TouchableOpacity
+          style={styles.icon}
+          onPress={() => navigateToListLike(item)}
+        >
+          <Text style={styles.iconText}>
+            {/* ({item?.likes?.filter((item) => item.isLike === true).length}) */}
+            {likes}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon}>
           <Icon name="chat-outline" size={24} color="black" />

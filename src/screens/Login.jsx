@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
         console.log(JSON.stringify(res.meta.requestStatus, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
           alert("Đăng nhập thành công");
-          navigation.navigate("Home");
+          // navigation.navigate("Home");
         } else {
           alert("Dang nhap that bai");
         }

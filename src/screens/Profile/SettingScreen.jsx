@@ -3,13 +3,14 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ROUTES from "../../constants/routes";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { logout } from "../../features/userSlice";
 const SettingScreen = () => {
 
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
+  const profile = useAppSelector((state) => state.user.profile);
 
 
 
@@ -33,7 +34,7 @@ const SettingScreen = () => {
 
   const handleLogout = async () => {
     await dispatch(logout());
-    navigation.navigate('Login');
+    navigation.goBack()
   };
 
   // const handleLogout = async () => {
@@ -79,21 +80,26 @@ const SettingScreen = () => {
         <Text style={styles.settingText}>Người dùng bị chặn</Text>
         <View style={styles.hr} />
       </View>
-      <View style={styles.settingItem}>
-        <TouchableOpacity onPress={navigateToPackageHistory}>
-          <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.hr} />
+      {
+        profile && <><View style={styles.settingItem}>
+          <TouchableOpacity onPress={navigateToPackageHistory}>
+            <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.settingItem}>
-        <TouchableOpacity onPress={navigateToSettingPackage}>
-          <Text style={styles.settingText}>Gói thành viên</Text>
-        </TouchableOpacity>
+          <View style={styles.hr} />
 
-        <Text style={styles.settingText1}>Premium</Text>
-      </View>
-      <View style={styles.hr} />
+          <View style={styles.settingItem}>
+            <TouchableOpacity onPress={navigateToSettingPackage}>
+              <Text style={styles.settingText}>Gói thành viên</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.settingText1}>Premium</Text>
+          </View>
+
+          <View style={styles.hr} /></>
+      }
+
 
       <Text style={styles.settingText}>
         <Text style={styles.boldText}>Giới thiệu</Text>
@@ -119,9 +125,12 @@ const SettingScreen = () => {
         <Text style={styles.settingText1}>1.0.22</Text>
       </View>
       <View style={styles.hr} />
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Log out</Text>
-      </TouchableOpacity>
+      {
+        profile && <TouchableOpacity onPress={handleLogout}>
+          <Text>Log out</Text>
+        </TouchableOpacity>
+      }
+
     </View>
   );
 };

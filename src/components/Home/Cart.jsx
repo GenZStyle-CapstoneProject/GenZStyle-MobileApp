@@ -80,44 +80,48 @@ const Cart = ({ item }) => {
     }, [])
   );
 
-  const renderItem = ({ item }) => (
-    <View key={item.postId} style={styles.postContainer}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("CartDetail", { item })}
-      >
-        <Image source={{ uri: item.image }} style={styles.postImage} />
-        <View style={styles.postFooter}>
-          <View style={styles.iconContainer}>
-            <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
-              <Icon
-                name={isLiked ? "heart" : "heart-outline"}
-                size={24}
-                color={isLiked ? "red" : "black"}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.icon}
-              onPress={() => navigateToListLike(item)}
-            >
-              <Text style={styles.iconText}>{item.likes.length}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
-              <Icon name="chat-outline" size={24} color="black" />
-              <Text style={styles.iconText}></Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.textContainer}>
-            <View style={styles.textRow}>
-              <Text style={styles.titleText}>{item.content}</Text>
+  const renderItem = ({ item }) => {
+    const isLikeTrue = item?.likes?.filter((item) => item.isLike === true);
+    console.log("Item is like", isLikeTrue.length);
+    return (
+      <View key={item.postId} style={styles.postContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("CartDetail", { item })}
+        >
+          <Image source={{ uri: item.image }} style={styles.postImage} />
+          <View style={styles.postFooter}>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
+                <Icon
+                  name={isLiked ? "heart" : "heart-outline"}
+                  size={24}
+                  color={isLiked ? "red" : "black"}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => navigateToListLike(item)}
+              >
+                <Text style={styles.iconText}>{isLikeTrue.length}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.icon}>
+                <Icon name="chat-outline" size={24} color="black" />
+                <Text style={styles.iconText}></Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.textRow}>
-              <Text style={styles.hashtagText}>{item.hashtag}</Text>
+            <View style={styles.textContainer}>
+              <View style={styles.textRow}>
+                <Text style={styles.titleText}>{item.content}</Text>
+              </View>
+              <View style={styles.textRow}>
+                <Text style={styles.hashtagText}>{item.hashtag}</Text>
+              </View>
             </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    </View>
-  );
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View>

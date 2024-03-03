@@ -15,7 +15,6 @@ const AuthTabNavigator = () => {
             <Stack.Screen name={'Login'} component={Login} options={{ headerShown: false, }} />
             <Stack.Screen name={'Signup'} component={Signup} options={{ headerShown: false, }} />
             <Stack.Screen name={'MoreInfo'} component={MoreInfo} options={{ headerShown: false, }} />
-
         </Stack.Navigator>
     )
 }

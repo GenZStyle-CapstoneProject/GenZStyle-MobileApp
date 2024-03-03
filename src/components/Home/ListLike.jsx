@@ -81,7 +81,7 @@ const ListLike = ({ route }) => {
     setFilteredData(filtered);
   };
 
-  const accountData = dataLike.likes.map((like) => like.account);
+  const accountData = dataLike?.likes?.map((like) => like.account);
   const renderLikeItem = ({ item }) => (
     <View style={styles.followerItem}>
       <Image source={{ uri: item?.avatar }} style={styles.avatar} />

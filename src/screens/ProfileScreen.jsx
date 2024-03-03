@@ -55,34 +55,43 @@ import ProfileLoggedIn from "../components/Profile/ProfileLoggedIn";
 import ProfileNotLoggedIn from "../components/Profile/ProfileNotLoggedIn";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const ProfileScreen = () => {
   const dispatch = useAppDispatch();
   const accountId = useSelector((state) => state.user.accountId);
   const profile = useSelector((state) => state.user.profile);
-  const [getToken, setToken] = useState(null);
+  const loading = useSelector((state) => state.user.loading)
+  // const [getToken, setToken] = useState(null);
 
   useEffect(() => {
-    getAccessToken();
+    // getAccessToken();
     const fetchData = async () => {
-      const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
-      console.log("userInfo", accountId);
+      // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+      // console.log("userInfo", accountId);
       await dispatch(getProfile(accountId)).then((res) => {
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
       });
     };
     fetchData();
-  }, []);
-  const getAccessToken = async () => {
-    const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
-    console.log("AccessToken: " + "<< " + accessToken + " >>");
-    setToken(accessToken);
-  };
-  return getToken != null ? (
-    <ProfileLoggedIn profile={profile} />
-  ) : (
-    <ProfileNotLoggedIn />
-  );
+  }, [accountId]);
+  // const getAccessToken = async () => {
+  //   const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+  //   console.log("AccessToken: " + "<< " + accessToken + " >>");
+  //   setToken(accessToken);
+  // };
+  return (
+    //  getToken != null ? (
+    <>
+      <Spinner visible={loading} />
+      <ProfileLoggedIn profile={profile} />
+
+    </>
+    // ) : (
+    //   <ProfileNotLoggedIn />
+    // );
+
+  )
 };
 
 export default ProfileScreen;

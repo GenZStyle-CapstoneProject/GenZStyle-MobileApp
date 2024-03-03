@@ -14,20 +14,20 @@ const AppNavigator = () => {
   const dispatch = useAppDispatch();
   const authenticated = useAppSelector((state) => state.user.authenticated);
   const isExitIntro = useAppSelector((state) => state.user.isExitIntro);
-  const loadingIntro = useAppSelector((state) => state.user.loadingIntro);
+  const loadingIntro = useAppSelector((state) => state.user.loadingIntro); 
 
   const fetchLoadAuthState = async () => {
     await dispatch(loadAuthState());
   };
   const fetchCheckExitIntro = async () => {
     await dispatch(checkExitIntro());
-  };
-  console.log("authenticated: ", authenticated);
+  };  
+  console.log("authenticated: ", authenticated); 
   console.log("isExitIntro: ", isExitIntro);
   React.useEffect(() => {
     fetchCheckExitIntro();
-    fetchLoadAuthState();
-  }, []);
+    fetchLoadAuthState(); 
+  }, []); 
 
   return (
     <Stack.Navigator>

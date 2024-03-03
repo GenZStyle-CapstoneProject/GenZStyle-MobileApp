@@ -13,28 +13,29 @@ import AuthTabNavigator from "../../AuthTabNavigator/AuthTabNavigator";
 const Stack = createNativeStackNavigator();
 const PostNavigator = ({ authenticated }) => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={ROUTES.POST}
-        component={PostScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.UPPOST}
-        component={UpPostScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.NOTIFICATION}
-        component={NotificationScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={ROUTES.FOLLOWING}
-        component={FollowingScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+    authenticated ===true ?
+      <Stack.Navigator>
+        <Stack.Screen
+          name={ROUTES.POST}
+          component={PostScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.UPPOST}
+          component={UpPostScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.NOTIFICATION}
+          component={NotificationScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={ROUTES.FOLLOWING}
+          component={FollowingScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator> : <AuthTabNavigator />
   );
 };
 

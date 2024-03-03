@@ -12,7 +12,7 @@ const HeaderProfile = ({ userInfo, profile }) => {
   };
 
   const handleSignin = () => {
-    navigation.navigate("Login");
+    navigation.navigate("LoginInProfile");
   };
   const handleFollowers = () => {
     navigation.navigate("ListFollow", { screen: "Người theo dõi" });
@@ -50,22 +50,20 @@ const HeaderProfile = ({ userInfo, profile }) => {
               profile?.data?.accounts[0]?.lastname
               : "Thông tin cá nhân"} */}
             <Text style={styles.username}>
-              {`${profile?.data?.accounts[0]?.firstname || ""} ${
-                profile?.data?.accounts[0]?.lastname || ""
-              }`}
+              Thông tin cá nhân
             </Text>
           </Text>
           <Text style={styles.account}>
             <Text style={styles.account}>
-              {profile?.data?.accounts[0]?.username}
+              {profile?.data?.accounts[0]?.username || "username"}
             </Text>
           </Text>
           <Text style={styles.account}>
             <Text style={styles.account}>
-              {profile?.data?.accounts[0]?.email}
+              {profile?.data?.accounts[0]?.email || "exmaple@gmail.com"}
             </Text>
           </Text>
-          <Text style={styles.account}> {profile?.data?.height}</Text>
+          <Text style={styles.account}>{profile?.data?.height || "xxx cm"}</Text>
         </View>
       </View>
       <Text style={styles.bioContent}>Just do it </Text>
@@ -83,7 +81,7 @@ const HeaderProfile = ({ userInfo, profile }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <View style={styles.notLoggedInContainer}>
+      <View style={styles.notLoggedInContainer}>
         {profile === null && (
           <TouchableOpacity onPress={() => handleSignin()}>
             <View style={styles.loginButton}>
@@ -91,7 +89,7 @@ const HeaderProfile = ({ userInfo, profile }) => {
             </View>
           </TouchableOpacity>
         )}
-      </View> */}
+      </View>
     </View>
   );
 };
@@ -157,7 +155,7 @@ const styles = StyleSheet.create({
   },
   notLoggedInContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginVertical: 10
   },
   notLoggedInText: {
     fontSize: 16,

@@ -9,7 +9,7 @@ const initialState = {
   authenticated: false,
   isExitIntro: false,
   loadingIntro: false,
-  accountId: "",
+  accountId: null,
   loading: false,
   error: null,
 };
@@ -20,6 +20,10 @@ export const login = createAsyncThunk(
       const response = await userService.login({ userName, passwordHash });
       console.log("<UserSlice>: " + response?.data);
       await AsyncStorage.setItem("ACCESS_TOKEN", response?.data?.accessToken);
+      await AsyncStorage.setItem(
+        "ACCOUNT_ID",
+        JSON.stringify(response?.data?.accountId)
+      );
       return response.data;
     } catch (error) {
       console.log(error);
@@ -33,7 +37,7 @@ export const logout = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       await AsyncStorage.removeItem("ACCESS_TOKEN");
-
+      await AsyncStorage.removeItem("ACCOUNT_ID");
       return true;
     } catch (error) {
       console.log(error);
@@ -47,10 +51,17 @@ export const loadAuthState = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
-      if (accessToken) {
-        return true;
+      const accountId = await AsyncStorage.getItem("ACCOUNT_ID");
+      if (accessToken && accountId) {
+        return {
+          authenticated: true,
+          accountId: accountId
+        };
       }
-      return false;
+      return {
+        authenticated: false,
+        accountId: null
+      };
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.response?.data);
@@ -94,8 +105,6 @@ export const getProfile = createAsyncThunk(
     try {
       // const response = await userService.getProfile(key);
       const response = await userService.getProfile(key);
-
-      console.log("<UserSlice - getProfile>: " + response?.data);
 
       return response.data;
     } catch (error) {
@@ -173,7 +182,7 @@ export const userSlice = createSlice({
         state.authenticated = true;
         state.accountId = action.payload.accountId; // Assuming accountId is a property in the user data
         // Save userInfo to AsyncStorage
-        AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
+        // AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -197,13 +206,14 @@ export const userSlice = createSlice({
       })
       .addCase(loadAuthState.fulfilled, (state, action) => {
         state.loading = false;
-        state.authenticated = action.payload;
+        state.authenticated = action.payload.authenticated;
+        state.accountId = action.payload.accountId;
         state.userInfo = action.payload;
         // Load userInfo from AsyncStorage
-        const userInfoFromStorage = AsyncStorage.getItem("USER_INFO");
-        if (userInfoFromStorage) {
-          state.userInfo = JSON.parse(userInfoFromStorage);
-        }
+        // const userInfoFromStorage = AsyncStorage.getItem("USER_INFO");
+        // if (userInfoFromStorage) {
+        //   state.userInfo = JSON.parse(userInfoFromStorage);
+        // }
       })
       .addCase(loadAuthState.rejected, (state, action) => {
         state.loading = true;
