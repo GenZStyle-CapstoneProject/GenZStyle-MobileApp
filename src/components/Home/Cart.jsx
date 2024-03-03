@@ -27,7 +27,12 @@ const Cart = ({ item }) => {
   };
   const dispatch = useDispatch();
   const navigateToListLike = (item) => {
-    navigation.navigate("ListLike", { dataLike: item });
+    const dataLikeList = item.likes.map((item) => {
+      item.account;
+    });
+    navigation.navigate("ListLike", {
+      dataLike: item,
+    });
   };
 
   // const fetchAllPosts = async () => {

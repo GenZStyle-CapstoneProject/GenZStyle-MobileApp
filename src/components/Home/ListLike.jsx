@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -66,10 +66,12 @@ const BackButton = ({ onPress }) => (
     <Ionicons name="arrow-back" size={24} color="black" />
   </TouchableOpacity>
 );
-const ListLike = () => {
+const ListLike = ({ route }) => {
   const navigation = useNavigation();
+  const { dataLike } = route.params;
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState(likeData);
+  console.log("Data like", dataLike);
   const handleSearch = (query) => {
     setSearchQuery(query);
     const lowerCaseQuery = query.toLowerCase();
@@ -79,10 +81,11 @@ const ListLike = () => {
     setFilteredData(filtered);
   };
 
+  const accountData = dataLike.likes.map((like) => like.account);
   const renderLikeItem = ({ item }) => (
     <View style={styles.followerItem}>
-      <Image source={{ uri: item.avatar }} style={styles.avatar} />
-      <Text style={styles.username}>{item.username}</Text>
+      <Image source={{ uri: item?.avatar }} style={styles.avatar} />
+      <Text style={styles.username}>{item?.username}</Text>
       <TouchableOpacity style={styles.followButton}>
         <Text style={styles.followButtonText}>Theo dõi</Text>
       </TouchableOpacity>
@@ -110,8 +113,8 @@ const ListLike = () => {
         />
       </View>
       <FlatList
-        data={filteredData}
-        keyExtractor={(item) => item.id}
+        data={accountData}
+        keyExtractor={(item) => item?.accountId.toString()}
         renderItem={renderLikeItem}
         contentContainerStyle={styles.listContainer}
       />
