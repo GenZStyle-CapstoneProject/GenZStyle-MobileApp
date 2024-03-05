@@ -65,7 +65,8 @@ const SettingScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Cài đặt</Text>
       </View>
-      <View>
+      {
+      profile && <><View>
         <Text style={styles.settingText}>
           <Text style={styles.boldText}>Cài đặt của tôi</Text>
         </Text>
@@ -79,7 +80,8 @@ const SettingScreen = () => {
       <View>
         <Text style={styles.settingText}>Người dùng bị chặn</Text>
         <View style={styles.hr} />
-      </View>
+      </View></>
+      }
       {
         profile && <><View style={styles.settingItem}>
           <TouchableOpacity onPress={navigateToPackageHistory}>

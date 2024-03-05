@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createnewpost, getDetailHashtag } from '../../features/postSlice';
 import * as FileSystem from 'expo-file-system';
 import { Button } from 'react-native-elements';
+import Spinner from "react-native-loading-spinner-overlay";
+import { useSelector } from 'react-redux';
 
 const UpPostScreen = () => {
 
@@ -27,6 +29,7 @@ const UpPostScreen = () => {
 
     const dispatch = useAppDispatch();
     const hashtagList = useAppSelector((state) => state.post.hashtagList)
+    const loading = useSelector((state) => state.user.loading)
     const [hashtagData, setHashtagData] = useState([]);
     useEffect(() => {
         fetchDetailHashtag();
@@ -93,6 +96,7 @@ const UpPostScreen = () => {
         }
     };
     return (
+        <><Spinner visible={loading} />
         <View style={{ flex: 1, padding: 10 }}>
             <View>
                 <View style={styles.header}>
@@ -129,19 +133,6 @@ const UpPostScreen = () => {
             <Text style={styles.title}>#Hashtag</Text>
 
             <View style={styles.inputContainer}>
-                {/* <TextInput
-                    style={styles.input}
-                    placeholder="Hãy nhập Hashtag để phân loại cụ thể trang phục của bạn."
-                    placeholderTextColor="gray"
-                    multiline
-                    value={hashtags}
-                    onChangeText={(text) => setHashtags(text)}
-                /> */}
-                {/* <Text>
-                    goi y:
-
-                    <Button title="Get data" onPress={() => fetchDetailHashtag(2)} />
-                </Text> */}
                 <FlatList data={hashtagData} renderItem={({ item }) => {
                     return <TouchableOpacity onPress={() => selectHashtag(item)} style={{ marginRight: 10, padding: 5, borderWidth: 2, borderColor: "gray", borderRadius: 10, backgroundColor: "#99A1E8" }}><Text>{item}</Text></TouchableOpacity>
                 }} horizontal />
@@ -171,7 +162,7 @@ const UpPostScreen = () => {
                     <Text style={styles.buttonText}>Đăng</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </View></>
     );
 };
 
