@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -14,66 +15,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { fecthActivePost } from "../../app/ActivePost/action";
 import { FlatList } from "react-native";
 
+
 const Cart = ({ item }) => {
-  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  const [isLiked, setIsLiked] = useState(false);
   const [dataActivePost, setDataActivePost] = useState();
+  const [likedPosts, setLikedPosts] = useState([]);
   const dataActive = useSelector((state) => state.activePost.dataActivePost);
-
-  const handleLikePress = () => {
-    setIsLiked(!isLiked);
-  };
-
   const dispatch = useDispatch();
-  const navigateToListLike = (item) => {
-    const dataLikeList = item.likes.map((item) => {
-      item.account;
-    });
-    navigation.navigate("ListLike", {
-      dataLike: item,
-    });
-  };
-
-  // const fetchAllPosts = async () => {
-  //     try {
-  //         const response = await axios.get('https://genzstyleappapi20240126141439.azurewebsites.net/odata/Posts/Active/Post');
-  //         console.log('Axios Response:', response.data);
-
-  //         if (Array.isArray(response.data)) {
-  //             setPosts(response.data);
-  //         } else if (Array.isArray(response.data.value)) {
-  //             setPosts(response.data.value);
-  //         } else {
-  //             console.error('Invalid response format. Expected an array.');
-  //         }
-
-  //         setLoading(false);
-  //     } catch (error) {
-  //         console.error('Error fetching posts:', error);
-  //         console.error('Error details:', error.response?.data);
-  //     }
-  // };
-  // useEffect(() => {
-  //   dispatch(fecthActivePost()).then((result) => {
-  //     if (result.payload) {
-  //       console.log("Data received:", result.payload);
-  //       const data = result.payload;
-  //       setDataActivePost(data);
-  //     } else {
-  //       console.log("Error received");
-  //     }
-  //   });
-  // }, []);
 
   useFocusEffect(
     useCallback(() => {
       dispatch(fecthActivePost()).then((result) => {
         if (result.payload) {
           console.log("Data received:", result.payload);
-          const data = result.payload;
+          const data = result.payload.map(post => ({
+            ...post,
+            isLiked: false,
+          }));
           setDataActivePost(data);
+          setLikedPosts([]);
         } else {
           console.log("Error received");
         }
@@ -81,51 +42,97 @@ const Cart = ({ item }) => {
     }, [])
   );
 
-  const renderItem = ({ item }) => {
-    const isLikeTrue = item?.likes?.filter((item) => item.isLike === true);
-    console.log("Item is like", isLikeTrue.length);
-    return (
-      <View key={item.postId} style={styles.postContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CartDetail", { item })}
-        >
-          <Image source={{ uri: item.image }} style={styles.postImage} />
-          <View style={styles.postFooter}>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity
-                style={styles.icon}
-                onPress={() => handleLikePress(item.postId)}
-              >
-                <Icon
-                  name={isLiked ? "heart" : "heart-outline"}
-                  size={24}
-                  color={isLiked ? "red" : "black"}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.icon}
-                onPress={() => navigateToListLike(item)}
-              >
-                <Text style={styles.iconText}>{isLikeTrue.length}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.icon}>
-                <Icon name="chat-outline" size={24} color="black" />
-                <Text style={styles.iconText}></Text>
-              </TouchableOpacity>
+  const handleLikePress = (postId) => {
+
+    const index = dataActive.findIndex((post) => post.postId === postId);
+
+
+    setDataActivePost((prevData) => {
+      const newData = [...prevData];
+      newData[index] = {
+        ...newData[index],
+        isLiked: !newData[index]?.isLiked,
+      };
+      return newData;
+    });
+
+
+    setLikedPosts((prevLikedPosts) => {
+      if (prevLikedPosts.includes(postId)) {
+        return prevLikedPosts.filter((id) => id !== postId);
+      } else {
+        return [...prevLikedPosts, postId];
+      }
+    });
+  };
+
+  const navigateToListLike = (postId) => {
+    const post = dataActive.find((p) => p.postId === postId);
+    if (post) {
+      navigation.navigate("ListLike", {
+        dataLike: post,
+      });
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <View key={item.postId} style={styles.postContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate("CartDetail", { item })}>
+        <Image source={{ uri: item.image }} style={styles.postImage} />
+        <View style={styles.postFooter}>
+          <View style={styles.iconContainer}>
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => handleLikePress(item.postId)}
+            >
+
+              {/* <Icon
+                
+                name={item.isLiked ? "cards-heart" : "cards-heart-outline"}
+                size={24}
+                style={[
+                  styles.icon,
+                  likedPosts.includes(item.postId) && styles.redHeartIcon
+
+                ]}
+              /> */}
+              <Icon
+                name={item.isLiked ? "heart" : "heart-outline"}
+                size={24}
+                style={[
+                  styles.icon,
+                  likedPosts.includes(item.postId) && { color: "red" }
+                ]}
+              />
+
+
+
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => navigateToListLike(item.postId)}
+            >
+              <Text style={styles.iconText}>{item.likes.length}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.icon}>
+              <Icon name="chat-outline" size={24} color="black" />
+              <Text style={styles.iconText}></Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.textContainer}>
+            <View style={styles.textRow}>
+              <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleText}>
+                {item.content}
+              </Text>
             </View>
-            <View style={styles.textContainer}>
-              <View style={styles.textRow}>
-                <Text style={styles.titleText}>{item.content}</Text>
-              </View>
-              <View style={styles.textRow}>
-                <Text style={styles.hashtagText}>{item.hashtag}</Text>
-              </View>
+            <View style={styles.textRow}>
+              <Text style={styles.hashtagText}>{item.hashtag}</Text>
             </View>
           </View>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View>
@@ -139,7 +146,6 @@ const Cart = ({ item }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   postContainerScrollView: {
     marginLeft: 5,
@@ -172,6 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: 10,
+
   },
   iconText: {
     marginLeft: 5,
@@ -189,6 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
     marginLeft: -10,
+    flex: 1,
   },
   hashtagText: {
     color: "black",
@@ -199,6 +207,7 @@ const styles = StyleSheet.create({
     color: "black",
     marginTop: 5,
   },
+
 });
 
 export default Cart;
