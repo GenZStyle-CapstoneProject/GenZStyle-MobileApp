@@ -32,9 +32,10 @@ const CartDetail = ({ route }) => {
   const [comments, setComments] = useState();
   const [getIdAccount, setAccountId] = useState();
 
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(null);
+  const [sttState, setSttState] = useState(null);
   console.log("Data loaded: ", item);
-  const likes = useSelector((state) => state.likePost.numberLikeOfPost)
+  const likes = useSelector((state) => state.likePost.numberLikeOfPost);
   useEffect(() => {
     const getAccountId = async () => {
       try {
@@ -62,7 +63,7 @@ const CartDetail = ({ route }) => {
     getAccountId();
   }, []);
 
-  console.log(likes)
+  console.log(likes);
 
   // const fetchNumberLikeOfPost = async () => {
   //   await dispatch(fetchNumberLikeOfPost({postId: item?.postId})).then((res) => {
@@ -75,17 +76,20 @@ const CartDetail = ({ route }) => {
 
   const handleLikePress = async () => {
     setIsLiked(!isLiked);
+    setSttState(!isLiked);
 
     try {
       await dispatch(
         fetchLikePost({
           postId: item?.postId,
         })
-      ).then( async (res)=> {
-        console.log("Data like: ", JSON.stringify(res, null, 2))
-        await dispatch(fetchNumberLikeOfPost({postId: item?.postId})).then((res) => {
-          console.log("Length like: ", JSON.stringify(res, null, 2))
-        })
+      ).then(async (res) => {
+        console.log("Data like: ", JSON.stringify(res, null, 2));
+        await dispatch(fetchNumberLikeOfPost({ postId: item?.postId })).then(
+          (res) => {
+            console.log("Length like: ", JSON.stringify(res, null, 2));
+          }
+        );
       });
     } catch (error) {
       console.error("Error dispatching likePost:", error.message);
@@ -182,8 +186,11 @@ const CartDetail = ({ route }) => {
           onPress={() => navigateToListLike(item)}
         >
           <Text style={styles.iconText}>
-            {/* ({item?.likes?.filter((item) => item.isLike === true).length}) */}
-            {likes}
+            {sttState === null
+              ? item?.likes?.filter((item) => item.isLike === true).length
+              : sttState === true
+              ? item?.likes?.filter((item) => item.isLike === true).length + 1
+              : item?.likes?.filter((item) => item.isLike === true).length - 1}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon}>

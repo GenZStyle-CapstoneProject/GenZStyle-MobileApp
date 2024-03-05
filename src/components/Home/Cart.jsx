@@ -25,6 +25,7 @@ const Cart = ({ item }) => {
   const handleLikePress = () => {
     setIsLiked(!isLiked);
   };
+
   const dispatch = useDispatch();
   const navigateToListLike = (item) => {
     const dataLikeList = item.likes.map((item) => {
@@ -91,7 +92,10 @@ const Cart = ({ item }) => {
           <Image source={{ uri: item.image }} style={styles.postImage} />
           <View style={styles.postFooter}>
             <View style={styles.iconContainer}>
-              <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
+              <TouchableOpacity
+                style={styles.icon}
+                onPress={() => handleLikePress(item.postId)}
+              >
                 <Icon
                   name={isLiked ? "heart" : "heart-outline"}
                   size={24}
