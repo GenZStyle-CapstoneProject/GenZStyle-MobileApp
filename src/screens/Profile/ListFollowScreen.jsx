@@ -13,12 +13,13 @@ const BackButton = ({ onPress }) => (
     </TouchableOpacity>
 );
 
-const ListFollowScreen = ({ navigation }) => {
+const ListFollowScreen = ({ navigation, route }) => {
+    const { screen, profile } = route.params;
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <BackButton onPress={() => navigation.goBack()} />
-                <Text style={styles.userName}>phungu_</Text>
+                <Text style={styles.userName}> {profile?.data?.accounts[0]?.username || "username"}</Text>
             </View>
             <Tab.Navigator
                 screenPosition="top"

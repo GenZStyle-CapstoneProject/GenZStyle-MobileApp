@@ -3,10 +3,10 @@ import { View, StyleSheet, Text } from "react-native";
 import HeaderProfile from "./HeaderProfile";
 import ProfileTab from "./ProfileTab";
 
-const ProfileLoggedIn = ({ profile }) => {
+const ProfileLoggedIn = ({ profile, followersData }) => {
     return (
         <View style={styles.container}>
-            <HeaderProfile profile={profile} />
+            <HeaderProfile profile={profile} followersData={followersData} />
             <View style={styles.hr} />
             <ProfileTab />
         </View>
