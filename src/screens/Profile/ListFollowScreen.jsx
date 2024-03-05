@@ -14,7 +14,7 @@ const BackButton = ({ onPress }) => (
 );
 
 const ListFollowScreen = ({ navigation, route }) => {
-    const { screen, profile } = route.params;
+    const { screen, profile, followersData } = route.params;
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -31,8 +31,8 @@ const ListFollowScreen = ({ navigation, route }) => {
                     tabBarIndicatorStyle: { backgroundColor: 'black' },
                 }}
             >
-                <Tab.Screen name="Người theo dõi" component={FollowersTab} />
-                <Tab.Screen name="Đang theo dõi" component={FollowingTab} />
+                <Tab.Screen name="Người theo dõi" component={FollowersTab} initialParams={{ followersData }} />
+                <Tab.Screen name="Đang theo dõi" component={FollowingTab} initialParams={{ followersData }} />
             </Tab.Navigator>
         </View>
     );

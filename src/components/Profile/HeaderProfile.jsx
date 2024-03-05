@@ -15,11 +15,11 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
     navigation.navigate("LoginInProfile");
   };
   const handleFollowers = () => {
-    navigation.navigate("ListFollow", { screen: "Người theo dõi", profile });
+    navigation.navigate("ListFollow", { screen: "Người theo dõi", profile, followersData });
   };
 
   const handleFollowing = () => {
-    navigation.navigate("ListFollow", { screen: "Đang theo dõi", profile });
+    navigation.navigate("ListFollow", { screen: "Đang theo dõi", profile, followersData });
   };
 
   return (
@@ -61,13 +61,13 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
       <View style={styles.bioContainer}>
         <View style={styles.bioColumn}>
           <TouchableOpacity onPress={handleFollowers}>
-            <Text style={styles.bioCount}>{followersData?.follower || "0"}</Text>
+            <Text style={styles.bioCount}>{followersData?.followers?.length || "0"}</Text>
             <Text style={styles.bioText}>Người theo dõi</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.bioColumn}>
           <TouchableOpacity onPress={handleFollowing}>
-            <Text style={styles.bioCount}>{followersData?.followering || "0"}</Text>
+            <Text style={styles.bioCount}>{followersData?.following?.length || "0"}</Text>
             <Text style={styles.bioText}>Đang theo dõi</Text>
           </TouchableOpacity>
         </View>
