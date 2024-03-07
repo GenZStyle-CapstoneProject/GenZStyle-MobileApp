@@ -23,7 +23,7 @@ const ProfileTab = (userInfo) => {
         >
             <Tab.Screen name="Bài đăng của tôi">
                 {/* {() => <MyPostsScreen userPosts={userInfo.posts} />} */}
-                {() => <MyPostsScreen accountId={userInfo.id} />}
+                {() => <MyPostsScreen accountId={userInfo.accountId} />}
             </Tab.Screen>
             <Tab.Screen name="Yêu thích" component={FavoritesScreen} />
             <Tab.Screen name="Đã lưu" component={SavedScreen} />

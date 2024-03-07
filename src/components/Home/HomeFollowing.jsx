@@ -23,7 +23,11 @@ const HomeFollowing = () => {
 
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={style.Container}>
+                <View style={{ flex: 1, backgroundColor: 'white' }}>
+                    <Text style={{ textAlign: 'center', fontWeight: 'regular', color: '#9D9FB7', marginTop: 10 }}>Khi những người bạn đang theo dõi chia sẻ trang phục của họ, bạn sẽ thấy những bộ trang phục ấy ở đây.</Text>
+                </View>
                 <View style={style.userContainer}>
+
                     <Avatar
                         activeOpacity={0.2}
                         avatarStyle={{}}

@@ -10,13 +10,9 @@ import HeaderHomeFollowing from '../components/Home/HeaderHomeFollowing';
 
 const FollowingScreen = () => (
     <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-        <HeaderHomeFollowing />
+        {/* <HeaderHomeFollowing /> */}
         <HomeFollowing />
-        <HomeFollowing />
-        <HomeFollowing />
-        <HomeFollowing />
-        <HomeFollowing />
-        <HomeFollowing />
+
     </ScrollView>
 );
 

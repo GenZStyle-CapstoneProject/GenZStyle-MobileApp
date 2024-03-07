@@ -8,7 +8,8 @@ import packageRegisterReducer from "../app/PackageRegister/slice";
 import listFollowReducer from "../app/ListFollow/slice"
 import postReducer from "../features/postSlice";
 import likePostReducer from "../app/LikePost/slice"
-
+import followFriendReducer from "../app/Button/slice"
+import MyPostSliceReducer from "../app/MyPost/slice"
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
@@ -23,7 +24,9 @@ export const store = configureStore({
     commnentPost: commentPostReducer,
     addCommentPost: addCommentPostReducer,
     packageRegister: packageRegisterReducer,
-    listFollow: listFollowReducer, 
-    likePost: likePostReducer
+    listFollow: listFollowReducer,
+    likePost: likePostReducer,
+    followFriend: followFriendReducer,
+    fetchMyPost: MyPostSliceReducer,
   },
 });
