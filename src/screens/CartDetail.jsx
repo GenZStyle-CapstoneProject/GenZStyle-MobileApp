@@ -190,7 +190,7 @@ const CartDetail = ({ route }) => {
               ? item?.likes?.filter((item) => item.isLike === true).length
               : sttState === true
                 ? item?.likes?.filter((item) => item.isLike === true).length + 1
-                : item?.likes?.filter((item) => item.isLike === true).length - 1}
+                : item?.likes?.filter((item) => item.isLike === true).length}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon}>
