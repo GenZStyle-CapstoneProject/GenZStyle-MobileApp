@@ -33,7 +33,9 @@ const CartDetail = ({ route }) => {
   const [getIdAccount, setAccountId] = useState();
 
   const [isLiked, setIsLiked] = useState(null);
-  const [sttState, setSttState] = useState(null);
+  const [sttState, setSttState] = useState(
+    item?.likes?.filter((item) => item.isLike === true).length
+  );
   console.log("Data loaded: ", item);
   const likes = useSelector((state) => state.likePost.numberLikeOfPost);
   useEffect(() => {
@@ -76,7 +78,12 @@ const CartDetail = ({ route }) => {
 
   const handleLikePress = async () => {
     setIsLiked(!isLiked);
-    setSttState(!isLiked);
+
+    setSttState((prevSttState) => {
+      const likeChange = isLiked ? -1 : 1;
+
+      return prevSttState + likeChange;
+    });
 
     try {
       await dispatch(
@@ -160,6 +167,14 @@ const CartDetail = ({ route }) => {
     });
   }, [comment]);
 
+  const handleLike = () => {
+    if (isLiked === true) {
+      handleLikePress(1);
+    } else {
+      handleLikePress(-1);
+    }
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* Back button */}
@@ -185,13 +200,7 @@ const CartDetail = ({ route }) => {
           style={styles.icon}
           onPress={() => navigateToListLike(item)}
         >
-          <Text style={styles.iconText}>
-            {sttState === null
-              ? item?.likes?.filter((item) => item.isLike === true).length
-              : sttState === true
-                ? item?.likes?.filter((item) => item.isLike === true).length + 1
-                : item?.likes?.filter((item) => item.isLike === true).length}
-          </Text>
+          <Text style={styles.iconText}>{sttState}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon}>
           <Icon name="chat-outline" size={24} color="black" />
