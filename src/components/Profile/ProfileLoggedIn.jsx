@@ -8,7 +8,7 @@ const ProfileLoggedIn = ({ profile, followersData }) => {
         <View style={styles.container}>
             <HeaderProfile profile={profile} followersData={followersData} />
             <View style={styles.hr} />
-            <ProfileTab />
+            <ProfileTab profile={profile} />
         </View>
     );
 };

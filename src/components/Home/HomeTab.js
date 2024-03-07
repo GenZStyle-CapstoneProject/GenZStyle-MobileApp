@@ -6,10 +6,13 @@ import { View, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ForYouScreen from "../../screens/ForYouScreen";
 import FollowingScreen from "../../screens/FollowingScreen";
-
+import ROUTES from '../../constants/routes';
+import { useNavigation } from '@react-navigation/native';
+import { IconButton } from 'react-native-paper';
 const Tab = createMaterialTopTabNavigator();
 
 const HomeTab = () => {
+    const navigation = useNavigation();
     return (
         <View style={{ flex: 1, marginTop: 40 }}>
             <Tab.Navigator
@@ -25,9 +28,12 @@ const HomeTab = () => {
                 <Tab.Screen name="Đang theo dõi" component={FollowingScreen} />
 
             </Tab.Navigator>
-            <View style={{ position: 'absolute', top: 0, right: 0, padding: 10 }}>
-                <TouchableOpacity onPress={() => { }}>
-                    <Ionicons name="chatbubble-ellipses" size={30} color="black" />
+            <View style={{ position: 'absolute', paddingTop: 2, alignSelf: 'flex-end', padding: 5 }}>
+                <TouchableOpacity onPress={() => navigation.navigate(ROUTES.CONVERSATIONS)}>
+                    <IconButton
+                        icon="chat"
+                        color="#000"
+                    />
                 </TouchableOpacity>
             </View>
         </View>
