@@ -10,7 +10,7 @@ export const fetchMyPost = createAsyncThunk(
             const apiUrl = `${BASE_URL}odata/Posts/${accountId}/GetPostByAccountId`;
             const response = await axios.get(apiUrl);
             console.log("apiUrl", apiUrl);
-            return response.data;
+            return response.data?.posts;
         } catch (error) {
             throw error;
         }

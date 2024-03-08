@@ -20,7 +20,6 @@ const MyPostSlice = createSlice({
             .addCase(fetchMyPost.fulfilled, (state, action) => {
                 state.loadingMyPost = "fulfilled";
                 state.posts = action.payload;
-                console.log("Action payload:", action.payload);
             })
             .addCase(fetchMyPost.rejected, (state, action) => {
                 state.loadingMyPost = "rejected";

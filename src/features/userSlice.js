@@ -2,10 +2,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { productService } from "../services/productService";
 import { userService } from "../services/userSevice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axiosClient from "../services/axiosClient";
 const initialState = {
   userInfo: null,
   profile: null,
   accessToken: "",
+  data: [],
   authenticated: false,
   isExitIntro: false,
   loadingIntro: false,
@@ -166,6 +168,30 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const fecthListFollow = createAsyncThunk(
+  "listfollow/fecthListFollow",
+  async () => {
+    try {
+      const apiUrl = `api/Users/ActiveProducts/odata/UserProfile/Follow`;
+      // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+      // console.log('aaaaa', apiUrl);
+      // const headers = {
+      //     Authorization: `Bearer ${accessToken}`,
+      // };
+
+
+      const response = await axiosClient.get(apiUrl);
+
+      console.log("Respone data", response.data);
+      return response.data;
+
+    } catch (error) {
+      console.log("errror")
+      throw error;
+    }
+  }
+)
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -195,6 +221,7 @@ export const userSlice = createSlice({
         state.userInfo = null;
         state.profile = null;
         state.loading = false;
+        state.data = null;
         state.authenticated = false;
         state.accountId = null;
       })
@@ -258,8 +285,7 @@ export const userSlice = createSlice({
         state.userInfo = action.payload;
         state.profile = action.payload;
         state.loading = false;
-        state.accountId = action.payload.accountId;
-
+        
         console.log("Cập nhật thông tin người dùng thành công");
 
         // Save userInfo to AsyncStorage
@@ -302,7 +328,23 @@ export const userSlice = createSlice({
 
         // Check if action has an error property before accessing its message
         state.error = action.error ? action.error.message : "Unknown error";
-      });
+      })
+      .addCase(fecthListFollow.pending, (state) => {
+        state.loading = "pending";
+        console.log("Pending state:", state);
+      })
+      .addCase(fecthListFollow.fulfilled, (state, action) => {
+        state.loading = "fulfilled";
+        state.data = action.payload;
+        console.log("Fulfilled state:", state);
+
+
+      })
+      .addCase(fecthListFollow.rejected, (state, action) => {
+        state.loading = "rejected";
+        state.error = action.error.message || "An error occurred";
+        console.error('Rejected state:', state.error);
+      });;
   },
 });
 export default userSlice.reducer;
