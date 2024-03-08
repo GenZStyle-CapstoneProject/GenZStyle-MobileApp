@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../../screens/HomeScreen";
@@ -22,7 +22,7 @@ const BottomTabNavigator = ({ authenticated }) => {
         },
         tabBarStyle: {
           backgroundColor: "white",
-          height: 55,
+          height: Platform.OS==="android" ? 55 : 90,
         },
         tabBarActiveTintColor: "#99A1E8",
         tabBarLabelStyle: {

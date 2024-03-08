@@ -18,7 +18,7 @@ const AppNavigator = () => {
 
   const fetchLoadAuthState = async () => {
     await dispatch(loadAuthState());
-  };
+  }; 
   const fetchCheckExitIntro = async () => {
     await dispatch(checkExitIntro());
   };  
