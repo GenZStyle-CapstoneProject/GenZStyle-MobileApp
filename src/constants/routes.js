@@ -6,6 +6,7 @@ const ROUTES = {
     FOLLOWING: 'Following',
 
     SEARCH: 'Search',
+    HASHTAG_RESULT: '"HashtagResult"',
     SEARCH_NAVIGATOR: 'SearchNavigator',
     POST: 'Post',
     POST_NAVIGATOR: 'PostNavigator',
