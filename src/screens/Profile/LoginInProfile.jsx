@@ -37,7 +37,7 @@ const LoginInProfile = ({ navigation }) => {
                     alert("Đăng nhập thành công");
                     navigation.goBack();
                 } else {
-                    alert("Dang nhap that bai");
+                    alert("Dang nhap that bai"); 
                 }
             });
         } catch (error) {

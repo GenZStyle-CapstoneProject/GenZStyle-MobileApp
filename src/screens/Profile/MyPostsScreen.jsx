@@ -212,12 +212,14 @@
 
 // export default MyPostsScreen;
 import React, { useState, useCallback } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, RefreshControl } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyPost } from "../../app/MyPost/action";
 import { FlatList } from "react-native";
+import EmptyResult from "../Search/EmptyResult";
+import { fecthListFollow, getProfile } from "../../features/userSlice";
 
 const MyPostsScreen = () => {
     const [loading, setLoading] = useState(true);
@@ -231,6 +233,8 @@ const MyPostsScreen = () => {
     useFocusEffect(
         useCallback(() => {
             dispatch(fetchMyPost(accountId)).then((result) => {
+                console.log("Action payload:", JSON.stringify(result, null, 2));
+
                 if (result.payload) {
                     setDataMyPost(result.payload.posts);
                     setLikedPosts([]);
@@ -238,9 +242,42 @@ const MyPostsScreen = () => {
                     console.log("Error received:", result.error);
                 }
             });
-        }, [dispatch])
+        }, [])  
     );
-
+    const [refreshing, setRefresing] = useState(false)
+    const onRefresh = useCallback(() => {
+      setRefresing(true)
+      const fetchData = async () => {
+        // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+        // console.log("userInfo", accountId);
+        await dispatch(getProfile(accountId)).then((res) => {
+          console.log(JSON.stringify(res, null, 2));
+        });
+      };
+      const fecthFollow = async () => {
+        // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+  
+        try {
+          await dispatch(fecthListFollow());
+  
+        } catch (error) {
+          // Handle the error or implement a retry mechanism 
+          console.error('Error in fecthFollow:', error);
+        }
+      };
+  
+  
+      const fetchAsync = async () => {
+        await fetchData();
+        await fecthFollow();
+        setRefresing(false)
+  
+      }
+  
+      fetchAsync();
+      setRefresing(false)
+  
+    }, [])
     const renderItem = ({ item }) => {
         return (
             <View key={item.postId} style={styles.postContainer}>
@@ -276,10 +313,12 @@ const MyPostsScreen = () => {
     return (
         <View style={styles.container}>
             <FlatList
-                data={dataMyPost.posts}
+                data={dataMyPost}
                 keyExtractor={(item) => item.postId.toString()}
                 renderItem={renderItem}
                 numColumns={2}
+                ListEmptyComponent={EmptyResult}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />
         </View>
     );

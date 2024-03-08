@@ -16,7 +16,7 @@ const AppNavigator = () => {
   const isExitIntro = useAppSelector((state) => state.user.isExitIntro);
   const loadingIntro = useAppSelector((state) => state.user.loadingIntro); 
 
-  const fetchLoadAuthState = async () => {
+  const fetchLoadAuthState = async () => {  
     await dispatch(loadAuthState());
   }; 
   const fetchCheckExitIntro = async () => {

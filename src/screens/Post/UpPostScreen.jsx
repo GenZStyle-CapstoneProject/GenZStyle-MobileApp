@@ -10,6 +10,7 @@ import * as FileSystem from 'expo-file-system';
 import { Button } from 'react-native-elements';
 import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const UpPostScreen = () => {
 
@@ -108,7 +109,7 @@ const UpPostScreen = () => {
                     </View>
                 </View>
             </View>
-
+            <KeyboardAwareScrollView>
             {/* Hiển thị ảnh đã chọn */}
             {selectedImage && (
                 <View style={styles.imageContainer}>
@@ -117,6 +118,7 @@ const UpPostScreen = () => {
             )}
 
             {/* Title "Gợi ý trang phục" */}
+        
             <Text style={styles.title}>Gợi ý trang phục</Text>
 
             {/* Ô input và hint text */}
@@ -143,7 +145,7 @@ const UpPostScreen = () => {
                     return <TouchableOpacity onPress={() => selectHashtag(item?.name)} style={{ marginRight: 10, marginTop:10, padding: 5, borderWidth: 2, borderColor: "gray", borderRadius: 10, backgroundColor: "#99A1E8" }}><Text>{item?.name}</Text></TouchableOpacity>
                 }} horizontal />
             </View>
-
+            </KeyboardAwareScrollView>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[styles.button, styles.draftButton]}
