@@ -23,7 +23,7 @@ const FashionScreen = () => {
                     data={products}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => <TouchableOpacity onPress={() => navigateToCartDetail(item)}>
-                        <Cart item={item} />
+                        {/* <Cart item={item} /> */}
                     </TouchableOpacity>}
                     numColumns={2}
                 />
