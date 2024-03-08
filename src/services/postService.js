@@ -19,4 +19,8 @@ export const postService = {
     const url = `/odata/Hashtags/GetHashTag`;
     return axiosClient.get(url);
   },
+  searchPostByHashtag: (hashtag) => {
+    const url = `/odata/HashTags/SearchByHashTagName?hashtag=${hashtag}`;
+    return axiosClient.get(url);
+  },
 };

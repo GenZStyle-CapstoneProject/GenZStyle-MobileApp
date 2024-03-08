@@ -7,13 +7,18 @@ const initialState = {
   userInfo: null,
   accessToken: "",
   hashtagList: [],
-
+  hashtagListSearch: [],
+  hashtagParam: "",
 };
 export const createnewpost = createAsyncThunk(
   "post/createnewpost",
   async ({ Content, Image, Hashtags }, { rejectWithValue }) => {
     try {
-      const response = await postService.createnewpost({ Content, Image, Hashtags });
+      const response = await postService.createnewpost({
+        Content,
+        Image,
+        Hashtags,
+      });
       console.log("<PostSlice>: " + response?.data);
       return response.data;
     } catch (error) {
@@ -28,6 +33,29 @@ export const getDetailHashtag = createAsyncThunk(
     try {
       const response = await postService.getDetailHashtag();
       return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+export const searchPostByHashtag = createAsyncThunk(
+  "post/searchPostByHashtag",
+  async (hashtag, { rejectWithValue }) => {
+    try {
+      const response = await postService.searchPostByHashtag(hashtag);
+      return { hashTags: response.data?.hashTags, hashtag: hashtag };
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+export const resetSearchPostByHashtag = createAsyncThunk(
+  "post/resetSearchPostByHashtag",
+  async (hashtag, { rejectWithValue }) => {
+    try {
+      return { hashTags: [], hashtag: hashtag };
     } catch (error) {
       console.log(error);
       return rejectWithValue(error.response?.data);
@@ -64,6 +92,23 @@ export const postSlice = createSlice({
       .addCase(getDetailHashtag.rejected, (state, action) => {
         state.loading = false;
       })
+      .addCase(searchPostByHashtag.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(searchPostByHashtag.fulfilled, (state, action) => {
+        state.hashtagListSearch = action.payload.hashTags;
+        state.hashtagParam = action.payload.hashtag;
+        state.loading = false;
+      })
+      .addCase(searchPostByHashtag.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(resetSearchPostByHashtag.pending, (state, action) => {})
+      .addCase(resetSearchPostByHashtag.fulfilled, (state, action) => {
+        state.hashtagListSearch = action.payload.hashTags;
+        state.hashtagParam = action.payload.hashtag;
+      })
+      .addCase(resetSearchPostByHashtag.rejected, (state, action) => {});
   },
 });
 export default postSlice.reducer;
