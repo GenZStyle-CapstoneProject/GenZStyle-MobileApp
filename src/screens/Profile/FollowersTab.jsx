@@ -6,6 +6,7 @@ const FollowersTab = ({ route }) => {
 
     const renderFollowerItem = ({ item }) => (
         <View style={styles.followerItem}>
+            <Image style={styles.avatar} source={{ uri: item?.user?.avatar }} />
             <Text style={styles.username}>{item?.username}</Text>
             <TouchableOpacity style={styles.unfollowButton}>
                 <Text style={styles.unfollowButtonText}>Gỡ</Text>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAddCommentPost } from "../app/AddComment/action";
 import { fetchLikePost, fetchNumberLikeOfPost } from "../app/LikePost/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const CartDetail = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
@@ -31,13 +32,18 @@ const CartDetail = ({ route }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState();
   const [getIdAccount, setAccountId] = useState();
+  const [showAllComments, setShowAllComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
+
 
   const [isLiked, setIsLiked] = useState(null);
   const [sttState, setSttState] = useState(
     item?.likes?.filter((item) => item.isLike === true).length
   );
-  console.log("Data loaded: ", item);
+
   const likes = useSelector((state) => state.likePost.numberLikeOfPost);
+  const commentInputRef = useRef(null);
+
   useEffect(() => {
     const getAccountId = async () => {
       try {
@@ -67,14 +73,7 @@ const CartDetail = ({ route }) => {
 
   console.log(likes);
 
-  // const fetchNumberLikeOfPost = async () => {
-  //   await dispatch(fetchNumberLikeOfPost({postId: item?.postId})).then((res) => {
-  //     console.log("Length like: ", JSON.stringify(res, null, 2))
-  //   })
-  // }
-  // useEffect(() => {
-  //   fetchNumberLikeOfPost();
-  // },[likes])
+
 
   const handleLikePress = async () => {
     setIsLiked(!isLiked);
@@ -93,7 +92,7 @@ const CartDetail = ({ route }) => {
       ).then(async (res) => {
         console.log("Data like: ", JSON.stringify(res, null, 2));
         await dispatch(fetchNumberLikeOfPost({ postId: item?.postId })).then(
-          (res) => {
+(res) => {
             console.log("Length like: ", JSON.stringify(res, null, 2));
           }
         );
@@ -102,13 +101,7 @@ const CartDetail = ({ route }) => {
       console.error("Error dispatching likePost:", error.message);
     }
   };
-  // const handleAddComment = () => {
-  //   if (comment.trim() !== "") {
-  //     setComments([...comments, comment]);
-  //     console.log("Added comment", comment);
-  //     setComment("");
-  //   }
-  // };
+
 
   const navigateToListLike = (item) => {
     navigation.navigate("ListLike", {
@@ -116,9 +109,11 @@ const CartDetail = ({ route }) => {
     });
   };
 
+
   const handleAddComment = async () => {
     if (comment.trim() !== "") {
       try {
+
         await dispatch(
           fetchAddCommentPost({
             postId: item.postId,
@@ -127,14 +122,20 @@ const CartDetail = ({ route }) => {
           })
         );
 
-        console.log("Added comment", comment);
+
+        setComments((prevComments) => [...prevComments, comment]);
+
+
         setComment("");
       } catch (error) {
-        // Handle any errors if the Redux thunk fails
         console.error("Error dispatching fetchAddCommentPost:", error.message);
       }
     }
   };
+
+
+
+
 
   const openReportModal = () => {
     setReportModalVisible(true);
@@ -156,16 +157,16 @@ const CartDetail = ({ route }) => {
   console.log("Item id", item.postId);
   useEffect(() => {
     dispatch(fetchCommentPost(item.postId)).then((result) => {
-      if (result.payload) {
-        console.log("Data Comment:", result.payload);
-        const data = result.payload?.map((item) => item.content);
-        console.log("Data Comment 2:", data);
+      if (result.payload && result.payload.value) {
+        const data = result.payload.value.map((comment) => comment.Content);
         setComments(data);
+        setCommentCount(data.length);
       } else {
-        console.log("Error received");
+        console.log("Error fetching comments:", result.payload);
       }
     });
-  }, [comment]);
+  }, [item.postId]);
+
 
   const handleLike = () => {
     if (isLiked === true) {
@@ -174,10 +175,13 @@ const CartDetail = ({ route }) => {
       handleLikePress(-1);
     }
   };
+  const handleComment = () => {
 
+    commentInputRef.current.focus();
+  };
   return (
     <ScrollView style={styles.container}>
-      {/* Back button */}
+
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
@@ -202,9 +206,16 @@ const CartDetail = ({ route }) => {
         >
           <Text style={styles.iconText}>{sttState}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.icon}>
+        <TouchableOpacity style={styles.icon} onPress={handleComment}>
           <Icon name="chat-outline" size={24} color="black" />
-          <Text style={styles.iconText}></Text>
+          <Text style={styles.iconText}>{commentCount}</Text>
+        </TouchableOpacity>
+<TouchableOpacity style={styles.icon} >
+          <Icon
+            name={"bookmark-multiple-outline"}
+            size={24}
+            color="black"
+          />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.moreOptionsIcon}
@@ -235,16 +246,18 @@ const CartDetail = ({ route }) => {
       <View style={styles.textRow}>
         <Text style={styles.titleText}>{item.content}</Text>
       </View>
+
+
       <View style={styles.textRow}>
-        {item?.hashPosts?.map((itemDetail) => (
-          <Text key={itemDetail.hashtag.id} style={styles.hashtagText}>
-            {itemDetail?.hashtag.name}
-          </Text>
-        ))}
+        <Text style={styles.hashtagText}>
+          {item.hashtags}
+        </Text>
       </View>
+
+
       {/* Danh sách bình luận */}
       <FlatList
-        data={comments}
+        data={(showAllComments && comments) ? comments : (comments ? comments.slice(0, 4) : [])}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View style={styles.commentContainer}>
@@ -253,16 +266,35 @@ const CartDetail = ({ route }) => {
         )}
       />
 
+
+
+
+      {/* "Read more" button */}
+      {comments && comments.length > 4 && !showAllComments && (
+        <TouchableOpacity onPress={() => setShowAllComments(true)}>
+          <Text style={styles.readMoreButton}>Xem thêm</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* "Read less" button */}
+      {showAllComments && (
+        <TouchableOpacity onPress={() => setShowAllComments(false)}>
+          <Text style={styles.readMoreButton}>Thu gọn</Text>
+        </TouchableOpacity>
+      )}
+
+
       {/* Phần nhập bình luận */}
       <View style={styles.commentInputContainer}>
         <TextInput
+          ref={commentInputRef}
           style={styles.commentInput}
           placeholder="Thêm bình luận ..."
           value={comment}
           onChangeText={(text) => setComment(text)}
         />
         <TouchableOpacity onPress={handleAddComment}>
-          <Text style={styles.addCommentButton}>Thêm</Text>
+          <Icon name="send-outline" size={24} color="blue" />
         </TouchableOpacity>
       </View>
 
@@ -277,7 +309,7 @@ const CartDetail = ({ route }) => {
 
       {/* Các sản phẩm liên quan 
       <View style={styles.relatedProductsContainer}>
-        <Text style={styles.relatedProductsTitle}>Các sản phẩm liên quan:</Text>
+<Text style={styles.relatedProductsTitle}>Các sản phẩm liên quan:</Text>
 
         <FlatList
           data={products}
@@ -311,42 +343,49 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     marginBottom: 16,
   },
+  hashtagText: {
+    color: "black",
+    marginTop: 5,
+    marginLeft: -10,
+    marginBottom: 10,
+
+
+  },
   iconContainer: {
     flexDirection: "row",
     justifyContent: "start",
     marginBottom: 5,
   },
+
   commentContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,
-    // backgroundColor: '#E3E5F8',
-    backgroundColor: "gray",
-    borderRadius: 20,
-    padding: 8,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 10,
+    padding: 10,
   },
   commentIcon: {
-    marginRight: 8,
-  },
-  commentTextPlaceholder: {
-    color: "#333",
-    fontStyle: "italic",
-    marginRight: 8,
+    marginLeft: 8,
   },
   commentText: {
     flex: 1,
+    marginLeft: 10,
   },
   commentInputContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: 16,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 10,
+    padding: 8,
   },
   commentInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "#E0E0E0",
     borderRadius: 8,
-    padding: 8,
+    padding: 10,
     marginRight: 8,
   },
   addCommentButton: {
@@ -420,6 +459,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "red",
     marginTop: 10,
+  },
+  readMoreButton: {
+    padding: 8,
+    color: "grey",
+    marginTop: 10,
+    fontSize: 16,
+    textDecorationLine: "underline",
   },
 });
 

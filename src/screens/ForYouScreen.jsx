@@ -61,7 +61,7 @@ const ForYouScreen = () => {
       {selectedCategory === "Nữ" && <CategoryForWomen />}
 
       <ScrollView
-        nestedScrollEnabled={true}
+  
         // nestedScrollEnabled={true}
         horizontal
         showsHorizontalScrollIndicator={false}

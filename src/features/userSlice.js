@@ -172,7 +172,7 @@ export const fecthListFollow = createAsyncThunk(
   "listfollow/fecthListFollow",
   async () => {
     try {
-      const apiUrl = `api/Users/ActiveProducts/odata/UserProfile/Follow`;
+      const apiUrl = `/odata/UserProfile/Follow`;
       // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
       // console.log('aaaaa', apiUrl);
       // const headers = {
@@ -343,7 +343,7 @@ export const userSlice = createSlice({
       .addCase(fecthListFollow.rejected, (state, action) => {
         state.loading = "rejected";
         state.error = action.error.message || "An error occurred";
-        console.error('Rejected state:', state.error);
+        console.log('Rejected state:', state.error);
       });;
   },
 });

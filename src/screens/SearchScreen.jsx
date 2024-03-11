@@ -327,11 +327,11 @@ const SearchScreen = () => {
             {selectedCategory === "Nam" && <CategoryForMen />}
             {selectedCategory === "Nữ" && <CategoryForWomen />}
 
-            {/* <Tab.Navigator>
+            <Tab.Navigator>
               <Tab.Screen name="Trang phục" component={FashionScreen} />
               <Tab.Screen name="Mọi người" component={EveryoneScreen} />
               <Tab.Screen name="Hashtag" component={HashtagScreen} />
-            </Tab.Navigator> */}
+            </Tab.Navigator>
           </View>
         </>
       )}

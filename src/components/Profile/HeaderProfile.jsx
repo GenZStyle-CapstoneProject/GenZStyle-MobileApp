@@ -36,8 +36,12 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
       </View>
       <View style={styles.topRow}>
         <View style={styles.avatarContainer}>
-          <Image
+          {/* <Image
             source={require("../../../assets/avatar.jpg")}
+            style={styles.profileImage}
+          /> */}
+          <Image
+            source={{ uri: profile?.data?.accounts[0]?.user?.avatar }}
             style={styles.profileImage}
           />
         </View>

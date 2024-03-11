@@ -6,7 +6,7 @@ export const userService = {
     return axiosClient.post(url, { ...{ userName, passwordHash } });
   },
   getProfile: (key) => {
-    const url = `/api/Users/Get/odata/Users/${key}/GetUserByAccountId`;
+    const url = `/odata/Users/${key}/GetUserByAccountId`;
     return axiosClient.get(url);
   },
   updateProfile: async (key, City, Address, Height, Phone, Gender, Dob) => {
@@ -21,8 +21,9 @@ export const userService = {
     formData.append("Dob", Dob);
     formData.append("Height", Height);
 
-    const url = `/api/Users/Put/User/${key}/UpdateUser`;
+    const url = `/User/${key}/UpdateUser`;
 
+    
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",

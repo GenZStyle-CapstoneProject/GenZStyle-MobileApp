@@ -1,24 +1,41 @@
-import { StyleSheet, } from 'react-native'
-import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Login from '../../screens/Login'
-import Signup from '../../screens/Signup'
-import Welcome from '../../screens/Welcome'
-import MoreInfo from '../../screens/MoreInfo'
+import { StyleSheet } from "react-native";
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Login from "../../screens/Login";
+import Signup from "../../screens/Signup";
+import Welcome from "../../screens/Welcome";
+import MoreInfo from "../../screens/MoreInfo";
+import WelcomeBack from "../../screens/WelcomeBack";
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
 const AuthTabNavigator = () => {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name={'Welcome'} component={Welcome} options={{ headerShown: false, }} />
-            <Stack.Screen name={'Login'} component={Login} options={{ headerShown: false, }} />
-            <Stack.Screen name={'Signup'} component={Signup} options={{ headerShown: false, }} />
-            <Stack.Screen name={'MoreInfo'} component={MoreInfo} options={{ headerShown: false, }} />
-        </Stack.Navigator>
-    )
-}
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={"WelcomeBack"}
+        component={WelcomeBack}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"Login"}
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"Signup"}
+        component={Signup}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"MoreInfo"}
+        component={MoreInfo}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+};
 
-export default AuthTabNavigator
+export default AuthTabNavigator;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

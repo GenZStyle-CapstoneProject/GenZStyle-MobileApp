@@ -50,7 +50,7 @@ const SettingPackage = () => {
           await dispatch(fetchPurchasePackage(2));
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.log("Error fetching data:", error);
       }
     };
     fetchData(type);

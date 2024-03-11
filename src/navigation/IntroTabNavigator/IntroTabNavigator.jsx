@@ -5,6 +5,7 @@ import Login from "../../screens/Login";
 import Signup from "../../screens/Signup";
 import Welcome from "../../screens/Welcome";
 import Start from "../../screens/Start";
+import LoginIntro from "../../screens/LoginIntro";
 const Stack = createNativeStackNavigator();
 
 const IntroTabNavigator = () => {
@@ -21,8 +22,8 @@ const IntroTabNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name={"Login"}
-        component={Login}
+        name={"LoginIntro"}
+        component={LoginIntro}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -86,16 +85,7 @@ const Cart = ({ item }) => {
               onPress={() => handleLikePress(item.postId)}
             >
 
-              {/* <Icon
-                
-                name={item.isLiked ? "cards-heart" : "cards-heart-outline"}
-                size={24}
-                style={[
-                  styles.icon,
-                  likedPosts.includes(item.postId) && styles.redHeartIcon
 
-                ]}
-              /> */}
               <Icon
                 name={item.isLiked ? "heart" : "heart-outline"}
                 size={24}
@@ -112,7 +102,7 @@ const Cart = ({ item }) => {
               style={styles.icon}
               onPress={() => navigateToListLike(item.postId)}
             >
-              <Text style={styles.iconText}>{item.likes.length}</Text>
+<Text style={styles.iconText}>{item.likes.length}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.icon}>
               <Icon name="chat-outline" size={24} color="black" />
@@ -125,9 +115,14 @@ const Cart = ({ item }) => {
                 {item.content}
               </Text>
             </View>
+
             <View style={styles.textRow}>
-              <Text style={styles.hashtagText}>{item.hashtag}</Text>
+
+
+              <Text style={styles.hashtagText}>{item.hashtags}</Text>
+
             </View>
+
           </View>
         </View>
       </TouchableOpacity>
@@ -146,68 +141,65 @@ const Cart = ({ item }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  postContainerScrollView: {
-    marginLeft: 5,
-    marginRight: 5,
-    paddingHorizontal: 0,
-    paddingVertical: 20,
-    overflow: "hidden",
-  },
   postContainer: {
-    padding: 10,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    marginBottom: 8,
+    marginRight: 16,
+    width: "48%",
+    borderRadius: 8,
+    overflow: "hidden",
+    marginTop: 8,
+    padding: 2,
   },
   postImage: {
-    width: 185,
-    height: 232,
+    width: "100%",
+    height: 250,
     resizeMode: "cover",
-  },
+    borderRadius: 8,
 
+  },
   postFooter: {
     flexDirection: "column",
-    justifyContent: "space-between",
-    padding: 10,
+    justifyContent: "flex-start",
+    padding: 8,
+    backgroundColor: "#f9f9f9",
   },
+
   iconContainer: {
     flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
   },
   icon: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 10,
-
+    marginRight: 2,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderRadius: 20,
+    padding: 2,
   },
   iconText: {
-    marginLeft: 5,
+    marginLeft: 4,
+    color: "#333333",
   },
   textContainer: {
-    marginLeft: 10,
-    flexDirection: "column",
+    marginLeft: 8,
   },
   textRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   titleText: {
-    fontWeight: "bold",
     fontSize: 16,
-    marginTop: 5,
-    marginLeft: -10,
-    flex: 1,
+    fontWeight: "bold",
+    color: "#333333",
+    marginBottom: 4,
   },
   hashtagText: {
-    color: "black",
-    marginTop: 5,
-    marginLeft: -10,
+    color: "#666666",
+    marginTop: 4,
   },
-  commentText: {
-    color: "black",
-    marginTop: 5,
-  },
-
 });
 
 export default Cart;

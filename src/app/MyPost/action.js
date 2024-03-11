@@ -1,18 +1,16 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "./../../../env";
+import axiosClient from "../../services/axiosClient";
 
 export const fetchMyPost = createAsyncThunk(
-    "MyPost/fetchMyPost",
-    async (accountId) => {
-        try {
-            const apiUrl = `${BASE_URL}odata/Posts/${accountId}/GetPostByAccountId`;
-            const response = await axios.get(apiUrl);
-            console.log("apiUrl", apiUrl);
-            return response.data?.posts;
-        } catch (error) {
-            throw error;
-        }
+  "MyPost/fetchMyPost",
+  async (accountId) => {
+    try {
+      const apiUrl = `/odata/Posts/${accountId}/GetPostByAccountId`;
+      const response = await axiosClient.get(apiUrl);
+      console.log("apiUrl", apiUrl);
+      return response.data?.posts;
+    } catch (error) {
+      throw error;
     }
+  }
 );

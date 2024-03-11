@@ -84,7 +84,7 @@ const ListLike = ({ route }) => {
   const accountData = dataLike?.likes?.map((like) => like.account);
   const renderLikeItem = ({ item }) => (
     <View style={styles.followerItem}>
-      <Image source={{ uri: item?.avatar }} style={styles.avatar} />
+      <Image style={styles.avatar} source={{ uri: item?.user?.avatar }} />
       <Text style={styles.username}>{item?.username}</Text>
       <TouchableOpacity style={styles.followButton}>
         <Text style={styles.followButtonText}>Theo dõi</Text>

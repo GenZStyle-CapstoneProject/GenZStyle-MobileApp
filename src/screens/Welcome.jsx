@@ -34,6 +34,10 @@ const Welcome = ({ navigation }) => {
   const handleCheckExitIntro = async () => {
     await dispatch(setExitIntro());
   };
+  const onCompleteOnboarding = async () => {
+    await AsyncStorage.setItem("appLaunched", "true");
+    navigation.replace("tab");
+  };
   return (
     <LinearGradient
       style={{
@@ -112,7 +116,7 @@ const Welcome = ({ navigation }) => {
               borderWidth: 2,
             }}
             onPress={() => {
-              navigation.navigate("Login");
+              navigation.navigate("LoginIntro");
             }}
           >
             <Text style={{ color: COLORS.black, fontWeight: "bold" }}>
@@ -137,7 +141,7 @@ const Welcome = ({ navigation }) => {
               Đăng ký{" "}
             </Text>
           </Pressable>
-          <TouchableOpacity onPress={() => handleCheckExitIntro()}>
+          <TouchableOpacity onPress={onCompleteOnboarding}>
             <Text
               style={{
                 color: COLORS.secondary,

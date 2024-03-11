@@ -6,7 +6,6 @@ import { Alert } from 'react-native';
 import ROUTES from '../../constants/routes';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createnewpost, getDetailHashtag } from '../../features/postSlice';
-import * as FileSystem from 'expo-file-system';
 import { Button } from 'react-native-elements';
 import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector } from 'react-redux';
@@ -73,13 +72,12 @@ const UpPostScreen = () => {
 
     }
     console.log(hashtagData)
-    FileSystem.readAsStringAsync(selectedImage?.uri).then((res) =>
-        setImage(res))
+    console.log(selectedImage)
     const handlePost = async () => {
         try {
             // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);
 
-            await dispatch(createnewpost({ Content: content, Image: { uri: selectedImage.uri, type: "image/jpg", name: selectedImage.filename }, Hashtags: hashtagData })).then(
+            await dispatch(createnewpost({ Content: content, Image: { uri: selectedImage?.uri, type: "image/jpg", name: selectedImage.filename }, Hashtags: hashtagData })).then(
                 (res) => {
                     console.log(JSON.stringify(res, null, 2));
                     if (res?.meta?.requestStatus === "fulfilled") {

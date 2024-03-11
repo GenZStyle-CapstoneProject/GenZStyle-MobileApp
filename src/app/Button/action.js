@@ -1,7 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "./../../../env";
+import axiosClient from "../../services/axiosClient";
 
 export const fetchFollowFriend = createAsyncThunk(
     "followFriend/fetchFollowFriend",
@@ -10,7 +8,7 @@ export const fetchFollowFriend = createAsyncThunk(
 
             const currentUserId = userId || getState().user.userId;
 
-            const apiUrl = `${BASE_URL}odata/Users/Follower`;
+            const apiUrl = `/odata/Users/Follower`;
             console.log("API URL: ", apiUrl);
 
 
@@ -19,7 +17,7 @@ export const fetchFollowFriend = createAsyncThunk(
 
             };
 
-            const response = await axios.post(apiUrl, requestBody);
+            const response = await axiosClient.post(apiUrl, requestBody);
             console.log("Response data", response.data);
 
             return response.data;
