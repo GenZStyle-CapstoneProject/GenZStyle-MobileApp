@@ -9,10 +9,10 @@ export const userService = {
     const url = `/odata/Users/${key}/GetUserByAccountId`;
     return axiosClient.get(url);
   },
-  updateProfile: async (key, City, Address, Height, Phone, Gender, Dob) => {
+  updateProfile: async (key, City, Address, Height, Phone, Gender, Dob, Avatar) => {
     const formData = new FormData();
 
-    // Append accountId to the form data
+
     formData.append("accountId", key);
     formData.append("City", City);
     formData.append("Address", Address);
@@ -20,6 +20,11 @@ export const userService = {
     formData.append("Phone", Phone);
     formData.append("Dob", Dob);
     formData.append("Height", Height);
+    formData.append("Avatar", {
+      uri: Avatar,
+      name: "avatar.jpg",
+      type: "image/jpg",
+    });
 
     const url = `/User/${key}/UpdateUser`;
 

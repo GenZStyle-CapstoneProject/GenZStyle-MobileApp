@@ -24,3 +24,56 @@ export const resetAccountWithPostList = createAsyncThunk(
     }
   }
 );
+export const getSuggestionAccount = createAsyncThunk(
+  "account/getSuggestionAccount",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await accountService.getSuggestionAccount();
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+export const followOneAccount = createAsyncThunk(
+  "account/followOneAccount",
+  async (accountId, { rejectWithValue }) => {
+    try {
+      const response = await accountService.followOneAccount(accountId);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+export const getSuggestionAccountByAccountId = createAsyncThunk(
+  "account/getSuggestionAccountByAccountId",
+  async (accountId, { rejectWithValue }) => {
+    try {
+      const response = await accountService.getSuggestionAccountByAccountId(
+        accountId
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+export const getFollowingAccountWithPosts = createAsyncThunk(
+  "account/getFollowingAccountWithPosts",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await accountService.getFollowingAccountWithPosts();
+      const responseINeed = response.data?.following?.flatMap((user) =>
+        user?.posts?.map((post) => ({ ...post }))
+      );
+      return responseINeed;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);

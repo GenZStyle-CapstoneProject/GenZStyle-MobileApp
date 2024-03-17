@@ -133,7 +133,7 @@ export const getProfile = createAsyncThunk(
 export const updateProfile = createAsyncThunk(
   "user/updateProfile",
   async (
-    { key, City, Address, Height, Phone, Gender, Dob },
+    { key, City, Address, Height, Phone, Gender, Dob, Avatar },
     { rejectWithValue, dispatch }
   ) => {
     try {
@@ -144,7 +144,8 @@ export const updateProfile = createAsyncThunk(
         Height,
         Phone,
         Gender,
-        Dob
+        Dob,
+        Avatar
       );
       console.log("<UserSlice - updateProfile>: " + response?.data);
 

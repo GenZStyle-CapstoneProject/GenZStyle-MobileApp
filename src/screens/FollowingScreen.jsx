@@ -4,9 +4,7 @@ import HomeFollowing from "../components/Home/HomeFollowing";
 import HeaderHomeFollowing from "../components/Home/HeaderHomeFollowing";
 
 const FollowingScreen = () => (
-
     <HomeFollowing />
-
 );
 
 const style = StyleSheet.create({});

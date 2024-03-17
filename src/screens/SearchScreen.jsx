@@ -32,8 +32,11 @@ import {
   resetSearchPostByHashtag,
   searchPostByHashtag,
 } from "../features/postSlice";
+import { ScreenWidth } from "react-native-elements/dist/helpers";
 
 const Tab = createMaterialTopTabNavigator();
+const TAB_BAR_WIDTH = ScreenWidth - 50;
+const TAB_BAR_INDICATOR = TAB_BAR_WIDTH / 2 - 100;
 
 const SearchScreen = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -208,7 +211,9 @@ const SearchScreen = () => {
         <View style={{ flex: 1, marginTop: 5 }}>
           <Tab.Navigator
             screenOptions={{
-              tabBarIndicatorStyle: { backgroundColor: "black" },
+              tabBarIndicatorStyle: {
+                backgroundColor: "black",
+              },
             }}
           >
             <Tab.Screen
@@ -327,7 +332,28 @@ const SearchScreen = () => {
             {selectedCategory === "Nam" && <CategoryForMen />}
             {selectedCategory === "Nữ" && <CategoryForWomen />}
 
-            <Tab.Navigator>
+            <Tab.Navigator
+              screenOptions={{
+                tabBarActiveTintColor: "black",
+                tabBarInactiveTintColor: "gray",
+                tabBarIndicatorStyle: {
+                  backgroundColor: "black",
+                  height: 1.5,
+                  width: TAB_BAR_INDICATOR,
+                  left: (TAB_BAR_WIDTH / 3 - TAB_BAR_INDICATOR) / 2,
+                },
+                tabBarStyle: {
+                  backgroundColor: "white",
+                  width: TAB_BAR_WIDTH,
+                  height: 40,
+                  elevation: 0,
+                  marginBottom: 10,
+                  alignSelf: "center",
+                },
+                tabBarLabelStyle: { textTransform: "none", fontWeight: 500 },
+                swipeEnabled: false,
+              }}
+            >
               <Tab.Screen name="Trang phục" component={FashionScreen} />
               <Tab.Screen name="Mọi người" component={EveryoneScreen} />
               <Tab.Screen name="Hashtag" component={HashtagScreen} />

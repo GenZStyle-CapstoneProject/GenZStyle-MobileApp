@@ -4,6 +4,7 @@ const ROUTES = {
     HOME: 'Home',
     HOME_NAVIGATOR: 'HomeNavigator',
     FOLLOWING: 'Following',
+    SUGGESTION_ACCOUNT: 'SuggestionAccount',
 
     SEARCH: 'Search',
     HASHTAG_RESULT: '"HashtagResult"',

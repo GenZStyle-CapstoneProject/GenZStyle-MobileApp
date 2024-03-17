@@ -26,7 +26,7 @@ import {
 import { imageUrlTest } from "../../utils/testData";
 import ROUTES from "../../constants/routes";
 
-const HomeFollowing = () => {
+const EveryOneSearch = () => {
   const navigation = useNavigation();
   const navigateToCartDetail = (item) => {
     navigation.navigate("CartDetail", { item });
@@ -67,7 +67,7 @@ const HomeFollowing = () => {
           await fetchAllAccountSuggestion();
         }
       });
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const fetchAllAccountSuggestion = async () => {
@@ -189,7 +189,7 @@ const HomeFollowing = () => {
           <FlatList
             nestedScrollEnabled
             data={[1, 2, 3]}
-            renderItem={({}) => {
+            renderItem={({ }) => {
               return (
                 <Avatar
                   onPress={() => navigateToCartDetail(item)}
@@ -405,8 +405,8 @@ const HomeFollowing = () => {
                   item?.follower > 9 && item?.follower < 100
                     ? 25
                     : item?.follower > 99
-                    ? 20
-                    : 35,
+                      ? 20
+                      : 35,
               }}
             >
               <Text style={{ fontSize: 13, fontWeight: 600 }}>
@@ -472,33 +472,19 @@ const HomeFollowing = () => {
     setRefreshing(false);
   }, [accountSuggestionList]);
 
-  return (
-    isFollowed !== null && (
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        <View style={{ flex: 1 }}>
-          {isFollowed ? (
-            <FlatList
-              data={accountFollowingList}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItemFollowing}
-              refreshControl={
-                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-              }
-            />
-          ) : (
-            <FlatList
-              data={accountSuggestionList}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem}
-              ListHeaderComponent={HeaderComponent}
-              refreshControl={
-                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-              }
-            />
-          )}
-        </View>
-      </View>
-    )
+  return ((
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <FlatList
+        data={accountSuggestionList}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={renderItem}
+        ListHeaderComponent={HeaderComponent}
+        refreshControl={
+          <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+        }
+      />
+    </View>
+  )
   );
 };
 
@@ -522,4 +508,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default HomeFollowing;
+export default EveryOneSearch;

@@ -1,9 +1,10 @@
 import React from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import HomeFollowing from "../../components/Home/HomeFollowing";
+import EveryOneSearch from "../../components/Home/EveryOneSearch";
 
 const EveryoneScreen = () => {
-  return <HomeFollowing />;
+  return <EveryOneSearch />;
 };
 
 export default EveryoneScreen;
