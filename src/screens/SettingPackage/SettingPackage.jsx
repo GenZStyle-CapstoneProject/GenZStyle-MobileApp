@@ -12,11 +12,16 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Payments from "react-native-payments";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchPurchasePackage } from "../../app/PackageRegister/action";
+import { fetchMomoPay } from "./../../app/MomoPay/action";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchUpdatePayment } from "./../../app/UpdatePayment/action";
+
 const SettingPackage = () => {
   const navigation = useNavigation();
-
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const dataMomoPay = useSelector((state) => state.fetchMomoPay.dataMomoPay);
   const [selectedSubscription, setSelectedSubscription] = useState(null);
   const [lastSelectedButton, setLastSelectedButton] = useState(null);
 
@@ -27,11 +32,23 @@ const SettingPackage = () => {
   };
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
-
+  console.log("UserInfo: " + JSON.stringify(userInfo));
+  console.log("dataMomoPay: ", dataMomoPay?.rechargeID);
   const closeModal = () => {
     setSelectedSubscription(null);
   };
-
+  const handleCheckPayment = () => {
+    const updatePayment = async () => {
+      try {
+        const rechargeID = dataMomoPay?.rechargeID;
+        console.log("Recharge: " + JSON.stringify(rechargeID));
+        await dispatch(fetchUpdatePayment(rechargeID));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    updatePayment();
+  };
   const subscriptionPrices = {
     VIP: 39.0,
     Premium: 99.0,
@@ -45,12 +62,18 @@ const SettingPackage = () => {
     const fetchData = async (type) => {
       try {
         if (type === "VIP") {
-          await dispatch(fetchPurchasePackage(1));
+          const email = userInfo?.email;
+          const type = 1;
+          const amount = 15000;
+          await dispatch(fetchMomoPay({ email, type, amount }));
+          // await dispatch(fetchPurchasePackage(1));
         } else {
-          await dispatch(fetchPurchasePackage(2));
+          const type = 2;
+          const amount = 30000;
+          await dispatch(fetchMomoPay({ email, type, amount }));
         }
       } catch (error) {
-        console.log("Error fetching data:", error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData(type);
@@ -165,6 +188,12 @@ const SettingPackage = () => {
                   onPress={() => handleRegister(selectedSubscription)}
                 >
                   <Text style={styles.closeButtonText}>Register</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.registerButton}
+                  onPress={() => handleCheckPayment()}
+                >
+                  <Text style={styles.closeButtonText}>Check</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.closeButton}

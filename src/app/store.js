@@ -7,10 +7,12 @@ import addCommentPostReducer from "../app/AddComment/slice";
 import packageRegisterReducer from "../app/PackageRegister/slice";
 import listFollowReducer from "../app/ListFollow/slice";
 import postReducer from "../features/postSlice";
-import likePostReducer from "../app/LikePost/slice"
-import followFriendReducer from "../app/Button/slice"
-import MyPostSliceReducer from "../app/MyPost/slice"
+import likePostReducer from "../app/LikePost/slice";
+import followFriendReducer from "../app/Button/slice";
+import MyPostSliceReducer from "../app/MyPost/slice";
 import accountReducer from "../app/Account/slice";
+import momoPaymentReducer from "../app/MomoPay/slice";
+import updatePaymentReducer from "../app/UpdatePayment/slice";
 
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
@@ -31,5 +33,7 @@ export const store = configureStore({
     listFollow: listFollowReducer,
     likePost: likePostReducer,
     account: accountReducer,
+    fetchMomoPay: momoPaymentReducer,
+    updatePayment: updatePaymentReducer,
   },
 });

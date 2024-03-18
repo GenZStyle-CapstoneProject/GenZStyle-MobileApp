@@ -22,6 +22,7 @@ export const login = createAsyncThunk(
       const response = await userService.login({ userName, passwordHash });
       console.log("<UserSlice>: " + response?.data);
       await AsyncStorage.setItem("ACCESS_TOKEN", response?.data?.accessToken);
+      await AsyncStorage.setItem("EMAIL", response?.data?.email);
       await AsyncStorage.setItem(
         "ACCOUNT_ID",
         JSON.stringify(response?.data?.accountId)
@@ -57,12 +58,12 @@ export const loadAuthState = createAsyncThunk(
       if (accessToken && accountId) {
         return {
           authenticated: true,
-          accountId: accountId
+          accountId: accountId,
         };
       }
       return {
         authenticated: false,
-        accountId: null
+        accountId: null,
       };
     } catch (error) {
       console.log(error);
@@ -180,18 +181,16 @@ export const fecthListFollow = createAsyncThunk(
       //     Authorization: `Bearer ${accessToken}`,
       // };
 
-
       const response = await axiosClient.get(apiUrl);
 
       console.log("Respone data", response.data);
       return response.data;
-
     } catch (error) {
-      console.log("errror")
+      console.log("errror");
       throw error;
     }
   }
-)
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -286,7 +285,7 @@ export const userSlice = createSlice({
         state.userInfo = action.payload;
         state.profile = action.payload;
         state.loading = false;
-        
+
         console.log("Cập nhật thông tin người dùng thành công");
 
         // Save userInfo to AsyncStorage
@@ -338,14 +337,12 @@ export const userSlice = createSlice({
         state.loading = "fulfilled";
         state.data = action.payload;
         console.log("Fulfilled state:", state);
-
-
       })
       .addCase(fecthListFollow.rejected, (state, action) => {
         state.loading = "rejected";
         state.error = action.error.message || "An error occurred";
-        console.log('Rejected state:', state.error);
-      });;
+        console.log("Rejected state:", state.error);
+      });
   },
 });
 export default userSlice.reducer;
