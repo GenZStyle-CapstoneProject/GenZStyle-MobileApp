@@ -313,9 +313,10 @@ import { fetchPurchasePackage } from "../../app/PackageRegister/action";
 import { fetchMomoPay } from "./../../app/MomoPay/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchUpdatePayment } from "./../../app/UpdatePayment/action";
-import momoIcon from '../../../assets/momo-icon.png';
+import momoIcon from "../../../assets/momo-icon.png";
 
-import zalopayIcon from '../../../assets/zalopay-icon.png';
+import zalopayIcon from "../../../assets/zalopay-icon.png";
+import { fetchZaloPay } from "../../app/ZaloPay/action";
 const SettingPackage = () => {
   const navigation = useNavigation();
   const userInfo = useSelector((state) => state.user.userInfo);
@@ -364,13 +365,33 @@ const SettingPackage = () => {
       if (type === "VIP") {
         const email = userInfo?.email;
         const type = 1;
-        const amount = 15000;
+        const amount = 199000;
         await dispatch(fetchMomoPay({ email, type, amount }));
         // await dispatch(fetchPurchasePackage(1));
       } else {
         const type = 2;
-        const amount = 30000;
+        const email = userInfo?.email;
+        const amount = 299000;
         await dispatch(fetchMomoPay({ email, type, amount }));
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const fetchDataZaloPay = async (type) => {
+    try {
+      // Thực hiện gọi hàm fetchMomoPay với type tương ứng
+      if (type === "VIP") {
+        const email = userInfo?.email;
+        const type = 1;
+        const amount = 199000;
+        await dispatch(fetchZaloPay({ email, type, amount }));
+        // await dispatch(fetchPurchasePackage(1));
+      } else {
+        const type = 2;
+        const email = userInfo?.email;
+        const amount = 299000;
+        await dispatch(fetchZaloPay({ email, type, amount }));
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -379,49 +400,47 @@ const SettingPackage = () => {
   const handlePayment = async (paymentMethod) => {
     setShowPaymentOptions(false);
 
-
     if (paymentMethod === "Momo") {
-
       await fetchData(selectedSubscription);
 
+      // try {
 
-      try {
+      //   const paymentResult = await MomoPayment.requestPayment({
+      //     partnerCode: "MOMO_PARTNER_A",
+      //     orderId: "0123456789",
+      //     requestId: "1234567891",
+      //     amount: 0,
+      //     responseTime: 1645170502966,
+      //     message: "Successful.",
+      //     resultCode: 0,
+      //     payUrl:
+      //       "https://test-payment.momo.vn/v2/gateway/pay?t=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==",
+      //     deeplink:
+      //       "momo://?action=subscription&isScanQR=false&sid=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==&v=2.1",
+      //     qrCodeUrl:
+      //       "https://test-payment.momo.vn/v2/gateway/app?isScanQr=true&t=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==",
+      //     partnerClientId: "user123456",
+      //   });
 
-        const paymentResult = await MomoPayment.requestPayment({
-          partnerCode: "MOMO_PARTNER_A",
-          orderId: "0123456789",
-          requestId: "1234567891",
-          amount: 0,
-          responseTime: 1645170502966,
-          message: "Successful.",
-          resultCode: 0,
-          payUrl:
-            "https://test-payment.momo.vn/v2/gateway/pay?t=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==",
-          deeplink:
-            "momo://?action=subscription&isScanQR=false&sid=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==&v=2.1",
-          qrCodeUrl:
-            "https://test-payment.momo.vn/v2/gateway/app?isScanQr=true&t=TU9NT0lPTEQyMDE5MDEyOXwwMTIzNDU2Nzg5MDEyMzQ1MTY0NTE3MDUwMzA3OQ==",
-          partnerClientId: "user123456",
-        });
+      //   if (paymentResult && paymentResult.status === "success") {
+      //     Alert.alert("Payment successful!");
+      //   } else {
+      //     Alert.alert("Payment failed!");
+      //   }
+      // } catch (error) {
+      //   console.error("Payment error:", error);
+      //   Alert.alert("Payment failed!");
+      // }
 
-
-        if (paymentResult && paymentResult.status === "success") {
-          Alert.alert("Payment successful!");
-        } else {
-          Alert.alert("Payment failed!");
-        }
-      } catch (error) {
-        console.error("Payment error:", error);
-        Alert.alert("Payment failed!");
-      }
-
+      setSelectedSubscription(null);
+    } else {
+      await fetchDataZaloPay(selectedSubscription);
       setSelectedSubscription(null);
     }
   };
 
   const closeRegisterModal2 = () => {
     setShowPaymentOptions(false);
-
   };
   const closeRegisterModal = () => {
     setShowPaymentOptions(false);
@@ -459,8 +478,8 @@ const SettingPackage = () => {
                 styles.button,
                 selectedSubscription === "VIP" && styles.selectedButton,
                 lastSelectedButton === "VIP" &&
-                !selectedSubscription &&
-                styles.lastSelectedButton,
+                  !selectedSubscription &&
+                  styles.lastSelectedButton,
               ]}
               onPress={() => handleSubscriptionPress("VIP")}
             >
@@ -471,8 +490,8 @@ const SettingPackage = () => {
                 styles.button,
                 selectedSubscription === "Premium" && styles.selectedButton,
                 lastSelectedButton === "Premium" &&
-                !selectedSubscription &&
-                styles.lastSelectedButton,
+                  !selectedSubscription &&
+                  styles.lastSelectedButton,
               ]}
               onPress={() => handleSubscriptionPress("Premium")}
             >
@@ -502,8 +521,11 @@ const SettingPackage = () => {
                   <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
 
-
-                <Modal visible={showPaymentOptions} transparent={true} animationType="slide">
+                <Modal
+                  visible={showPaymentOptions}
+                  transparent={true}
+                  animationType="slide"
+                >
                   <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                       <TouchableOpacity
@@ -512,14 +534,24 @@ const SettingPackage = () => {
                       >
                         <MaterialIcons name="close" size={32} color="black" />
                       </TouchableOpacity>
-                      <Text style={[styles.modalTitle, { fontSize: 24 }]}>Choose Payment Method</Text>
+                      <Text style={[styles.modalTitle, { fontSize: 24 }]}>
+                        Choose Payment Method
+                      </Text>
                       <TouchableOpacity
                         style={styles.paymentOption}
                         onPress={() => handlePayment("Momo")}
                       >
                         <View style={styles.paymentOptionContent}>
-                          <Image source={momoIcon} style={[styles.paymentIcon, { width: 48, height: 48 }]} />
-                          <Text style={[styles.buttonText, { fontSize: 20 }]}>Momo</Text>
+                          <Image
+                            source={momoIcon}
+                            style={[
+                              styles.paymentIcon,
+                              { width: 48, height: 48 },
+                            ]}
+                          />
+                          <Text style={[styles.buttonText, { fontSize: 20 }]}>
+                            Momo
+                          </Text>
                         </View>
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -527,8 +559,16 @@ const SettingPackage = () => {
                         onPress={() => handlePayment("ZaloPay")}
                       >
                         <View style={styles.paymentOptionContent}>
-                          <Image source={zalopayIcon} style={[styles.paymentIcon, { width: 48, height: 48 }]} />
-                          <Text style={[styles.buttonText, { fontSize: 20 }]}>ZaloPay</Text>
+                          <Image
+                            source={zalopayIcon}
+                            style={[
+                              styles.paymentIcon,
+                              { width: 48, height: 48 },
+                            ]}
+                          />
+                          <Text style={[styles.buttonText, { fontSize: 20 }]}>
+                            ZaloPay
+                          </Text>
                         </View>
                       </TouchableOpacity>
                     </View>
@@ -651,7 +691,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-
   },
   modalView: {
     backgroundColor: "white",
@@ -659,7 +698,7 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     elevation: 5,
-    marginTop: Dimensions.get('window').height * 0.2,
+    marginTop: Dimensions.get("window").height * 0.2,
   },
   modalTitle: {
     fontSize: 18,

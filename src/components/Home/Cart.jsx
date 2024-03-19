@@ -13,22 +13,37 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useDispatch, useSelector } from "react-redux";
 import { fecthActivePost } from "../../app/ActivePost/action";
 import { FlatList } from "react-native";
-
+import { fetchLikePost } from "./../../app/LikePost/action";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Cart = ({ item }) => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const [dataActivePost, setDataActivePost] = useState();
   const [likedPosts, setLikedPosts] = useState([]);
+  const [accountId, setAccountId] = useState();
+  const [loadData, setLoadData] = useState(false);
   const dataActive = useSelector((state) => state.activePost.dataActivePost);
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    const getAccountId = async () => {
+      try {
+        const accountId2 = await AsyncStorage.getItem("ACCOUNT_ID");
+        console.log("Account loaded: ", accountId2);
+        setAccountId(accountId2);
+      } catch (error) {
+        console.error("Error getting access accountId:", error);
+        throw error;
+      }
+    };
+    getAccountId();
+  }, [loadData]);
   useFocusEffect(
     useCallback(() => {
       dispatch(fecthActivePost()).then((result) => {
         if (result.payload) {
           console.log("Data received:", result.payload);
-          const data = result.payload.map(post => ({
+          const data = result.payload.map((post) => ({
             ...post,
             isLiked: false,
           }));
@@ -40,21 +55,40 @@ const Cart = ({ item }) => {
       });
     }, [])
   );
-
-  const handleLikePress = (postId) => {
-
+  const handleLikePress = async (postId) => {
+    setLoadData(!loadData);
     const index = dataActive.findIndex((post) => post.postId === postId);
-
-
+    try {
+      await dispatch(
+        fetchLikePost({
+          postId: postId,
+        })
+      );
+      await dispatch(fecthActivePost()).then((result) => {
+        if (result.payload) {
+          console.log("Data received:", result.payload);
+          const data = result.payload.map((post) => ({
+            ...post,
+            isLiked: false,
+          }));
+          setDataActivePost(data);
+          setLikedPosts([]);
+        } else {
+          console.log("Error received");
+        }
+      });
+    } catch (error) {
+      console.error("Error dispatching likePost:", error.message);
+    }
     setDataActivePost((prevData) => {
       const newData = [...prevData];
+      console.log("Id", postId);
       newData[index] = {
         ...newData[index],
         isLiked: !newData[index]?.isLiked,
       };
       return newData;
     });
-
 
     setLikedPosts((prevLikedPosts) => {
       if (prevLikedPosts.includes(postId)) {
@@ -76,7 +110,9 @@ const Cart = ({ item }) => {
 
   const renderItem = ({ item }) => (
     <View key={item.postId} style={styles.postContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("CartDetail", { item })}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("CartDetail", { item })}
+      >
         <Image source={{ uri: item.image }} style={styles.postImage} />
         <View style={styles.postFooter}>
           <View style={styles.iconContainer}>
@@ -84,25 +120,29 @@ const Cart = ({ item }) => {
               style={styles.icon}
               onPress={() => handleLikePress(item.postId)}
             >
-
-
               <Icon
-                name={item.isLiked ? "heart" : "heart-outline"}
+                name={
+                  item.likes.some(
+                    (like) => like.isLike === true && like.likeBy == accountId
+                  )
+                    ? "heart"
+                    : "heart-outline"
+                }
                 size={24}
-                style={[
-                  styles.icon,
-                  likedPosts.includes(item.postId) && { color: "red" }
-                ]}
+                style={{
+                  color: item.likes.some(
+                    (like) => like.isLike === true && like.likeBy == accountId
+                  )
+                    ? "red"
+                    : "black",
+                }}
               />
-
-
-
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.icon}
               onPress={() => navigateToListLike(item.postId)}
             >
-<Text style={styles.iconText}>{item.likes.length}</Text>
+              <Text style={styles.iconText}>{item.likes.length}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.icon}>
               <Icon name="chat-outline" size={24} color="black" />
@@ -111,18 +151,18 @@ const Cart = ({ item }) => {
           </View>
           <View style={styles.textContainer}>
             <View style={styles.textRow}>
-              <Text numberOfLines={2} ellipsizeMode="tail" style={styles.titleText}>
+              <Text
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                style={styles.titleText}
+              >
                 {item.content}
               </Text>
             </View>
 
             <View style={styles.textRow}>
-
-
               <Text style={styles.hashtagText}>{item.hashtags}</Text>
-
             </View>
-
           </View>
         </View>
       </TouchableOpacity>
@@ -157,7 +197,6 @@ const styles = StyleSheet.create({
     height: 250,
     resizeMode: "cover",
     borderRadius: 8,
-
   },
   postFooter: {
     flexDirection: "column",

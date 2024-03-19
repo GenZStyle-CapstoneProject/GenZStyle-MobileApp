@@ -12,6 +12,7 @@ import followFriendReducer from "../app/Button/slice";
 import MyPostSliceReducer from "../app/MyPost/slice";
 import accountReducer from "../app/Account/slice";
 import momoPaymentReducer from "../app/MomoPay/slice";
+import zaloPaymentReducer from "../app/ZaloPay/slice";
 import updatePaymentReducer from "../app/UpdatePayment/slice";
 
 export const store = configureStore({
@@ -34,6 +35,7 @@ export const store = configureStore({
     likePost: likePostReducer,
     account: accountReducer,
     fetchMomoPay: momoPaymentReducer,
+    fetchZaloPay: zaloPaymentReducer,
     updatePayment: updatePaymentReducer,
   },
 });
