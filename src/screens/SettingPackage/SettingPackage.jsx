@@ -339,7 +339,13 @@ const SettingPackage = () => {
       try {
         const rechargeID = dataMomoPay?.rechargeID;
         console.log("Recharge: " + JSON.stringify(rechargeID));
-        await dispatch(fetchUpdatePayment(rechargeID));
+        const responseData = await dispatch(fetchUpdatePayment(rechargeID));
+        console.log("Response Data: ", responseData);
+        if (responseData.payload.status === 1) {
+          alert("Thanh toán thành công");
+        } else {
+          alert("Chưa thanh toán");
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
