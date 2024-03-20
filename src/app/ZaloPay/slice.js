@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchMomoPay } from "./action";
+import { fetchZaloPay } from "./action";
 
 const zaloPaymentSlice = createSlice({
   name: "paymentZalo",
@@ -11,14 +11,14 @@ const zaloPaymentSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMomoPay.pending, (state) => {
+      .addCase(fetchZaloPay.pending, (state) => {
         state.loadingZaloPay = "pending";
       })
-      .addCase(fetchMomoPay.fulfilled, (state, action) => {
+      .addCase(fetchZaloPay.fulfilled, (state, action) => {
         state.loadingZaloPay = "fulfilled";
         state.dataZaloPay = action.payload;
       })
-      .addCase(fetchMomoPay.rejected, (state, action) => {
+      .addCase(fetchZaloPay.rejected, (state, action) => {
         state.loadingZaloPay = "rejected";
         state.errorZaloPay = action.error.message;
       });
