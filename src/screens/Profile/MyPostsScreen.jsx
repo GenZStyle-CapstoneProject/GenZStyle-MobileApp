@@ -408,7 +408,7 @@
 // });
 
 // export default MyPostsScreen;
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -429,7 +429,7 @@ const MyPostsScreen = () => {
   const dispatch = useDispatch();
   const accountId = useSelector((state) => state.user.accountId);
   const dataMyPost = useSelector((state) => state.fetchMyPost?.posts);
-
+  const [dataPost, setDataMyPost] = useState([]);
   useFocusEffect(
     useCallback(() => {
       dispatch(fetchMyPost(accountId || 0)).then((result) => {
