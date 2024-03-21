@@ -90,7 +90,7 @@ export const checkExitIntro = createAsyncThunk(
   "user/checkExitIntro",
   async (_, { rejectWithValue }) => {
     try {
-      const data = await AsyncStorage.getItem("Intro");
+      const data = await AsyncStorage.removeItem("Intro");
       if (data) {
         return true;
       }

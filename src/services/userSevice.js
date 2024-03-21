@@ -28,7 +28,7 @@ export const userService = {
 
     const url = `/User/${key}/UpdateUser`;
 
-    
+
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",

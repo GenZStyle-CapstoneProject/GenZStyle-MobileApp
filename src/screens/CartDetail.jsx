@@ -23,7 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAddCommentPost } from "../app/AddComment/action";
 import { fetchLikePost, fetchNumberLikeOfPost } from "../app/LikePost/action";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { savePost, unsavePost } from "../app/SavePost/action";
 const CartDetail = ({ route }) => {
   const navigation = useNavigation();
   const { item } = route.params;
@@ -92,7 +92,7 @@ const CartDetail = ({ route }) => {
       ).then(async (res) => {
         console.log("Data like: ", JSON.stringify(res, null, 2));
         await dispatch(fetchNumberLikeOfPost({ postId: item?.postId })).then(
-(res) => {
+          (res) => {
             console.log("Length like: ", JSON.stringify(res, null, 2));
           }
         );
@@ -132,6 +132,80 @@ const CartDetail = ({ route }) => {
       }
     }
   };
+
+  const savedPosts = useSelector((state) => state.save.savedPosts) || [];
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(savedPosts.includes(item.postId));
+
+  // const handleSave = async () => {
+  //   try {
+  //     if (saving) return;
+
+  //     setSaving(true);
+
+  //     if (saved) {
+  //       // Nếu bài viết đã được lưu, thực hiện hủy lưu
+  //       await dispatch(unsavePost(item.postId));
+  //       setSaved(false);
+  //       Alert.alert("Thông báo", "Đã hủy lưu bài viết thành công!");
+  //     } else {
+  //       // Nếu bài viết chưa được lưu, thực hiện lưu
+  //       await dispatch(savePost(item.postId));
+  //       setSaved(true);
+  //       Alert.alert("Thông báo", "Lưu bài viết thành công!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error saving post:", error.message);
+  //     Alert.alert("Lỗi", "Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+  //   } finally {
+  //     setSaving(false);
+  //   }
+  // };
+  const handleSave = async () => {
+    try {
+      if (saving) return;
+
+      setSaving(true);
+
+      if (saved) {
+        // Nếu bài viết đã được lưu, thực hiện hủy lưu
+        await dispatch(unsavePost(item.postId));
+        setSaved(false);
+        await AsyncStorage.removeItem("SAVED_POST_" + item.postId); // Xóa trạng thái đã lưu từ AsyncStorage
+        Alert.alert("Thông báo", "Đã hủy lưu bài viết thành công!");
+      } else {
+        // Nếu bài viết chưa được lưu, thực hiện lưu
+        await dispatch(savePost(item.postId));
+        setSaved(true);
+        await AsyncStorage.setItem("SAVED_POST_" + item.postId, "true"); // Lưu trạng thái đã lưu vào AsyncStorage
+        Alert.alert("Thông báo", "Lưu bài viết thành công!");
+      }
+    } catch (error) {
+      console.error("Error saving post:", error.message);
+      Alert.alert("Lỗi", "Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  useEffect(() => {
+    const getSavedState = async () => {
+      try {
+        const savedState = await AsyncStorage.getItem("SAVED_POST_" + item.postId);
+        if (savedState === "true") {
+          setSaved(true);
+        } else {
+          setSaved(false);
+        }
+      } catch (error) {
+        console.error("Error getting saved state:", error);
+      }
+    };
+
+    getSavedState();
+  }, []);
+
+
 
 
 
@@ -210,12 +284,8 @@ const CartDetail = ({ route }) => {
           <Icon name="chat-outline" size={24} color="black" />
           <Text style={styles.iconText}>{commentCount}</Text>
         </TouchableOpacity>
-<TouchableOpacity style={styles.icon} >
-          <Icon
-            name={"bookmark-multiple-outline"}
-            size={24}
-            color="black"
-          />
+        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <Icon name={saved ? "bookmark" : "bookmark-outline"} size={30} color={saved ? "red" : "black"} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.moreOptionsIcon}
@@ -333,8 +403,8 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    top: 10,
-    left: 10,
+    top: 25,
+    left: 20,
     zIndex: 1,
   },
   image: {
@@ -348,13 +418,14 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: -10,
     marginBottom: 10,
-
+    left: 20,
 
   },
   iconContainer: {
     flexDirection: "row",
     justifyContent: "start",
     marginBottom: 5,
+    left: 20,
   },
 
   commentContainer: {
@@ -364,6 +435,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0F0F0",
     borderRadius: 10,
     padding: 10,
+    left: 15,
   },
   commentIcon: {
     marginLeft: 8,
@@ -401,11 +473,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     marginTop: 5,
+    left: 10,
   },
   icon: {
     flexDirection: "row",
     alignItems: "center",
     marginRight: 10,
+
   },
   iconText: {
     marginLeft: 5,

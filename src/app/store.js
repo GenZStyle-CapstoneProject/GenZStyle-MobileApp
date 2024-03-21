@@ -14,7 +14,8 @@ import accountReducer from "../app/Account/slice";
 import momoPaymentReducer from "../app/MomoPay/slice";
 import zaloPaymentReducer from "../app/ZaloPay/slice";
 import updatePaymentReducer from "../app/UpdatePayment/slice";
-
+import saveReducer from "../app/SavePost/slice";
+import listSaveReducer from "../app/ListSave/slice";
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
@@ -37,5 +38,7 @@ export const store = configureStore({
     fetchMomoPay: momoPaymentReducer,
     fetchZaloPay: zaloPaymentReducer,
     updatePayment: updatePaymentReducer,
+    save: saveReducer,
+    listSave: listSaveReducer,
   },
 });

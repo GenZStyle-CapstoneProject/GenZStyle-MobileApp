@@ -37,7 +37,7 @@ const ForYouScreen = () => {
       >
         <View style={styles.rowContainer}>
           <Text style={styles.categoryButtonText}>{categoryButtonText} </Text>
-          <Icon name="chevron-down" size={30} color="black" />
+          <Icon name="chevron-down" size={30} color="#1C6758" />
         </View>
       </TouchableOpacity>
 
@@ -61,7 +61,7 @@ const ForYouScreen = () => {
       {selectedCategory === "Nữ" && <CategoryForWomen />}
 
       <ScrollView
-  
+
         // nestedScrollEnabled={true}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -83,12 +83,12 @@ const ForYouScreen = () => {
         <TouchableOpacity style={styles.filterButton}>
           <Text style={styles.buttonText}>Bộ lọc(19)</Text>
         </TouchableOpacity>
-        <Icon name="tune" size={20} color="black" style={styles.icon} />
+        <Icon name="tune" size={24} color="black" style={styles.icon} />
         <Text style={styles.separatorText}> | </Text>
         <TouchableOpacity style={styles.sortButton}>
           <Text style={styles.buttonText}>Sắp xếp</Text>
         </TouchableOpacity>
-        <Icon name="sort" size={20} color="black" style={styles.icon} />
+        <Icon name="sort" size={24} color="#1C6758" style={styles.icon} />
       </View>
 
       <View style={styles.bottomHorizontalLine} />
@@ -166,8 +166,8 @@ const styles = StyleSheet.create({
   },
   bottomHorizontalLine: {
     width: "100%",
-    height: 1,
-    backgroundColor: "black",
+    height: 2,
+    backgroundColor: "#1C6758",
     marginTop: 3,
   },
 
@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "black",
     fontWeight: "bold",
+    fontSize: 17,
   },
 });
 

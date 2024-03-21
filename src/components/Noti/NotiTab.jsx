@@ -11,11 +11,11 @@ const NotiTab = () => {
         <View style={{ flex: 1, marginTop: 40, backgroundColor: 'white' }}>
             <Tab.Navigator
                 screenOptions={{
-                    tabBarActiveTintColor: 'black',
+                    tabBarActiveTintColor: '#1C6758',
                     tabBarInactiveTintColor: 'gray',
-                    tabBarIndicatorStyle: { backgroundColor: 'black' },
+                    tabBarIndicatorStyle: { backgroundColor: '#1C6758' },
                     tabBarStyle: { backgroundColor: 'white', borderTopWidth: 2, borderTopColor: 'transparent' },
-                    tabBarLabelStyle: { fontWeight: 'bold' },
+                    tabBarLabelStyle: { fontWeight: 'bold', fontSize: 18 },
                 }}
             >
                 <Tab.Screen name="Hoạt động" component={ActivityTab} />

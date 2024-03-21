@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: 'bold',
+    fontSize: 18
   },
   hr: {
     borderBottomColor: 'lightgray',

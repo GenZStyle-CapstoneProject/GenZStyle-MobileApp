@@ -1,19 +1,15 @@
-import { View, Text, Pressable, Image } from 'react-native'
+import { View, Text, Pressable, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from '../constants/colors';
-import Button from '../components/Button';
-
+// import Button from '../components/Button';
+import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import { useFonts } from '@use-expo/font';
 const Start = ({ navigation }) => {
-    const [fontsLoaded] = useFonts({
-        'AmitaRegular': require('../../assets/fonts/Amita-Regular.ttf'),
+
+    let [fontsLoaded] = useFonts({
+        Pacifico_400Regular,
     });
-
-    useEffect(() => {
-        console.log('Fonts Loaded:', fontsLoaded);
-    }, [fontsLoaded]);
-
 
     return (
         <LinearGradient
@@ -69,25 +65,24 @@ const Start = ({ navigation }) => {
                     top: 500,
                     width: "100%"
                 }}>
-                    <Text style={{
+                    {fontsLoaded && <Text style={{
+                        fontFamily: "Pacifico_400Regular",
                         fontSize: 50,
-                        color: COLORS.black,
-                        fontFamily: fontsLoaded ? 'AmitaRegular' : 'System',
-                    }}
-                    >StyleGenZ</Text>
+                        color: "black",
+                    }}>GenZStyle</Text>}
 
 
                     <View style={{ marginVertical: 22 }}>
                         <Text style={{
-                            fontSize: 16,
-                            color: COLORS.black,
-                            marginVertical: 4
+                            fontSize: 20,
+                            color: "black",
+                            marginVertical: 4,
+
                         }}>Bật thông báo của bạn để nhận nội dung đặc biệt từ ứng dụng</Text>
 
                     </View>
 
-                    <Button
-                        title="Start"
+                    <TouchableOpacity
                         onPress={() => {
                             navigation.navigate("Welcome");
                         }}
@@ -95,12 +90,24 @@ const Start = ({ navigation }) => {
                             marginTop: 22,
                             borderRadius: 50,
                             width: "100%",
-                            backgroundColor: COLORS.white,
+                            backgroundColor: "#1C6758",
                             borderWidth: 0,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            paddingBottom: 12,
+                            paddingVertical: 9,
                         }}
                     >
+                        <Text style={{
+                            color: "white",
 
-                    </Button>
+                            fontSize: 24,
+                        }}>
+                            Start
+                        </Text>
+                    </TouchableOpacity>
+
+
 
 
 

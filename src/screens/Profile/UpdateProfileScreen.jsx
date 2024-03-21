@@ -424,6 +424,7 @@
 // export default UpdateProfileScreen;
 import React, { useEffect, useState } from "react";
 import {
+  KeyboardAvoidingView,
   View,
   Text,
   ScrollView,
@@ -440,7 +441,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import * as ImagePicker from "expo-image-picker";
 import { useSelector } from "react-redux";
-
+import { LinearGradient } from "expo-linear-gradient";
 import { useAppDispatch } from "../../app/hooks";
 import { updateProfile, getProfile } from "../../features/userSlice";
 import { LogBox } from 'react-native';
@@ -455,7 +456,7 @@ const UpdateProfileScreen = () => {
   const navigation = useNavigation();
   const profile = useSelector((state) => state.user.profile);
   const accountId = useSelector((state) => state.user.accountId);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState("");
 
   const [formData, setFormData] = useState({
     key:
@@ -491,47 +492,175 @@ const UpdateProfileScreen = () => {
       Avatar: userProfile.data?.avatar || "",
     });
   }, [userProfile]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { City, Address, Height, Phone, Gender, Dob } = formData;
-
-    const key = userProfile?.data?.accounts?.[0]?.accountId || "";
-
-    if (!key) {
-      console.error("Invalid key value");
-      return;
-    }
-
+  const handleSubmit = async () => {
     try {
-      await dispatch(
-        updateProfile({
-          key,
-          City,
-          Address,
-          Height,
-          Phone,
-          Gender: Gender === "Nam",
-          Dob,
-          Avatar: selectedImage || Avatar,
-        })
-      );
+      const { City, Address, Height, Phone, Gender, Dob } = formData;
+      const key = userProfile?.data?.accounts?.[0]?.accountId || "";
+
+      if (!key) {
+        console.error("Invalid key value");
+        return;
+      }
+
+      let updatedAvatar = Avatar;
+
+
+      if (selectedImage && selectedImage !== Avatar) {
+        updatedAvatar = selectedImage;
+      }
+
+      await dispatch(updateProfile({
+        key,
+        City,
+        Address,
+        Height,
+        Phone,
+        Gender: Gender === "Nam",
+        Dob,
+        Avatar: updatedAvatar,
+      }));
 
       await dispatch(getProfile(key));
-
       console.log("Profile updated successfully");
-      Alert.alert("Success", "Profile updated successfully", [
-        {
-          text: "OK",
-          onPress: () => {
-            navigation.navigate("Profile");
-          },
+      Alert.alert("Success", "Profile updated successfully", [{
+        text: "OK",
+        onPress: () => {
+          navigation.navigate("Profile");
         },
-      ]);
+      }]);
     } catch (error) {
       console.error("Failed to update profile", error);
     }
   };
+
+  // const handleSubmit = async () => {
+  //   try {
+  //     const { City, Address, Height, Phone, Gender, Dob, Avatar } = formData;
+  //     const key = userProfile?.data?.accounts?.[0]?.accountId || "";
+
+  //     if (!key) {
+  //       console.error("Invalid key value");
+  //       return;
+  //     }
+
+  //     await dispatch(updateProfile({
+  //       key,
+  //       City,
+  //       Address,
+  //       Height,
+  //       Phone,
+  //       Gender: Gender === "Nam",
+  //       Dob,
+  //       Avatar: selectedImage || Avatar,
+  //     }));
+
+  //     await dispatch(getProfile(key));
+  //     console.log("Profile updated successfully");
+  //     Alert.alert("Success", "Profile updated successfully", [{
+  //       text: "OK",
+  //       onPress: () => {
+  //         navigation.navigate("Profile");
+  //       },
+  //     }]);
+  //   } catch (error) {
+  //     console.error("Failed to update profile", error);
+
+
+  //   }
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const { City, Address, Height, Phone, Gender, Dob, Avatar } = formData;
+
+
+  //   const key = userProfile?.data?.accounts?.[0]?.accountId || "";
+
+  //   if (!key) {
+  //     console.error("Invalid key value");
+  //     return;
+  //   }
+
+  //   try {
+  //     await dispatch(
+  //       updateProfile({
+  //         key,
+  //         City,
+  //         Address,
+  //         Height,
+  //         Phone,
+  //         Gender: Gender === "Nam",
+  //         Dob,
+  //         Avatar: selectedImage || Avatar,
+  //       })
+  //     );
+
+  //     await dispatch(getProfile(key));
+
+  //     console.log("Profile updated successfully");
+  //     Alert.alert("Success", "Profile updated successfully", [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           navigation.navigate("Profile");
+  //         },
+  //         // onPress: () => {
+  //         //   navigation.goBack();
+  //         // },
+  //       },
+  //     ]);
+  //   } catch (error) {
+  //     console.error("Failed to update profile", error);
+  //   }
+  // };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const { City, Address, Height, Phone, Gender, Dob } = formData;
+
+  //   const key = userProfile?.data?.accounts?.[0]?.accountId || "";
+
+  //   if (!key) {
+  //     console.error("Invalid key value");
+  //     return;
+  //   }
+
+  //   try {
+  //     let updatedAvatar = selectedImage || formData.Avatar;
+
+  //     // Kiểm tra nếu không có selectedImage (hình mới), sử dụng Avatar từ formData
+  //     if (!selectedImage && !formData.Avatar) {
+  //       console.log("No new avatar selected, using current avatar");
+  //       updatedAvatar = userProfile.data?.avatar || "";
+  //     }
+
+  //     await dispatch(
+  //       updateProfile({
+  //         key,
+  //         City,
+  //         Address,
+  //         Height,
+  //         Phone,
+  //         Gender: Gender === "Nam",
+  //         Dob,
+  //         Avatar: updatedAvatar,
+  //       })
+  //     );
+
+  //     await dispatch(getProfile(key));
+
+  //     console.log("Profile updated successfully");
+  //     Alert.alert("Success", "Profile updated successfully", [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           navigation.navigate("Profile");
+  //         },
+  //       },
+  //     ]);
+  //   } catch (error) {
+  //     console.error("Failed to update profile", error);
+  //   }
+  // };
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -617,87 +746,119 @@ const UpdateProfileScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={handleGoBack} style={styles.headerBack}>
-          <Icon name="keyboard-arrow-left" size={30} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Chỉnh sửa hồ sơ</Text>
-        <TouchableOpacity style={styles.headerSave} onPress={handleSubmit}>
-          <Text style={styles.headerSaveText}>Hoàn tất</Text>
-        </TouchableOpacity>
-      </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
+    >
+      <ScrollView style={styles.container}>
+        <View style={styles.headerContainer}>
 
-      <View style={styles.avatarContainer}>
-        <Image
-          source={{ uri: selectedImage || profile?.data?.accounts[0]?.user?.avatar }}
-          style={styles.profileImage}
-        />
-        <TouchableOpacity
-          onPress={handleChangeAvatar}
-          style={styles.changeAvatarButton}
-        >
-          <Text style={styles.changeAvatarText}>Thay đổi hình ảnh</Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={handleGoBack} style={styles.headerBack}>
+            <Icon name="keyboard-arrow-left" size={30} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Chỉnh sửa hồ sơ</Text>
+          {/* <TouchableOpacity style={styles.headerSave} onPress={handleSubmit}>
+            <Text style={styles.headerSaveText}>Hoàn tất</Text>
+          </TouchableOpacity> */}
+        </View>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Ngày sinh"
-          value={formData.Dob}
-          onChangeText={(text) => handleChange("Dob", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Số điện thoại"
-          value={formData.Phone}
-          onChangeText={(text) => handleChange("Phone", text)}
-        />
-        <View style={styles.rowContainer}>
-          <TextInput
-            style={styles.halfInput}
-            placeholder="Chiều cao (cm)"
-            value={formData.Height.toString()}
-            onChangeText={(text) => handleChange("Height", text)}
+
+        <View style={styles.avatarContainer}>
+          <LinearGradient colors={['#1C6758', '#DBE9EC']} style={styles.gradient} />
+          <Image
+            source={{ uri: selectedImage || profile?.data?.accounts[0]?.user?.avatar }}
+            style={styles.profileImage}
           />
-          <TouchableOpacity onPress={() => setGenderModalVisible(true)}>
-            <Text style={styles.genderText}>{selectedGender}</Text>
+
+        </View>
+        <View style={styles.avatarContainer}>
+          <TouchableOpacity
+            onPress={handleChangeAvatar}
+            style={styles.changeAvatarButton}
+          >
+            <Text style={styles.changeAvatarText}>Thay đổi hình ảnh</Text>
           </TouchableOpacity>
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Thành phố/Tỉnh"
-          value={formData.City}
-          onChangeText={(text) => handleChange("City", text)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Địa chỉ"
-          value={formData.Address}
-          onChangeText={(text) => handleChange("Address", text)}
-        />
-      </View>
+        <View style={styles.inputContainer}>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputTitle}>Ngày sinh</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ngày sinh"
+              value={formData.Dob}
+              onChangeText={(text) => handleChange("Dob", text)}
+            />
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputTitle}>Số điện thoại</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Số điện thoại"
+              value={formData.Phone}
+              onChangeText={(text) => handleChange("Phone", text)}
+            />
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputTitle}>Chiều cao (cm)</Text>
+            <View style={styles.rowContainer}>
+              <TextInput
+                style={styles.halfInput}
+                placeholder="Chiều cao (cm)"
+                value={formData.Height.toString()}
+                onChangeText={(text) => handleChange("Height", text)}
+              />
+              <TouchableOpacity onPress={() => setGenderModalVisible(true)}>
+                <Text style={styles.genderText}>{selectedGender}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputTitle}>Thành phố/Tỉnh</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Thành phố/Tỉnh"
+              value={formData.City}
+              onChangeText={(text) => handleChange("City", text)}
+            />
+          </View>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.inputTitle}>Địa chỉ</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Địa chỉ"
+              value={formData.Address}
+              onChangeText={(text) => handleChange("Address", text)}
+            />
+          </View>
 
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={genderModalVisible}
-        onRequestClose={() => setGenderModalVisible(false)}
-      >
-        <View style={styles.genderModal}>
-          {genderOptions.map((gender) => (
-            <TouchableOpacity
-              key={gender}
-              style={styles.genderOption}
-              onPress={() => handleGenderSelect(gender)}
-            >
-              <Text>{gender}</Text>
-            </TouchableOpacity>
-          ))}
         </View>
-      </Modal>
-    </ScrollView>
+        <View style={styles.avatarContainer}>
+          <TouchableOpacity style={styles.headerSave} onPress={handleSubmit}>
+            <Text style={styles.headerSaveText}>Hoàn tất</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={genderModalVisible}
+          onRequestClose={() => setGenderModalVisible(false)}
+        >
+          <View style={styles.genderModal}>
+            {genderOptions.map((gender) => (
+              <TouchableOpacity
+                key={gender}
+                style={styles.genderOption}
+                onPress={() => handleGenderSelect(gender)}
+              >
+                <Text>{gender}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </Modal>
+
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -705,57 +866,95 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+
   },
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingTop: 30,
+    paddingBottom: 2,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
+    backgroundColor: '#1C6758',
   },
   headerBack: {
-    padding: 8,
+    padding: 6,
   },
   headerTitle: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
+    right: 16,
   },
   headerSave: {
-    padding: 8,
-  },
-  headerSaveText: {
-    fontSize: 16,
-    color: "#2196f3",
-  },
-  avatarContainer: {
-    alignItems: "center",
-    marginTop: 20,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-  },
-  changeAvatarButton: {
-    marginTop: 10,
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#2196f3",
+    borderColor: "black",
+    backgroundColor: "#1C6758",
+    marginTop: 10,
+  },
+  headerSaveText: {
+    fontSize: 18,
+    color: "white",
+  },
+  avatarContainer: {
+    alignItems: "center",
+    bottom: 5,
+
+
+  },
+  gradient: {
+    width: '100%',
+    height: '70%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+
+  },
+  profileImage: {
+
+    marginTop: 30,
+    width: 150,
+    height: 150,
+    borderRadius: 80,
+
+
+
+  },
+  changeAvatarButton: {
+
+
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#1C6758",
+    backgroundColor: "#1C6758",
+    marginTop: 10,
+
   },
   changeAvatarText: {
-    fontSize: 16,
-    color: "#2196f3",
+    fontSize: 18,
+    color: "white",
   },
   inputContainer: {
     paddingHorizontal: 16,
     marginTop: 20,
+    // bottom: 230,
+  },
+  inputWrapper: {
+    marginBottom: 2,
+  },
+  inputTitle: {
+    marginBottom: 5,
+    fontWeight: 'bold',
+
   },
   input: {
     height: 50,
@@ -784,7 +983,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     fontSize: 16,
-    color: "#2196f3",
+    color: "#1C6758",
 
   },
   genderModal: {

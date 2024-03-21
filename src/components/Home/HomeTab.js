@@ -16,14 +16,14 @@ const TAB_BAR_INDICATOR = TAB_BAR_WIDTH / 2 - 50;
 const HomeTab = () => {
   const navigation = useNavigation();
   return (
-    <View style={{ flex: 1, marginTop: 40, }}>
+    <View style={{ flex: 1, marginTop: 40 }}>
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "black",
+          tabBarActiveTintColor: "#1C6758",
           tabBarInactiveTintColor: "gray",
           tabBarIndicatorStyle: {
-            backgroundColor: "black",
-            height: 3,
+            backgroundColor: "#1C6758",
+            height: 2,
             width: TAB_BAR_INDICATOR,
             left: (TAB_BAR_WIDTH / 2 - TAB_BAR_INDICATOR) / 2,
           },
@@ -34,7 +34,7 @@ const HomeTab = () => {
             elevation: 0,
             marginBottom: 10
           },
-          tabBarLabelStyle: { textTransform: "none", fontWeight: 500 },
+          tabBarLabelStyle: { textTransform: "none", fontWeight: "bold", fontSize: 16 },
           swipeEnabled: false,
         }}
       >

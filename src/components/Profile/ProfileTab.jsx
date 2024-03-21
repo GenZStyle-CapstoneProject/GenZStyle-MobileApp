@@ -13,10 +13,10 @@ const ProfileTab = (userInfo) => {
     return (
         <Tab.Navigator
             screenOptions={{
-                tabBarActiveTintColor: 'black',
+                tabBarActiveTintColor: '#1C6758',
                 tabBarInactiveTintColor: 'gray',
                 tabBarScrollEnabled: true,
-                tabBarIndicatorStyle: { backgroundColor: 'black' },
+                tabBarIndicatorStyle: { backgroundColor: '#1C6758' },
                 tabBarStyle: { backgroundColor: 'white' },
 
             }}
@@ -25,8 +25,8 @@ const ProfileTab = (userInfo) => {
                 {/* {() => <MyPostsScreen userPosts={userInfo.posts} />} */}
                 {() => <MyPostsScreen accountId={userInfo?.accountId} />}
             </Tab.Screen>
-            <Tab.Screen name="Yêu thích" component={FavoritesScreen} />
-            <Tab.Screen name="Đã lưu" component={SavedScreen} />
+            {/* <Tab.Screen name="Yêu thích" component={FavoritesScreen} /> */}
+            {/* <Tab.Screen name="Đã lưu" component={SavedScreen} /> */}
             <Tab.Screen name="Tủ quần áo của tôi" component={MyClothesScreen} />
         </Tab.Navigator>
     );

@@ -21,10 +21,10 @@ const BottomTabNavigator = ({ authenticated }) => {
           backgroundColor: "red",
         },
         tabBarStyle: {
-          backgroundColor: "white",
-          height: Platform.OS==="android" ? 55 : 90,
+          backgroundColor: "#DBE9EC",
+          height: Platform.OS === "android" ? 55 : 90,
         },
-        tabBarActiveTintColor: "#99A1E8",
+        tabBarActiveTintColor: "#1C6758",
         tabBarLabelStyle: {
           marginBottom: 5,
           fontSize: 12,

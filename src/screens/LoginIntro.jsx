@@ -1,25 +1,18 @@
 import { View, Text, Pressable, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
+
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../constants/colors";
 import { useFonts } from "@use-expo/font";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch } from "../app/hooks";
 import Spinner from "react-native-loading-spinner-overlay";
 import { login } from "../features/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 const LoginIntro = ({ navigation }) => {
-  // const handleLogin = () => {
-  //     navigation.navigate("HomeScreen");
-  // };
-  // const [fontsLoaded] = useFonts({
-  //     'AmitaRegular': require('../assets/fonts/Amita-Regular.ttf'),
-  // });
-
-  // useEffect(() => {
-  //     console.log('Fonts Loaded:', fontsLoaded);
-  // }, [fontsLoaded]);
+  let [fontsLoaded] = useFonts({
+    Pacifico_400Regular,
+  });
   const dispatch = useAppDispatch();
 
   const [username, setUsername] = useState("");
@@ -57,135 +50,125 @@ const LoginIntro = ({ navigation }) => {
   }, [getAccessToken]);
 
   return (
-    <LinearGradient
-      style={{
-        flex: 1,
-      }}
-      colors={[COLORS.white, COLORS.secondary]}
-    >
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <View>
-          <Text
-            style={{
-              fontSize: 50,
 
-              color: COLORS.black,
-              // fontFamily: 'AmitaRegular',
-            }}
-          >
-            StyleGenZ
-          </Text>
-        </View>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EC" }}>
+      <View>
+        {fontsLoaded && <Text style={{
+          fontFamily: "Pacifico_400Regular",
+          fontSize: 70,
+          color: "black",
+        }}>GenZStyle</Text>}
+      </View>
 
-        {/* content */}
+      {/* content */}
+      <View
+        style={{
+          paddingHorizontal: 42,
+          width: "100%",
+        }}
+      >
+        {/* Ô nhập tài khoản */}
         <View
           style={{
-            paddingHorizontal: 42,
-            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: COLORS.white,
+            paddingVertical: 12,
+            borderRadius: 50,
+            marginBottom: 25,
+            marginTop: 90,
+            paddingHorizontal: 10,
           }}
         >
-          {/* Ô nhập tài khoản */}
-          <View
+          <Ionicons
+            name="person"
+            size={24}
+            color={COLORS.grey}
+            style={{ marginRight: 10 }}
+          />
+          <TextInput
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: COLORS.white,
-              paddingVertical: 10,
-              borderRadius: 50,
-              marginBottom: 12,
-              marginTop: 100,
-              paddingHorizontal: 10,
+              flex: 1,
+              fontSize: 18,
             }}
-          >
-            <Ionicons
-              name="person"
-              size={24}
-              color={COLORS.grey}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              style={{
-                flex: 1,
-                fontSize: 16,
-              }}
-              placeholder="Tên tài khoản"
-              value={username}
-              onChangeText={(text) => setUsername(text)}
-            />
-          </View>
+            placeholder="Tên tài khoản"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
+        </View>
 
-          {/* Ô nhập mật khẩu */}
-          <View
+        {/* Ô nhập mật khẩu */}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: COLORS.white,
+            paddingVertical: 12,
+            borderRadius: 50,
+            marginBottom: 12,
+            paddingHorizontal: 10,
+          }}
+        >
+          <Ionicons
+            name="lock-closed"
+            size={24}
+            color={COLORS.grey}
+            style={{ marginRight: 10 }}
+          />
+          <TextInput
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: COLORS.white,
-              paddingVertical: 10,
-              borderRadius: 50,
-              marginBottom: 12,
-              paddingHorizontal: 10,
+              flex: 1,
+              fontSize: 18,
             }}
-          >
-            <Ionicons
-              name="lock-closed"
-              size={24}
-              color={COLORS.grey}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              style={{
-                flex: 1,
-                fontSize: 16,
-              }}
-              placeholder="Mật khẩu"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
-          </View>
+            placeholder="Mật khẩu"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+        </View>
 
-          {/* Nút Đăng Nhập */}
-          <Pressable
-            style={{
-              backgroundColor: COLORS.white,
-              marginTop: 20,
-              paddingVertical: 15,
-              borderRadius: 50,
-              alignItems: "center",
-            }}
-            onPress={handleLogin}
-          >
-            <Text
-              style={{
-                color: COLORS.secondary,
-                fontWeight: "normal",
-                fontSize: 20,
-              }}
-            >
-              Đăng nhập
-            </Text>
-          </Pressable>
-
+        {/* Nút Đăng Nhập */}
+        <Pressable
+          style={{
+            backgroundColor: COLORS.secondary,
+            marginTop: 20,
+            paddingVertical: 15,
+            borderRadius: 50,
+            alignItems: "center",
+          }}
+          onPress={handleLogin}
+        >
           <Text
             style={{
-              color: COLORS.black,
+              color: COLORS.white,
               fontWeight: "bold",
-              paddingVertical: 5,
-
-              alignItems: "center",
-              marginTop: 5,
-              marginLeft: 10,
-              left: 90,
-            }}
-            onPress={() => {
-              navigation.navigate("Signup");
+              fontSize: 20,
             }}
           >
-            Bạn chưa có tài khoản?
+            Đăng nhập
           </Text>
-        </View>
+        </Pressable>
+
+        <Text
+          style={{
+            color: COLORS.black,
+            fontWeight: "bold",
+            paddingVertical: 9,
+            fontSize: 17,
+            alignItems: "center",
+            marginTop: 10,
+            marginLeft: 10,
+            left: 70,
+          }}
+          onPress={() => {
+            navigation.navigate("Signup");
+          }}
+        >
+          Bạn chưa có tài khoản?
+        </Text>
       </View>
-    </LinearGradient>
+    </View>
+
   );
 };
 

@@ -199,7 +199,7 @@ const SearchScreen = () => {
           }}
           value={searchQuery}
           onFocus={() => setIsFocusSearchBar(true)}
-          //   onBlur={() => setIsFocusSearchBar(false)}
+        //   onBlur={() => setIsFocusSearchBar(false)}
         />
         {isFocusSearchBar === true && (
           <TouchableOpacity onPress={handleBlur}>
@@ -334,10 +334,10 @@ const SearchScreen = () => {
 
             <Tab.Navigator
               screenOptions={{
-                tabBarActiveTintColor: "black",
+                tabBarActiveTintColor: "#1C6758",
                 tabBarInactiveTintColor: "gray",
                 tabBarIndicatorStyle: {
-                  backgroundColor: "black",
+                  backgroundColor: "#1C6758",
                   height: 1.5,
                   width: TAB_BAR_INDICATOR,
                   left: (TAB_BAR_WIDTH / 3 - TAB_BAR_INDICATOR) / 2,
@@ -350,7 +350,7 @@ const SearchScreen = () => {
                   marginBottom: 10,
                   alignSelf: "center",
                 },
-                tabBarLabelStyle: { textTransform: "none", fontWeight: 500 },
+                tabBarLabelStyle: { textTransform: "none", fontWeight: 500, fontSize: 15 },
                 swipeEnabled: false,
               }}
             >
@@ -411,7 +411,7 @@ const style = StyleSheet.create({
     borderBottomWidth: 0,
   },
   textContainer: {
-    backgroundColor: "#99A1E8",
+    backgroundColor: "#1C6758",
     padding: 25,
     justifyContent: "center",
     alignItems: "center",
@@ -419,8 +419,8 @@ const style = StyleSheet.create({
   },
   text: {
     fontFamily: "Pacifico_400Regular",
-    fontSize: 50,
-    color: "black",
+    fontSize: 55,
+    color: "white",
   },
   buttonContainer: {
     flexDirection: "row",

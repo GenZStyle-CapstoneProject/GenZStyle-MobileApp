@@ -66,21 +66,21 @@ const SettingScreen = () => {
         <Text style={styles.headerTitle}>Cài đặt</Text>
       </View>
       {
-      profile && <><View>
-        <Text style={styles.settingText}>
-          <Text style={styles.boldText}>Cài đặt của tôi</Text>
-        </Text>
-      </View>
+        profile && <><View>
+          <Text style={styles.settingText}>
+            <Text style={styles.boldText}>Cài đặt của tôi</Text>
+          </Text>
+        </View>
 
-      <TouchableOpacity onPress={handleEditProfile}>
-        <Text style={styles.settingText}>Chỉnh sửa hồ sơ</Text>
-      </TouchableOpacity>
-      <View style={styles.hr} />
+          <TouchableOpacity onPress={handleEditProfile}>
+            <Text style={styles.settingText}>Chỉnh sửa hồ sơ</Text>
+          </TouchableOpacity>
+          <View style={styles.hr} />
 
-      <View>
-        <Text style={styles.settingText}>Người dùng bị chặn</Text>
-        <View style={styles.hr} />
-      </View></>
+          <View>
+            <Text style={styles.settingText}>Người dùng bị chặn</Text>
+            <View style={styles.hr} />
+          </View></>
       }
       {
         profile && <><View style={styles.settingItem}>
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingTop: 50,
-    backgroundColor: "white",
+    backgroundColor: "#DBE9EC"
   },
 
   settingText: {
@@ -183,8 +183,10 @@ const styles = StyleSheet.create({
   headerTitle: {
     flex: 1,
     textAlign: "center",
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
+    right: 30,
+    marginBottom: 12
   },
 });
 

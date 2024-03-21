@@ -128,7 +128,7 @@ const Cart = ({ item }) => {
                     ? "heart"
                     : "heart-outline"
                 }
-                size={24}
+                size={27}
                 style={{
                   color: item.likes.some(
                     (like) => like.isLike === true && like.likeBy == accountId
@@ -145,7 +145,7 @@ const Cart = ({ item }) => {
               <Text style={styles.iconText}>{item.likes.length}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.icon}>
-              <Icon name="chat-outline" size={24} color="black" />
+              <Icon name="chat-outline" size={27} color="black" />
               <Text style={styles.iconText}></Text>
             </TouchableOpacity>
           </View>
@@ -221,16 +221,17 @@ const styles = StyleSheet.create({
   iconText: {
     marginLeft: 4,
     color: "#333333",
+    fontSize: 17,
   },
   textContainer: {
-    marginLeft: 8,
+    marginLeft: 4,
   },
   textRow: {
     flexDirection: "row",
     alignItems: "center",
   },
   titleText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#333333",
     marginBottom: 4,
