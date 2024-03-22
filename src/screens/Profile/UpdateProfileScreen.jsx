@@ -765,7 +765,7 @@ const UpdateProfileScreen = () => {
 
 
         <View style={styles.avatarContainer}>
-          <LinearGradient colors={['#1C6758', '#DBE9EC']} style={styles.gradient} />
+          <LinearGradient colors={['#0BB391', '#11AA8B']} style={styles.gradient} />
           <Image
             source={{ uri: selectedImage || profile?.data?.accounts[0]?.user?.avatar }}
             style={styles.profileImage}
@@ -877,7 +877,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
-    backgroundColor: '#1C6758',
+    backgroundColor: '#0BB391',
   },
   headerBack: {
     padding: 6,
@@ -894,7 +894,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "#1C6758",
     backgroundColor: "#1C6758",
     marginTop: 10,
   },

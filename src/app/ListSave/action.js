@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosClient from "../../services/axiosClient";
 
-export const fecthListSave = createAsyncThunk(
+export const fetchListSave = createAsyncThunk(
     "listSave/fetchlistSave",
     async () => {
         try {

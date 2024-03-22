@@ -53,14 +53,13 @@ const SettingScreen = () => {
   //   }
   // };
 
-
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.headerBack}
-        >
+        <TouchableOpacity onPress={handleGoBack} style={styles.headerBack}>
           <Icon name="keyboard-arrow-left" size={30} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Cài đặt</Text>
@@ -172,7 +171,8 @@ const styles = StyleSheet.create({
   },
 
   headerBack: {
-    right: 20,
+    right: 15,
+
   },
   headerContainer: {
     flexDirection: "row",
