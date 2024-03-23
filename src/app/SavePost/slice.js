@@ -69,7 +69,7 @@ const saveSlice = createSlice({
             .addCase(unsavePost.fulfilled, (state, action) => {
                 state.saving = false;
                 state.error = null;
-                const postId = action.payload; // Assume API trả về postId đã hủy lưu
+                const postId = action.payload; 
                 state.savedPosts = state.savedPosts.filter(id => id !== postId);
             })
             .addCase(unsavePost.rejected, (state, action) => {

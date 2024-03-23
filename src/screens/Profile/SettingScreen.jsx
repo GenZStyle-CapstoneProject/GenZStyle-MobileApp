@@ -21,10 +21,12 @@ const SettingScreen = () => {
 
   };
 
-
+  const navigateToUpdatePassword = () => {
+    navigation.navigate(ROUTES.UPDATEPASSWORD);
+  };
 
   const navigateToSettingPackage = () => {
-    // Chuyển đến màn hình mong muốn khi TouchableOpacity được nhấn
+
     navigation.navigate(ROUTES.SETTINGPACKAGE);
   };
 
@@ -101,7 +103,9 @@ const SettingScreen = () => {
           <View style={styles.hr} /></>
       }
 
-
+      <TouchableOpacity onPress={navigateToUpdatePassword}>
+        <Text style={styles.settingText}>Đổi mật khẩu</Text>
+      </TouchableOpacity>
       <Text style={styles.settingText}>
         <Text style={styles.boldText}>Giới thiệu</Text>
       </Text>
@@ -128,7 +132,7 @@ const SettingScreen = () => {
       <View style={styles.hr} />
       {
         profile && <TouchableOpacity onPress={handleLogout}>
-          <Text>Log out</Text>
+          <Text >Log out</Text>
         </TouchableOpacity>
       }
 

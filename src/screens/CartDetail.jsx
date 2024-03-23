@@ -177,7 +177,8 @@ const CartDetail = ({ route }) => {
         // Nếu bài viết chưa được lưu, thực hiện lưu
         await dispatch(savePost(item.postId));
         setSaved(true);
-        await AsyncStorage.setItem("SAVED_POST_" + item.postId, "true"); // Lưu trạng thái đã lưu vào AsyncStorage
+        await AsyncStorage.setItem("SAVED_POST_" + item.postId, "true");
+        console.log("lưu bài viết thành công");
         Alert.alert("Thông báo", "Lưu bài viết thành công!");
       }
     } catch (error) {

@@ -30,7 +30,7 @@ const ROUTES = {
 
     LISTLIKE: 'ListLike',
     LISTLIKE_NAVIGATOR: 'ListLikeNavigator',
-
+    UPDATEPASSWORD: 'UpdatePasswordScreen',
     HASHTAGVIEW: 'HashtagView',
     HASHTAGVIEW_NAVIGATOR: 'HashtagViewNavigator',
     SETTINGPACKAGE: 'SettingPackage',

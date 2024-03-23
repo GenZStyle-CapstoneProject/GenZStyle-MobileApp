@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMyPost } from "../../app/MyPost/action";
 import { fetchLikePost } from "../../app/LikePost/action";
+import { fecthListFollow, getProfile } from "../../features/userSlice";
 import EmptyResult from "../Search/EmptyResult";
 
 const MyPostsScreen = () => {
@@ -32,6 +34,35 @@ const MyPostsScreen = () => {
       });
     }, [dispatch, accountId])
   );
+  const [refreshing, setRefresing] = useState(false);
+  const onRefresh = useCallback(() => {
+    setRefresing(true);
+    const fetchData = async () => {
+      // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+      // console.log("userInfo", accountId);
+      await dispatch(getProfile(accountId || 0)).then((res) => {
+        console.log(JSON.stringify(res, null, 2));
+      });
+    };
+    const fecthFollow = async () => {
+      // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+
+      try {
+        await dispatch(fecthListFollow());
+      } catch (error) {
+        // Handle the error or implement a retry mechanism
+        console.error("Error in fecthFollow:", error);
+      }
+    };
+    const fetchAsync = async () => {
+      await fetchData();
+      await fecthFollow();
+      setRefresing(false);
+    };
+
+    fetchAsync();
+    setRefresing(false);
+  }, [accountId]);
   const navigateToListLike = (postId) => {
     const post = dataMyPost.find((p) => p.postId === postId);
     if (post) {
@@ -46,7 +77,7 @@ const MyPostsScreen = () => {
       await dispatch(fetchLikePost({ postId }));
       await dispatch(fetchMyPost(accountId || 0));
 
-
+      // Cập nhật lại dữ liệu bài viết trên giao diện
       setDataMyPost((prevData) => {
         return prevData.map((post) => {
           if (post.postId === postId) {
@@ -117,7 +148,6 @@ const MyPostsScreen = () => {
                 <Text style={styles.iconText}>{item.comments}</Text>
               </TouchableOpacity>
             </View>
-
             <View style={styles.textContainer}>
               <Text
                 numberOfLines={2}
@@ -147,6 +177,9 @@ const MyPostsScreen = () => {
         renderItem={renderItem}
         numColumns={2}
         ListEmptyComponent={EmptyResult}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );
@@ -176,7 +209,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     padding: 8,
     backgroundColor: "#f9f9f9",
-    borderRadius: 8,
   },
   iconContainer: {
     flexDirection: "row",

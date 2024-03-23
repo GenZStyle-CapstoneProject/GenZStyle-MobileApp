@@ -73,18 +73,25 @@
 
 // export default MyClothesScreen;
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Dimensions } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchListSave } from '../../app/ListSave/action';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MyClothesScreen = () => {
     const dispatch = useDispatch();
     const { list } = useSelector((state) => state.listSave);
 
-    useEffect(() => {
+    const fetchListSaveCallback = useCallback(() => {
         dispatch(fetchListSave());
     }, [dispatch]);
+
+    useFocusEffect(fetchListSaveCallback);
+
+    useEffect(() => {
+        fetchListSaveCallback();
+    }, [fetchListSaveCallback]);
 
     return (
         <View style={styles.container}>

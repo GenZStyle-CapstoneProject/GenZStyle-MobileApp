@@ -41,7 +41,7 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
             style={styles.profileImage}
           /> */}
           <Image
-            source={{ uri: profile?.data?.accounts[0]?.user?.avatar }}
+            source={{ uri: profile?.data?.account?.user?.avatar }}
             style={styles.profileImage}
           />
         </View>
@@ -49,13 +49,13 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
           <Text style={styles.username}>
 
             <Text style={styles.username}>
-              {profile?.data?.accounts[0]?.username || "Thông tin cá nhân"}
+              {profile?.data?.account?.username || "Thông tin cá nhân"}
             </Text>
           </Text>
 
           <Text style={styles.account}>
             <Text style={styles.account}>
-              {profile?.data?.accounts[0]?.email || "exmaple@gmail.com"}
+              {profile?.data?.account?.email || "exmaple@gmail.com"}
             </Text>
           </Text>
           <Text style={styles.account}>{profile?.data?.height || "xxx cm"}</Text>
