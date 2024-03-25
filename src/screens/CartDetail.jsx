@@ -279,11 +279,11 @@ const CartDetail = ({ route }) => {
           style={styles.icon}
           onPress={() => navigateToListLike(item)}
         >
-          <Text style={styles.iconText}>{sttState}</Text>
+          <Text style={styles.iconText}>({sttState})</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.icon} onPress={handleComment}>
           <Icon name="chat-outline" size={24} color="black" />
-          <Text style={styles.iconText}>{commentCount}</Text>
+          <Text style={styles.iconText}>({commentCount})</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
           <Icon name={saved ? "bookmark" : "bookmark-outline"} size={30} color={saved ? "red" : "black"} />

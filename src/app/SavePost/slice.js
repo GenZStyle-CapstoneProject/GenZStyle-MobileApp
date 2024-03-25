@@ -32,7 +32,7 @@ import { savePost, unsavePost } from "./action";
 const saveSlice = createSlice({
     name: "save",
     initialState: {
-        savedPosts: [], // Danh sách các postId đã lưu
+        savedPosts: [],
         saving: false,
         error: null,
     },
@@ -55,7 +55,7 @@ const saveSlice = createSlice({
             .addCase(savePost.fulfilled, (state, action) => {
                 state.saving = false;
                 state.error = null;
-                const postId = action.payload; // Assume API trả về postId đã lưu
+                const postId = action.payload;
                 state.savedPosts.push(postId);
             })
             .addCase(savePost.rejected, (state, action) => {
@@ -69,7 +69,7 @@ const saveSlice = createSlice({
             .addCase(unsavePost.fulfilled, (state, action) => {
                 state.saving = false;
                 state.error = null;
-                const postId = action.payload; 
+                const postId = action.payload;
                 state.savedPosts = state.savedPosts.filter(id => id !== postId);
             })
             .addCase(unsavePost.rejected, (state, action) => {

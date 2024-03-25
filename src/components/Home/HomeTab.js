@@ -19,10 +19,10 @@ const HomeTab = () => {
     <View style={{ flex: 1, marginTop: 40 }}>
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "#1C6758",
+          tabBarActiveTintColor: "black",
           tabBarInactiveTintColor: "gray",
           tabBarIndicatorStyle: {
-            backgroundColor: "#1C6758",
+            backgroundColor: "black",
             height: 2,
             width: TAB_BAR_INDICATOR,
             left: (TAB_BAR_WIDTH / 2 - TAB_BAR_INDICATOR) / 2,
@@ -34,7 +34,7 @@ const HomeTab = () => {
             elevation: 0,
             marginBottom: 10
           },
-          tabBarLabelStyle: { textTransform: "none", fontWeight: "bold", fontSize: 16 },
+          tabBarLabelStyle: { textTransform: "none", fontWeight: "bold", fontSize: 15 },
           swipeEnabled: false,
         }}
       >

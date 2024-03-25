@@ -18,6 +18,7 @@ import { LogBox } from "react-native";
 const ForYouScreen = () => {
   useEffect(() => {
     LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+    LogBox.ignoreLogs(["Could not find image file:///private/var/containers/Bundle/Application/C8E46929-4905-4D9D-8D77-7BA37ADDA8E8/Expo%20Go.app/abc.png"]);
   }, []);
   const [showGenderOptions, setShowGenderOptions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -25,7 +26,7 @@ const ForYouScreen = () => {
   const navigation = useNavigation();
 
   const navigateToCartDetail = (item) => {
-    // Chuyển đến màn hình CartDetail và truyền postId
+
     navigation.navigate("CartDetail", { item });
   };
 
@@ -37,7 +38,7 @@ const ForYouScreen = () => {
       >
         <View style={styles.rowContainer}>
           <Text style={styles.categoryButtonText}>{categoryButtonText} </Text>
-          <Icon name="chevron-down" size={30} color="#1C6758" />
+          <Icon name="chevron-down" size={30} color="black" />
         </View>
       </TouchableOpacity>
 
@@ -88,7 +89,7 @@ const ForYouScreen = () => {
         <TouchableOpacity style={styles.sortButton}>
           <Text style={styles.buttonText}>Sắp xếp</Text>
         </TouchableOpacity>
-        <Icon name="sort" size={24} color="#1C6758" style={styles.icon} />
+        <Icon name="sort" size={24} color="black" style={styles.icon} />
       </View>
 
       <View style={styles.bottomHorizontalLine} />
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
   bottomHorizontalLine: {
     width: "100%",
     height: 2,
-    backgroundColor: "#1C6758",
+    backgroundColor: "black",
     marginTop: 3,
   },
 
