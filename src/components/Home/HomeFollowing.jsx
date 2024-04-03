@@ -25,6 +25,7 @@ import {
 } from "../../app/Account/actions";
 import { imageUrlTest } from "../../utils/testData";
 import ROUTES from "../../constants/routes";
+import AuthenFollow from "./AuthenFollow";
 
 const HomeFollowing = () => {
   const navigation = useNavigation();
@@ -38,6 +39,15 @@ const HomeFollowing = () => {
     navigation.navigate(ROUTES.SUGGESTION_ACCOUNT);
   };
 
+  function findFirstFollow(arr) {
+    if (typeof arr !== "undefined" && Array.isArray(arr)) {
+      if (arr.find((item) => item.isfollow === true)) {
+        return true;
+      }
+      return false;
+    }
+  }
+
   // ** API
   const dispatch = useDispatch();
   const accountSuggestionList = useSelector(
@@ -46,6 +56,8 @@ const HomeFollowing = () => {
   const accountFollowingList = useSelector(
     (state) => state.account.accountFollowingList
   );
+  const authenticated = useSelector((state) => state.user.authenticated);
+
   // ** React hooks state
   const [isFollowed, setIsFollowed] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -56,7 +68,7 @@ const HomeFollowing = () => {
       await fetchAllFetFollowingAccountWithPosts();
     };
     fetch();
-  }, []);
+  }, [authenticated]);
 
   // Dispatch functions
   const followOneAccountById = async (accountId) => {
@@ -79,12 +91,9 @@ const HomeFollowing = () => {
   };
 
   const fetchAllAccountSuggestionForCheck = async () => {
-    await dispatch(getSuggestionAccount()).then((res) => {
-      const isFollowed = Boolean(
-        res?.payload?.some((obj) => obj.isfollow === true)
-      );
-      setIsFollowed(isFollowed);
-    });
+    const res = await dispatch(getSuggestionAccount());
+    const isFollowed = findFirstFollow(res.payload ?? []);
+    setIsFollowed(isFollowed);
   };
 
   const fetchAllFetFollowingAccountWithPosts = async () => {
@@ -114,7 +123,7 @@ const HomeFollowing = () => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() => navigateToFriend({ name: "duy", id: 1 })}
+        onPress={() => null}
         style={{ marginTop: 5, marginHorizontal: 15, marginBottom: 10 }}
       >
         <View
@@ -472,33 +481,34 @@ const HomeFollowing = () => {
     setRefreshing(false);
   }, [accountSuggestionList]);
 
-  return (
-    isFollowed !== null && (
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        <View style={{ flex: 1 }}>
-          {isFollowed ? (
-            <FlatList
-              data={accountFollowingList}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItemFollowing}
-              refreshControl={
-                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-              }
-            />
-          ) : (
-            <FlatList
-              data={accountSuggestionList}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem}
-              ListHeaderComponent={HeaderComponent}
-              refreshControl={
-                <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-              }
-            />
-          )}
-        </View>
+  console.log(authenticated);
+  return isFollowed !== null && authenticated ? (
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ flex: 1 }}>
+        {isFollowed ? (
+          <FlatList
+            data={accountFollowingList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderItemFollowing}
+            refreshControl={
+              <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+            }
+          />
+        ) : (
+          <FlatList
+            data={accountSuggestionList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderItem}
+            ListHeaderComponent={HeaderComponent}
+            refreshControl={
+              <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+            }
+          />
+        )}
       </View>
-    )
+    </View>
+  ) : (
+    <AuthenFollow />
   );
 };
 

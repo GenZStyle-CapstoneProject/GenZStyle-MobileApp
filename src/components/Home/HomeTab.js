@@ -16,7 +16,7 @@ const TAB_BAR_INDICATOR = TAB_BAR_WIDTH / 2 - 50;
 const HomeTab = () => {
   const navigation = useNavigation();
   return (
-    <View style={{ flex: 1, marginTop: 40 }}>
+    <View style={{ flex: 1, marginTop: 0 }}>
       <Tab.Navigator
         screenOptions={{
           tabBarActiveTintColor: "black",

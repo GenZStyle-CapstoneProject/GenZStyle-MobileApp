@@ -9,36 +9,14 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { imageUrlTest } from "../../../utils/testData";
 import Spinner from "react-native-loading-spinner-overlay";
+import ROUTES from "../../../constants/routes";
+import { getSuggestionAccountByAccountId } from "../../../app/Account/actions";
+import { useDispatch } from "react-redux";
 
 const data = ["dongvancong", "truongtieunhi", "vuvanthong", "antdesign12"];
-
-const Card = ({ item }) => {
-  return (
-    <TouchableOpacity style={{ marginHorizontal: 10, marginBottom: 10 }}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Image
-          style={{ height: 45, width: 45, borderRadius: 100 }}
-          source={{
-            uri: item?.user?.avatar || imageUrlTest,
-          }}
-        />
-        <View style={{ flex: 1, marginLeft: 10, gap: 3 }}>
-          <Text style={{ fontWeight: 700, color: "black" }}>
-            {item?.firstname &&
-              item?.lastname &&
-              item?.firstname + " " + item?.lastname}
-          </Text>
-          <Text style={{ color: "grey" }}>
-            {"@" + item?.username + " | " + `${item?.posts?.length} bài viết`}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
 
 const HistoryCard = ({ item, onPress }) => {
   return (
@@ -70,6 +48,44 @@ const Everyone = ({
   loadingEveryone,
 }) => {
   //   const [searchHistoryList, setSearchHistoryList] = useState([]);
+  const dispatch = useDispatch()
+  const navigation = useNavigation();
+  const navigateToFriend = (item) => {
+    navigation.navigate(ROUTES.FRIENDS, { item });
+  };
+  const fetchAccountSuggestion = async (accountId) => {
+    await dispatch(getSuggestionAccountByAccountId(accountId));
+  };
+
+  const Card = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => fetchAccountSuggestion(item?.accountId).then((res) => {
+          navigateToFriend(item);
+        })}
+        style={{ marginHorizontal: 10, marginBottom: 10 }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            style={{ height: 45, width: 45, borderRadius: 100 }}
+            source={{
+              uri: item?.user?.avatar || imageUrlTest,
+            }}
+          />
+          <View style={{ flex: 1, marginLeft: 10, gap: 3 }}>
+            <Text style={{ fontWeight: 700, color: "black" }}>
+              {item?.firstname &&
+                item?.lastname &&
+                item?.firstname + " " + item?.lastname}
+            </Text>
+            <Text style={{ color: "grey" }}>
+              {"@" + item?.username + " | " + `${item?.posts?.length} bài viết`}
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   useFocusEffect(
     useCallback(() => {

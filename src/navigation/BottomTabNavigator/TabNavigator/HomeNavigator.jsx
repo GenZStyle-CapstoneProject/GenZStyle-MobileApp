@@ -7,8 +7,11 @@ import ROUTES from "../../../constants/routes";
 import MessagesScreen from "../../../screens/MessagesScreen";
 import ConversationsScreen from "../../../screens/ConversationsScreen";
 import SuggestionAccount from "../../../components/Home/SuggestionAccount";
+import AuthTabNavigator from "../../AuthTabNavigator/AuthTabNavigator";
+import Follower from "../../../components/Friends/Follower/Follower";
+import Following from "../../../components/Friends/Following/Following";
 const Stack = createNativeStackNavigator();
-const HomeNavigator = () => {
+const HomeNavigator = ({ authenticated }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -31,6 +34,13 @@ const HomeNavigator = () => {
         component={SuggestionAccount}
         options={{ headerShown: false }}
       />
+      {!authenticated && (
+        <Stack.Screen
+          name={"AUTH_NAVIGATOR"}
+          component={AuthTabNavigator}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 };

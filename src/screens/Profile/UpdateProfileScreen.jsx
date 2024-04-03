@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -85,7 +84,7 @@ const UpdateProfileScreen = () => {
         updatedAvatar = selectedImage;
       } else if (!selectedImage && !Avatar) {
         console.log("No new avatar selected, using current avatar");
-        updatedAvatar = userProfile.data?.avatar || ""; // Sử dụng hình hiện có nếu không có hình mới được chọn
+updatedAvatar = userProfile.data?.avatar || ""; // Sử dụng hình hiện có nếu không có hình mới được chọn
       }
 
       await dispatch(updateProfile({
@@ -112,135 +111,7 @@ const UpdateProfileScreen = () => {
     }
   };
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     const { City, Address, Height, Phone, Gender, Dob, Avatar } = formData;
-  //     const key = userProfile?.data?.accounts?.[0]?.accountId || "";
-
-  //     if (!key) {
-  //       console.error("Invalid key value");
-  //       return;
-  //     }
-
-  //     await dispatch(updateProfile({
-  //       key,
-  //       City,
-  //       Address,
-  //       Height,
-  //       Phone,
-  //       Gender: Gender === "Nam",
-  //       Dob,
-  //       Avatar: selectedImage || Avatar,
-  //     }));
-
-  //     await dispatch(getProfile(key));
-  //     console.log("Profile updated successfully");
-  //     Alert.alert("Success", "Profile updated successfully", [{
-  //       text: "OK",
-  //       onPress: () => {
-  //         navigation.navigate("Profile");
-  //       },
-  //     }]);
-  //   } catch (error) {
-  //     console.error("Failed to update profile", error);
-
-
-  //   }
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const { City, Address, Height, Phone, Gender, Dob, Avatar } = formData;
-
-
-  //   const key = userProfile?.data?.accounts?.[0]?.accountId || "";
-
-  //   if (!key) {
-  //     console.error("Invalid key value");
-  //     return;
-  //   }
-
-  //   try {
-  //     await dispatch(
-  //       updateProfile({
-  //         key,
-  //         City,
-  //         Address,
-  //         Height,
-  //         Phone,
-  //         Gender: Gender === "Nam",
-  //         Dob,
-  //         Avatar: selectedImage || Avatar,
-  //       })
-  //     );
-
-  //     await dispatch(getProfile(key));
-
-  //     console.log("Profile updated successfully");
-  //     Alert.alert("Success", "Profile updated successfully", [
-  //       {
-  //         text: "OK",
-  //         onPress: () => {
-  //           navigation.navigate("Profile");
-  //         },
-  //         // onPress: () => {
-  //         //   navigation.goBack();
-  //         // },
-  //       },
-  //     ]);
-  //   } catch (error) {
-  //     console.error("Failed to update profile", error);
-  //   }
-  // };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const { City, Address, Height, Phone, Gender, Dob } = formData;
-
-  //   const key = userProfile?.data?.accounts?.[0]?.accountId || "";
-
-  //   if (!key) {
-  //     console.error("Invalid key value");
-  //     return;
-  //   }
-
-  //   try {
-  //     let updatedAvatar = selectedImage || formData.Avatar;
-
-  //     // Kiểm tra nếu không có selectedImage (hình mới), sử dụng Avatar từ formData
-  //     if (!selectedImage && !formData.Avatar) {
-  //       console.log("No new avatar selected, using current avatar");
-  //       updatedAvatar = userProfile.data?.avatar || "";
-  //     }
-
-  //     await dispatch(
-  //       updateProfile({
-  //         key,
-  //         City,
-  //         Address,
-  //         Height,
-  //         Phone,
-  //         Gender: Gender === "Nam",
-  //         Dob,
-  //         Avatar: updatedAvatar,
-  //       })
-  //     );
-
-  //     await dispatch(getProfile(key));
-
-  //     console.log("Profile updated successfully");
-  //     Alert.alert("Success", "Profile updated successfully", [
-  //       {
-  //         text: "OK",
-  //         onPress: () => {
-  //           navigation.navigate("Profile");
-  //         },
-  //       },
-  //     ]);
-  //   } catch (error) {
-  //     console.error("Failed to update profile", error);
-  //   }
-  // };
-
+ 
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -327,8 +198,8 @@ const UpdateProfileScreen = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
+//       behavior={Platform.OS === "ios" ? "padding" : "height"}
+// keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
     >
       <ScrollView style={styles.container}>
         <View style={styles.headerContainer}>
@@ -344,7 +215,7 @@ const UpdateProfileScreen = () => {
 
 
         <View style={styles.avatarContainer}>
-          <LinearGradient colors={['#FF7F50', '#FF7F50']} style={styles.gradient} />
+          <LinearGradient colors={['#DBE9EC', '#DBE9EC']} style={styles.gradient} />
           <Image
             source={{ uri: selectedImage || profile?.data?.account?.user?.avatar }}
             style={styles.profileImage}
@@ -402,7 +273,7 @@ const UpdateProfileScreen = () => {
             />
           </View>
           <View style={styles.inputWrapper}>
-            <Text style={styles.inputTitle}>Địa chỉ</Text>
+<Text style={styles.inputTitle}>Địa chỉ</Text>
             <TextInput
               style={styles.input}
               placeholder="Địa chỉ"
@@ -456,7 +327,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
-    backgroundColor: '#FF7F50',
+    backgroundColor: '#DBE9EC',
   },
   headerBack: {
     padding: 6,
@@ -473,8 +344,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#262626",
-    backgroundColor: "#262626",
+    borderColor: "#1C6758",
+    backgroundColor: "#1C6758",
     marginTop: 10,
   },
   headerSaveText: {
@@ -502,6 +373,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 80,
+    borderWidth: 5,
+    borderColor: "white",
 
 
 
@@ -513,8 +386,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#262626",
-    backgroundColor: "#262626",
+    borderColor: "#1C6758",
+    backgroundColor: "#1C6758",
     marginTop: 10,
 
   },
@@ -545,7 +418,7 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+justifyContent: "space-between",
     alignItems: "center",
   },
   halfInput: {

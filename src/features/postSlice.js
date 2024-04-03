@@ -7,6 +7,7 @@ const initialState = {
   userInfo: null,
   accessToken: "",
   hashtagList: [],
+  hashtagObject: null,
   hashtagListSearch: [],
   hashtagParam: "",
 };
@@ -27,11 +28,41 @@ export const createnewpost = createAsyncThunk(
     }
   }
 );
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async ({ key, Content, Image, Hashtags }, { rejectWithValue }) => {
+    try {
+      const response = await postService.updatePost({
+        key,
+        Content,
+        Image,
+        Hashtags,
+      });
+      console.log("<PostSlice>: " + response?.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
 export const getDetailHashtag = createAsyncThunk(
   "post/getName",
   async (_, { rejectWithValue }) => {
     try {
       const response = await postService.getDetailHashtag();
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+export const getHashtagById = createAsyncThunk(
+  "post/getHashtagById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await postService.getHashtagById(id);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -90,6 +121,17 @@ export const postSlice = createSlice({
         state.loading = false;
       })
       .addCase(getDetailHashtag.rejected, (state, action) => {
+        state.loading = false;
+      })
+      //
+      .addCase(getHashtagById.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getHashtagById.fulfilled, (state, action) => {
+        state.hashtagObject = action.payload.posts;
+        state.loading = false;
+      })
+      .addCase(getHashtagById.rejected, (state, action) => {
         state.loading = false;
       })
       .addCase(searchPostByHashtag.pending, (state, action) => {

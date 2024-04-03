@@ -10,8 +10,9 @@ import {
   getSuggestionAccount,
   getSuggestionAccountByAccountId,
 } from "../../app/Account/actions";
-const HeaderFriend = () => {
-  const navigation = useNavigation();
+import ROUTES from "../../constants/routes";
+const HeaderFriend = ({ navigation }) => {
+  // const navigation = useNavigation();
   const SettingFriends = () => {
     // Chuyển đến trang Setting khi người dùng nhấn vào icon Setting
     navigation.navigate("SettingFriends");
@@ -19,7 +20,7 @@ const HeaderFriend = () => {
   const accountSuggestion = useSelector(
     (state) => state.account.accountSuggestion
   );
-
+  const authenticated = useSelector((state) => state.user.authenticated);
   const dispatch = useDispatch();
 
   const fetchAllAccountSuggestion = async () => {
@@ -45,6 +46,15 @@ const HeaderFriend = () => {
       });
     } catch (error) {}
   };
+
+  function navigateToFollower() {
+    navigation.push(ROUTES.FOLLOWER, { account: accountSuggestion });
+  }
+
+  function navigateToFollowing() {
+    navigation.push(ROUTES.FOLLOWING, { account: accountSuggestion });
+  }
+
   return (
     <View style={styles.header}>
       <View style={styles.iconContainer}>
@@ -109,20 +119,26 @@ const HeaderFriend = () => {
         </View>
 
         <View style={styles.bioContainer}>
-          <View style={styles.bioColumn}>
+          <TouchableOpacity
+            onPress={navigateToFollower}
+            style={styles.bioColumn}
+          >
             <Text style={styles.bioCount}>
               {accountSuggestion?.follower || 0}
             </Text>
             <Text style={styles.bioText}>Người theo dõi</Text>
-          </View>
-          <View style={styles.bioColumn}>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={navigateToFollowing}
+            style={styles.bioColumn}
+          >
             <Text style={styles.bioCount}>
               {accountSuggestion?.following || 0}
             </Text>
             <Text style={styles.bioText}>Đang theo dõi</Text>
-          </View>
+          </TouchableOpacity>
           <View>
-            {!accountSuggestion?.isfollow ? (
+            {!accountSuggestion?.isfollow || authenticated === false ? (
               <TouchableOpacity
                 onPress={() =>
                   followOneAccountById(accountSuggestion?.accountId)

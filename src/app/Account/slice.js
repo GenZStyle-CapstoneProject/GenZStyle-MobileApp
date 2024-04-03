@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   followOneAccount,
   getAccountWithPostList,
+  getFollowerAndFollowingByAccountId,
   getFollowingAccountWithPosts,
   getSuggestionAccount,
   getSuggestionAccountByAccountId,
   resetAccountWithPostList,
+  updatePassword,
 } from "./actions";
 
 const accountSlice = createSlice({
@@ -16,6 +18,7 @@ const accountSlice = createSlice({
     accountSuggestionList: [],
     accountSuggestion: null,
     accountFollowingList: [],
+    accountFollowInfo: null,
     loading: null,
   },
   reducers: {},
@@ -77,6 +80,29 @@ const accountSlice = createSlice({
         state.loading = false;
       })
       .addCase(getFollowingAccountWithPosts.rejected, (state, action) => {
+        state.loading = false;
+      })
+      // Ngăn cách
+      .addCase(getFollowerAndFollowingByAccountId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        getFollowerAndFollowingByAccountId.fulfilled,
+        (state, action) => {
+          state.accountFollowInfo = action.payload;
+          state.loading = false;
+        }
+      )
+      .addCase(getFollowerAndFollowingByAccountId.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(updatePassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updatePassword.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
         state.loading = false;
       });
   },

@@ -9,33 +9,40 @@ import FollowingScreen from "../../../screens/FollowingScreen";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { loadAuthState } from "../../../features/userSlice";
 import AuthTabNavigator from "../../AuthTabNavigator/AuthTabNavigator";
+import UpPostDraftScreen from "../../../screens/Post/UpPostDraftScreen";
 
 const Stack = createNativeStackNavigator();
 const PostNavigator = ({ authenticated }) => {
-  return (
-    authenticated ===true ?
-      <Stack.Navigator>
-        <Stack.Screen
-          name={ROUTES.POST}
-          component={PostScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={ROUTES.UPPOST}
-          component={UpPostScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={ROUTES.NOTIFICATION}
-          component={NotificationScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={ROUTES.FOLLOWING}
-          component={FollowingScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator> : <AuthTabNavigator />
+  return authenticated === true ? (
+    <Stack.Navigator>
+      <Stack.Screen
+        name={ROUTES.POST}
+        component={PostScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.UPPOST}
+        component={UpPostScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.UPPOSTDRAFT}
+        component={UpPostDraftScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.NOTIFICATION}
+        component={NotificationScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.FOLLOWING}
+        component={FollowingScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  ) : (
+    <AuthTabNavigator />
   );
 };
 

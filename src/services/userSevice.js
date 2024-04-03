@@ -78,5 +78,9 @@ export const userService = {
       throw error;
     }
   },
+  resetPassword: (email) => {
+    const url = `/odata/Accounts/ResetPassword?email=${email}`;
+    return axiosClient.put(url);
+  },
 
 };

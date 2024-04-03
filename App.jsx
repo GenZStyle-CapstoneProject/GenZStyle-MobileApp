@@ -13,12 +13,12 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
         <NavigationContainer>
           <AppNavigator />
         </NavigationContainer>
-      </GestureHandlerRootView>
-    </Provider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }

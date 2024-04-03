@@ -1,17 +1,6 @@
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  Linking,
-  TouchableOpacity,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
-import * as Google from "expo-auth-session/providers/google";
-import ROUTES from "../constants/routes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch } from "../app/hooks";
 import { setExitIntro } from "../features/userSlice";

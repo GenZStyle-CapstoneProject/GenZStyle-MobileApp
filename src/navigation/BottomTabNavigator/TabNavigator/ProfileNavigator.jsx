@@ -12,7 +12,8 @@ import Login from "../../../screens/Login";
 import Signup from "../../../screens/Signup";
 import MoreInfo from "../../../screens/MoreInfo";
 import LoginInProfile from "../../../screens/Profile/LoginInProfile";
-import UpdatePasswordScreen from "../../../screens/Profile/UpdatePasswordScreen"
+import UpdatePasswordScreen from "../../../screens/Profile/UpdatePasswordScreen";
+import EditPost from "../../../screens/Profile/EditPost";
 const Stack = createNativeStackNavigator();
 const ProfileNavigator = () => {
   return (
@@ -60,6 +61,11 @@ const ProfileNavigator = () => {
       <Stack.Screen
         name={ROUTES.UPDATEPASSWORD}
         component={UpdatePasswordScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.EDIT_POST}
+        component={EditPost}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

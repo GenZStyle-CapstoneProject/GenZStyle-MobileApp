@@ -1,2 +1,2 @@
 export const BASE_URL =
-  "https://genzstyle.azurewebsites.net";
+  "https://genzstyleapp.azurewebsites.net";

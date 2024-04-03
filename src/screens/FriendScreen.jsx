@@ -11,7 +11,10 @@ import CartFriends from "../components/Friends/CartFriends";
 import products from "../data/Products";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { getSuggestionAccountByAccountId } from "../app/Account/actions";
+import {
+  getFollowerAndFollowingByAccountId,
+  getSuggestionAccountByAccountId,
+} from "../app/Account/actions";
 
 const FriendScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -22,18 +25,25 @@ const FriendScreen = ({ route }) => {
   const accountSuggestion = useSelector(
     (state) => state.account.accountSuggestion
   );
+  const accountFollowInfo = useSelector(
+    (state) => state.account.accountFollowInfo
+  );
 
   const fetchAccountSuggestion = async () => {
     await dispatch(getSuggestionAccountByAccountId(item?.accountId));
   };
 
-  // useEffect(() => {
-  //   fetchAccountSuggestion();
-  // }, []);
+  const fetchFollowerAndFollowingByAccountId = async () => {
+    await dispatch(getFollowerAndFollowingByAccountId(item?.accountId));
+  };
+
+  useEffect(() => {
+    fetchFollowerAndFollowingByAccountId();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <HeaderFriend />
+      <HeaderFriend navigation={navigation} />
       <View style={styles.hr} />
       {/* <CartFriends /> */}
 
