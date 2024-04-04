@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useCallback } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,7 +70,7 @@ const styles = StyleSheet.create({
     },
     postItem: {
         justifyContent: 'flex-start',
-        alignItems: 'center',
+alignItems: 'center',
         padding: 8,
         width: windowWidth / 2 - 15, // 15 là tổng padding và margin theo chiều ngang
         marginBottom: 16,
@@ -125,4 +123,3 @@ const styles = StyleSheet.create({
 });
 
 export default MyClothesScreen;
-
