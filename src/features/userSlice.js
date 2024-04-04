@@ -14,6 +14,7 @@ const initialState = {
   accountId: null,
   loading: false,
   error: null,
+  email: null,
 };
 export const login = createAsyncThunk(
   "user/login",
@@ -191,6 +192,19 @@ export const fecthListFollow = createAsyncThunk(
     }
   }
 );
+export const resetPassword = createAsyncThunk(
+  "user/resetPassword",
+  async (email, { rejectWithValue }) => {
+    try {
+      const response = await userService.resetPassword(email);
+      console.log(email);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -342,6 +356,15 @@ export const userSlice = createSlice({
         state.loading = "rejected";
         state.error = action.error.message || "An error occurred";
         console.log("Rejected state:", state.error);
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
       });
   },
 });

@@ -67,13 +67,40 @@ export const getFollowingAccountWithPosts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await accountService.getFollowingAccountWithPosts();
-      const responseINeed = response.data?.following?.flatMap((user) =>
-        user?.posts?.map((post) => ({ ...post }))
-      );
-      return responseINeed;
+      // const responseINeed = response.data?.following?.flatMap((user) =>
+      //   user?.posts?.map((post) => ({ ...post }))
+      // );
+      return response.data;
     } catch (error) {
       console.log(error);
       return rejectWithValue(error);
+    }
+  }
+);
+export const getFollowerAndFollowingByAccountId = createAsyncThunk(
+  "account/getFollowerAndFollowingByAccountId",
+  async (accountId, { rejectWithValue }) => {
+    try {
+      const response = await accountService.getFollowerAndFollowingByAccountId(
+        accountId
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
+export const updatePassword = createAsyncThunk(
+  "account/updatePassword",
+  async (data) => {
+    try {
+      const response = await accountService.updatePassword(data);
+      console.log(data)
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      // return rejectWithValue(error);
     }
   }
 );

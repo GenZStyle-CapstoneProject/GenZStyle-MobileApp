@@ -24,7 +24,9 @@ const Cart = ({ item }) => {
   const [accountId, setAccountId] = useState();
   const [loadData, setLoadData] = useState(false);
   const dataActive = useSelector((state) => state.activePost.dataActivePost);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     const getAccountId = async () => {
       try {
@@ -142,9 +144,9 @@ const Cart = ({ item }) => {
               style={styles.icon}
               onPress={() => navigateToListLike(item.postId)}
             >
-              <Text style={styles.iconText}>{item.likes.length}</Text>
+              <Text style={styles.iconText}>({item.likes.length})</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.icon}>
+            <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate("CartDetail", { item })}>
               <Icon name="chat-outline" size={27} color="black" />
               <Text style={styles.iconText}></Text>
             </TouchableOpacity>

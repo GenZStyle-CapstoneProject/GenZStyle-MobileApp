@@ -6,6 +6,7 @@ import Signup from "../../screens/Signup";
 import Welcome from "../../screens/Welcome";
 import MoreInfo from "../../screens/MoreInfo";
 import WelcomeBack from "../../screens/WelcomeBack";
+import ForgotPassword from "../../screens/ForgotPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,11 @@ const AuthTabNavigator = () => {
       <Stack.Screen
         name={"MoreInfo"}
         component={MoreInfo}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"ForgotPassword"}
+        component={ForgotPassword}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

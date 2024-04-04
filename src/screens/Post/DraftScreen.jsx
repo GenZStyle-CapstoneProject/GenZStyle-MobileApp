@@ -1,7 +1,17 @@
-import React from 'react';
-import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { ScreenWidth } from "./CameraScreen";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ROUTES from "../../constants/routes";
 
 const DraftScreen = () => {
   const navigation = useNavigation();
@@ -10,24 +20,74 @@ const DraftScreen = () => {
     navigation.goBack();
   };
 
-  const draftData = [
-    { id: '1', imageUri: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '2', imageUri: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '3', imageUri: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '4', imageUri: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '5', imageUri: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '6', imageUri: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '7', imageUri: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-    { id: '8', imageUri: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  ];
+  const navigateToUpPostDraft = (item) => {
+    navigation.navigate(ROUTES.UPPOSTDRAFT, { object: item });
+  };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Image source={{ uri: item.imageUri }} style={styles.image} />
-      <TouchableOpacity style={styles.deleteButton}>
-        <AntDesign name="delete" size={24} color="red" />
+  const [draftData, setDraftData] = useState([]);
+
+  const fetchAllDraftInStorage = async () => {
+    try {
+      const res = await AsyncStorage.getItem("DRAFT_ARRAY");
+      let dataArray = [];
+      if (res) {
+        dataArray = JSON.parse(res);
+      }
+      setDraftData(dataArray);
+      console.log("dataArray", JSON.stringify(dataArray, null, 2));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeDraftItem = async (item) => {
+    try {
+      const res = await AsyncStorage.getItem("DRAFT_ARRAY");
+      let dataArray = [];
+
+      if (res) {
+        dataArray = JSON.parse(res);
+      }
+
+      dataArray = dataArray.filter((itemA) => itemA.id !== item?.id);
+      await AsyncStorage.setItem("DRAFT_ARRAY", JSON.stringify(dataArray));
+      setDraftData(dataArray);
+
+      fetchAllDraftInStorage();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const removeAllDratf = async () => {
+    try {
+      await AsyncStorage.removeItem("DRAFT_ARRAY").finally(() => {
+        fetchAllDraftInStorage();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllDraftInStorage();
+    }, [])
+  );
+
+  const renderItem = ({ item, index }) => (
+    <TouchableOpacity
+      onPress={() => navigateToUpPostDraft(item)}
+      style={[styles.itemContainer, { marginLeft: index % 2 === 0 ? 5 : 10 }]}
+    >
+      <Image source={{ uri: item?.selectedImage?.uri }} style={styles.image} />
+      <TouchableOpacity
+        onPress={() => removeDraftItem(item)}
+        style={styles.deleteButton}
+      >
+        <AntDesign name="delete" size={20} color="red" />
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -41,11 +101,16 @@ const DraftScreen = () => {
             <Text style={styles.hashtag}>Bản nháp</Text>
           </View>
         </View>
-        <Text style={{
-          textAlign: 'center',
-          color: 'gray',
-          marginBottom: 10,
-        }}>Tất cả các bản nháp sẽ bị xóa nếu bạn đăng xuất hoặc gỡ cài đặt ứng dụng.</Text>
+        <Text
+          style={{
+            textAlign: "center",
+            color: "gray",
+            marginBottom: 10,
+          }}
+        >
+          Tất cả các bản nháp sẽ bị xóa nếu bạn đăng xuất hoặc gỡ cài đặt ứng
+          dụng.
+        </Text>
       </View>
       <FlatList
         data={draftData}
@@ -60,43 +125,42 @@ const DraftScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
+    // padding: 15,
+    paddingTop: 30,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
     marginBottom: 20,
   },
   hashtagContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   hashtag: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
   },
   itemContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
     marginBottom: 16,
   },
   image: {
-    width: '100%',
+    width: ScreenWidth / 2 - 10,
     aspectRatio: 1,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     borderRadius: 10,
     marginBottom: 10,
   },
   deleteButton: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#fff',
+    position: "absolute",
+    alignSelf: "flex-end",
+    backgroundColor: "#fff",
     borderRadius: 20,
-    padding: 10,
-    marginTop: -30,
-    marginRight: 10,
+    padding: 7,
+    top: 10,
+    right: 10,
   },
 });
 

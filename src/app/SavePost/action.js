@@ -7,7 +7,9 @@ export const savePost = createAsyncThunk(
         try {
             const apiUrl = `/odata/Posts/${postId}/SaveCollectionByPostId`;
             const response = await axiosClient.post(apiUrl);
-            return postId; // Trả về postId đã lưu
+            console.log("apiUrl", apiUrl);
+            return response.data?.posts;
+
         } catch (error) {
             throw error;
         }
@@ -18,9 +20,9 @@ export const unsavePost = createAsyncThunk(
     "save/unsavePost",
     async (postId) => {
         try {
-            const apiUrl = `/odata/Posts/${postId}/UnsaveCollectionByPostId`; // Thay đổi API endpoint tương ứng
+            const apiUrl = `/odata/Posts/${postId}/SaveCollectionByPostId`;
             const response = await axiosClient.post(apiUrl);
-            return postId; // Trả về postId đã hủy lưu
+            return postId;
         } catch (error) {
             throw error;
         }

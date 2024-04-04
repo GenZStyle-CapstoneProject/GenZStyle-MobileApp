@@ -5,11 +5,16 @@ const ROUTES = {
   HOME_NAVIGATOR: "HomeNavigator",
   FOLLOWING: "Following",
   SUGGESTION_ACCOUNT: "SuggestionAccount",
+  FOLLOWING: "Following",
+  FOLLOWER: "Follower",
 
   SEARCH: "Search",
   HASHTAG_RESULT: '"HashtagResult"',
   SEARCH_NAVIGATOR: "SearchNavigator",
   POST: "Post",
+  POST_DETAIL: "PostDetail",
+  HASHTAG_DETAIL: "HashtagDetail",
+
   POST_NAVIGATOR: "PostNavigator",
   NOTIFICATION: "Notification",
   NOTIFICATION_NAVIGATOR: "NotificationNavigator",
@@ -30,7 +35,7 @@ const ROUTES = {
 
   LISTLIKE: "ListLike",
   LISTLIKE_NAVIGATOR: "ListLikeNavigator",
-
+  UPDATEPASSWORD: "UpdatePasswordScreen",
   HASHTAGVIEW: "HashtagView",
   HASHTAGVIEW_NAVIGATOR: "HashtagViewNavigator",
   SETTINGPACKAGE: "SettingPackage",
@@ -46,10 +51,14 @@ const ROUTES = {
   REPORTPOST: "ReportPost",
   REPORTPOST_NAVIGATOR: "ReportPostNavigator",
   UPPOST: "UpPost",
+  UPPOSTDRAFT: "UpPostDraft",
   UPPOST_NAVIGATOR: "UpPostNavigator",
+  EDIT_POST: "EditPost",
+  LIBRARY_IAMGE: "LibraryImage",
 
   CONVERSATIONS: "ConversationsScreens",
   MESSAGESSCREEN: "MessagesScreen",
   GROUPMEMBERSSCREEN: "GroupMembersScreen",
+  FORGOTPASSWORD: "ForgotPassword",
 };
 export default ROUTES;

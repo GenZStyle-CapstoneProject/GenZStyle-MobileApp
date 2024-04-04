@@ -19,7 +19,7 @@ const ListFollowScreen = ({ navigation, route }) => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <BackButton onPress={() => navigation.goBack()} />
-                <Text style={styles.userName}> {profile?.data?.accounts[0]?.username || "username"}</Text>
+                <Text style={styles.userName}> {profile?.data?.account?.username || "username"}</Text>
             </View>
             <Tab.Navigator
                 screenPosition="top"

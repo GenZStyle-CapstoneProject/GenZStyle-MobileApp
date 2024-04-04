@@ -142,6 +142,9 @@ const Signup = ({ navigation }) => {
   return (
 
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EC" }}>
+      <View style={{ position: 'absolute', top: 40, left: 20, padding: 7, backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="arrow-back" size={30} color="white" /></TouchableOpacity>
+      </View>
       <View>
         {fontsLoaded && <Text style={{
           fontFamily: "Pacifico_400Regular",

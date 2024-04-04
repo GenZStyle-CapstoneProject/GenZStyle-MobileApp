@@ -304,14 +304,11 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import * as Payments from "react-native-payments";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPurchasePackage } from "../../app/PackageRegister/action";
 import { fetchMomoPay } from "./../../app/MomoPay/action";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchUpdatePayment } from "./../../app/UpdatePayment/action";
 import momoIcon from "../../../assets/momo-icon.png";
 

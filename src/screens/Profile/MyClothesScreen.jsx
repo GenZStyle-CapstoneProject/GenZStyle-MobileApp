@@ -1,90 +1,28 @@
 
-// import React, { useEffect } from 'react';
-// import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { fetchListSave } from '../../app/ListSave/action';
 
-// const MyClothesScreen = () => {
-//     const dispatch = useDispatch();
-//     const { list } = useSelector((state) => state.listSave);
-
-//     useEffect(() => {
-//         dispatch(fetchListSave());
-//     }, [dispatch]);
-
-//     return (
-//         <View style={styles.container}>
-//             <FlatList
-//                 data={list.data}
-//                 keyExtractor={(item) => item.id.toString()}
-//                 renderItem={({ item }) => (
-//                     <View style={styles.postItem}>
-//                         <Image source={{ uri: item.image_url }} style={styles.image} />
-//                         <View style={styles.postFooter}>
-//                             <Text style={styles.name}>{item.name}</Text>
-//                         </View>
-//                     </View>
-//                 )}
-//                 numColumns={2}
-//                 columnWrapperStyle={styles.columnWrapperStyle}
-//                 contentContainerStyle={styles.contentContainer}
-//             />
-//         </View>
-//     );
-// };
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: 'white',
-//     },
-//     postItem: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         padding: 10,
-//         width: '50%',
-//     },
-//     image: {
-//         width: '100%',
-//         height: 150,
-//         resizeMode: 'cover',
-//         marginBottom: 10,
-//         borderRadius: 8,
-//     },
-//     postFooter: {
-//         flexDirection: 'column',
-
-//     },
-//     name: {
-//         fontSize: 16,
-//         fontWeight: "bold",
-//         color: "#333333",
-
-//     },
-//     columnWrapperStyle: {
-//         justifyContent: 'space-between',
-//         paddingHorizontal: 10,
-//     },
-//     contentContainer: {
-//         paddingHorizontal: 10,
-//     },
-// });
-
-// export default MyClothesScreen;
-
-import React, { useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, Dimensions } from 'react-native';
+import React, { useEffect, useCallback } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchListSave } from '../../app/ListSave/action';
-
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const MyClothesScreen = () => {
     const dispatch = useDispatch();
     const { list } = useSelector((state) => state.listSave);
-
-    useEffect(() => {
+    const navigation = useNavigation();
+    const navigateToCartDetail = (item) => {
+        console.log("Data being passed to CartDetail:", item);
+        navigation.navigate("CartDetail", { item });
+    };
+    const fetchListSaveCallback = useCallback(() => {
         dispatch(fetchListSave());
     }, [dispatch]);
+
+    useFocusEffect(fetchListSaveCallback);
+
+    useEffect(() => {
+        fetchListSaveCallback();
+    }, [fetchListSaveCallback]);
 
     return (
         <View style={styles.container}>
@@ -92,12 +30,30 @@ const MyClothesScreen = () => {
                 data={list.data}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <View style={styles.postItem}>
-                        <Image source={{ uri: item.image_url }} style={styles.image} />
-                        <View style={styles.postFooter}>
-                            <Text style={styles.name}>{item.name}</Text>
+                    <TouchableOpacity onPress={() => navigateToCartDetail(item)}>
+                        <View style={styles.postItem}>
+                            <Image source={{ uri: item.post.image }} style={styles.image} />
+                            <View style={styles.postFooter}>
+                                <TouchableOpacity style={styles.icon} onPress={() => handleLikePress()}>
+                                    <Icon name="heart-outline" size={24} color="#333" />
+                                </TouchableOpacity>
+                                <Text style={styles.iconText}>2</Text>
+                                <TouchableOpacity style={styles.icon} onPress={() => handleCommentPress()}>
+                                    <Icon name="chat-outline" size={24} color="black" />
+                                </TouchableOpacity>
+
+                            </View>
+
+                            <View style={styles.postFooter}>
+                                <Text style={styles.name}>{item.post.content}</Text>
+
+                            </View>
+                            <View style={styles.postFooter}>
+
+                                <Text style={styles.hashtagText}>{item.hashtags}</Text>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 )}
                 numColumns={2}
                 columnWrapperStyle={styles.columnWrapperStyle}
@@ -150,6 +106,23 @@ const styles = StyleSheet.create({
     contentContainer: {
         paddingHorizontal: 5,
     },
+    hashtagText: {
+        color: "#666666",
+    },
+
+    icon: {
+        flexDirection: "row",
+        alignItems: "center",
+
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        borderRadius: 20,
+        padding: 8,
+    },
+    iconText: {
+        marginLeft: 4,
+        color: "#333333",
+    },
 });
 
 export default MyClothesScreen;
+

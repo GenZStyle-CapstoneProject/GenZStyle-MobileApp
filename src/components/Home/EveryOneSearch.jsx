@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import CartHomeFollowing from "./CartHomeFollowing";
 import images from "../../data/Image";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Card, Icon, Badge } from "react-native-paper";
 import { Avatar, Button } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -46,9 +46,20 @@ const EveryOneSearch = () => {
   const accountFollowingList = useSelector(
     (state) => state.account.accountFollowingList
   );
+  const authenticated = useSelector((state) => state.user.authenticated);
+
   // ** React hooks state
   const [isFollowed, setIsFollowed] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  function findFirstFollow(arr) {
+    if (typeof arr !== "undefined" && Array.isArray(arr)) {
+      if (arr.find((item) => item.isfollow === true)) {
+        return true;
+      }
+      return false;
+    }
+  }
 
   useEffect(() => {
     const fetch = async () => {
@@ -67,22 +78,37 @@ const EveryOneSearch = () => {
           await fetchAllAccountSuggestion();
         }
       });
-    } catch (error) { }
+    } catch (error) {}
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllAccountSuggestion();
+    }, [])
+  );
 
   const fetchAllAccountSuggestion = async () => {
     await dispatch(getSuggestionAccount());
   };
 
   const fetchAccountSuggestion = async (accountId) => {
-    await dispatch(getSuggestionAccountByAccountId(accountId));
+    if (authenticated) {
+      await dispatch(getSuggestionAccountByAccountId(accountId)).then((res) => {
+        console.log("res", JSON.stringify(res, null, 2));
+      });
+      return true;
+    } else {
+      Alert.alert(
+        "Thông báo",
+        "Vui lòng đăng nhập để xem thông tin cá nhân của người khác!"
+      );
+      return false;
+    }
   };
 
   const fetchAllAccountSuggestionForCheck = async () => {
     await dispatch(getSuggestionAccount()).then((res) => {
-      const isFollowed = Boolean(
-        res?.payload?.some((obj) => obj.isfollow === true)
-      );
+      const isFollowed = findFirstFollow(res.payload ?? []);
       setIsFollowed(isFollowed);
     });
   };
@@ -114,7 +140,13 @@ const EveryOneSearch = () => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() => navigateToFriend({ name: "duy", id: 1 })}
+        onPress={() =>
+          fetchAccountSuggestion(item?.accountId).then((res) => {
+            if (res) {
+              navigateToFriend(item);
+            }
+          })
+        }
         style={{ marginTop: 5, marginHorizontal: 15, marginBottom: 10 }}
       >
         <View
@@ -133,7 +165,9 @@ const EveryOneSearch = () => {
             }}
             onPress={() => {
               fetchAccountSuggestion(item?.accountId).then((res) => {
-                navigateToFriend(item);
+                if (res) {
+                  navigateToFriend(item);
+                }
               });
             }}
             rounded
@@ -157,7 +191,7 @@ const EveryOneSearch = () => {
             </View>
           </View>
           <View style={{ flex: 1, marginLeft: 20 }}>
-            {!item?.isfollow ? (
+            {!item?.isfollow || authenticated === false ? (
               <Button
                 title="Theo dõi"
                 titleStyle={{ color: "white", fontSize: 12 }}
@@ -166,7 +200,11 @@ const EveryOneSearch = () => {
                   marginLeft: 60,
                   backgroundColor: "black",
                 }}
-                onPress={() => followOneAccountById(item?.accountId)}
+                onPress={() =>
+                  authenticated
+                    ? followOneAccountById(item?.accountId)
+                    : Alert.alert("Thông báo", "Bạn cần phải đăng nhập!")
+                }
               />
             ) : (
               <Button
@@ -189,10 +227,10 @@ const EveryOneSearch = () => {
           <FlatList
             nestedScrollEnabled
             data={[1, 2, 3]}
-            renderItem={({ }) => {
+            renderItem={({}) => {
               return (
                 <Avatar
-                  onPress={() => navigateToCartDetail(item)}
+                  onPress={() => navigateToCartDetail(item?.posts?.[0])}
                   containerStyle={{ width: "33%", height: 170 }}
                   avatarStyle={{ borderRadius: 2 }}
                   source={{
@@ -405,8 +443,8 @@ const EveryOneSearch = () => {
                   item?.follower > 9 && item?.follower < 100
                     ? 25
                     : item?.follower > 99
-                      ? 20
-                      : 35,
+                    ? 20
+                    : 35,
               }}
             >
               <Text style={{ fontSize: 13, fontWeight: 600 }}>
@@ -472,7 +510,7 @@ const EveryOneSearch = () => {
     setRefreshing(false);
   }, [accountSuggestionList]);
 
-  return ((
+  return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <FlatList
         data={accountSuggestionList}
@@ -484,7 +522,6 @@ const EveryOneSearch = () => {
         }
       />
     </View>
-  )
   );
 };
 

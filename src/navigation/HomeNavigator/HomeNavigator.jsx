@@ -13,6 +13,10 @@ import { loadAuthState } from "../../features/userSlice";
 import Login from "../../screens/Login";
 import HomeFollowing from "../../components/Home/HomeFollowing";
 import Signup from "../../screens/Signup";
+import Following from "../../components/Friends/Following/Following";
+import Follower from "../../components/Friends/Follower/Follower";
+import PostDetail from "../../screens/PostDetail";
+import HashtagDetail from "../../screens/Search/SearchBy/Hashtag/HastagDetail";
 
 const Stack = createNativeStackNavigator();
 const HomeNavigator = ({ authenticated }) => {
@@ -50,6 +54,16 @@ const HomeNavigator = ({ authenticated }) => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={ROUTES.POST_DETAIL}
+        component={PostDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.HASHTAG_DETAIL}
+        component={HashtagDetail}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={ROUTES.FRIENDS}
         component={FriendScreen}
         options={{ headerShown: false }}
@@ -67,6 +81,16 @@ const HomeNavigator = ({ authenticated }) => {
       <Stack.Screen
         name={ROUTES.REPORTPOST}
         component={ReportPost}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.FOLLOWER}
+        component={Follower}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.FOLLOWING}
+        component={Following}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

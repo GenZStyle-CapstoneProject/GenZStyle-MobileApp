@@ -16,6 +16,8 @@ import zaloPaymentReducer from "../app/ZaloPay/slice";
 import updatePaymentReducer from "../app/UpdatePayment/slice";
 import saveReducer from "../app/SavePost/slice";
 import listSaveReducer from "../app/ListSave/slice";
+import deleteCommentReducer from "../app/DeleteComment/slice";
+import hiddenPostReducer from "../app/HidePosts/slice";
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
@@ -40,5 +42,7 @@ export const store = configureStore({
     updatePayment: updatePaymentReducer,
     save: saveReducer,
     listSave: listSaveReducer,
+    deleteComment: deleteCommentReducer,
+    hiddenPost: hiddenPostReducer,
   },
 });

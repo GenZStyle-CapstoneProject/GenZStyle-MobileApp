@@ -1,9 +1,9 @@
 import axiosClient from "./axiosClient";
 
 export const accountService = {
-  updateAccount: (key) => {
-    const url = `/odata/Accounts/${key}/Update`;
-    return axiosClient.put(url);
+  updatePassword: (data) => {
+    const url = `/odata/Accounts/${data.key}/Update`;
+    return axiosClient.put(url, data.requestBody);
   },
   getAccountWithPostList: (username) => {
     const url = `/odata/Accounts/SearchByUserName?username=${username}`;
@@ -22,7 +22,11 @@ export const accountService = {
     return axiosClient.get(url);
   },
   getFollowingAccountWithPosts: () => {
-    const url = `/odata/UserProfile/Follow`;
+    const url = `/odata/GetPost/User/Follow`;
+    return axiosClient.get(url);
+  },
+  getFollowerAndFollowingByAccountId: (accountId) => {
+    const url = `/odata/AccountProfile/Follow?AccountId=${accountId}`;
     return axiosClient.get(url);
   },
 };

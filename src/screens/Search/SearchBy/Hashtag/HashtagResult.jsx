@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import { imageUrlTest } from "../../../../utils/testData";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import {
@@ -20,57 +20,36 @@ import {
   MaterialCommunityIcons,
 } from "react-native-vector-icons";
 import { Divider, Searchbar } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 import EmptyResult from "../../EmptyResult";
+import ROUTES from "../../../../constants/routes";
+import { searchPostByHashtag } from "../../../../features/postSlice";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const GAP = 4;
 const MARGIN_LEFT = 2;
-const data = [
-  {
-    name: "#xinhxan",
-    posts: [
-      {
-        name: "trái dứng",
-        img: imageUrlTest,
-      },
-      {
-        name: "cồn lài",
-        img: imageUrlTest,
-      },
-      {
-        name: "đuồi bầu",
-        img: imageUrlTest,
-      },
-    ],
-  },
-  {
-    name: "#xinhdep",
-    posts: [
-      {
-        name: "trái dứng",
-        img: imageUrlTest,
-      },
-      {
-        name: "cồn lài",
-        img: imageUrlTest,
-      },
-      {
-        name: "đuồi bầu",
-        img: imageUrlTest,
-      },
-    ],
-  },
-];
+
 const HashtagResult = () => {
   const navigation = useNavigation();
   // Fetch API
+  const dispatch = useDispatch();
   const hashtagListSearch = useSelector(
     (state) => state.post.hashtagListSearch
   );
+  const accountId = useSelector((state) => state.user.accountId);
   const hashtagParam = useSelector((state) => state.post.hashtagParam);
+  const searchByHashtag = async () => {
+    await dispatch(searchPostByHashtag(hashtagParam)).then((res) => {
+      console.log(JSON.stringify(res, null, 2));
+    });
+  };
 
+  useFocusEffect(
+    useCallback(() => {
+      searchByHashtag();
+    }, [])
+  );
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -148,19 +127,45 @@ const HashtagResult = () => {
                   maxWidth: SCREEN_WIDTH / 2 - GAP,
                 }}
               >
-                <Image
-                  style={{
-                    width: SCREEN_WIDTH / 2 - GAP,
-                    height: 250,
-                  }}
-                  source={{ uri: item?.image || imageUrlTest }}
-                />
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate(ROUTES.CARTDETAIL, { item })
+                  }
+                >
+                  <Image
+                    style={{
+                      width: SCREEN_WIDTH / 2 - GAP,
+                      height: 250,
+                    }}
+                    source={{ uri: item?.image || imageUrlTest }}
+                  />
+                </TouchableOpacity>
                 <View style={{ marginHorizontal: 5 }}>
                   <View
                     style={{ flexDirection: "row", marginTop: 10, gap: 10 }}
                   >
-                    <Icon name="star-outline" size={24} color={"grey"} />
+                    <Icon
+                      name={
+                        item.likes.some(
+                          (like) =>
+                            like.isLike === true && like.likeBy == accountId
+                        )
+                          ? "heart"
+                          : "heart-outline"
+                      }
+                      size={24}
+                      color={
+                        item.likes.some(
+                          (like) =>
+                            like.isLike === true && like.likeBy == accountId
+                        )
+                          ? "red"
+                          : "grey"
+                      }
+                    />
+                    <Text>{item?.likes?.length}</Text>
                     <Icon name="chat-outline" size={24} color={"grey"} />
+                    <Text>{}</Text>
                   </View>
                   <Text
                     numberOfLines={1}
@@ -177,8 +182,8 @@ const HashtagResult = () => {
                       fontWeight: 500,
                     }}
                   >
-                    {item?.hashPosts.map((post, index) => {
-                      return post?.hashtag.name + " ";
+                    {item?.hashtags?.map((item, index) => {
+                      return item + " ";
                     })}
                   </Text>
                 </View>

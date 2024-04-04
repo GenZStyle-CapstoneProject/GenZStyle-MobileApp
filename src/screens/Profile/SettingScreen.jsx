@@ -21,10 +21,12 @@ const SettingScreen = () => {
 
   };
 
-
+  const navigateToUpdatePassword = () => {
+    navigation.navigate(ROUTES.UPDATEPASSWORD);
+  };
 
   const navigateToSettingPackage = () => {
-    // Chuyển đến màn hình mong muốn khi TouchableOpacity được nhấn
+
     navigation.navigate(ROUTES.SETTINGPACKAGE);
   };
 
@@ -75,18 +77,30 @@ const SettingScreen = () => {
             <Text style={styles.settingText}>Chỉnh sửa hồ sơ</Text>
           </TouchableOpacity>
           <View style={styles.hr} />
+          <View>
+            <TouchableOpacity onPress={navigateToUpdatePassword}>
+              <Text style={styles.settingText}>Đổi mật khẩu</Text>
+            </TouchableOpacity>
+            <View style={styles.hr} />
+          </View>
 
           <View>
             <Text style={styles.settingText}>Người dùng bị chặn</Text>
             <View style={styles.hr} />
           </View></>
       }
+
+
       {
-        profile && <><View style={styles.settingItem}>
-          <TouchableOpacity onPress={navigateToPackageHistory}>
-            <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
-          </TouchableOpacity>
-        </View>
+        profile && <>
+          <Text style={styles.settingText}>
+            <Text style={styles.boldText}>Gói hệ thống</Text>
+          </Text>
+          <View style={styles.settingItem}>
+            <TouchableOpacity onPress={navigateToPackageHistory}>
+              <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.hr} />
 
@@ -100,8 +114,6 @@ const SettingScreen = () => {
 
           <View style={styles.hr} /></>
       }
-
-
       <Text style={styles.settingText}>
         <Text style={styles.boldText}>Giới thiệu</Text>
       </Text>
@@ -127,8 +139,8 @@ const SettingScreen = () => {
       </View>
       <View style={styles.hr} />
       {
-        profile && <TouchableOpacity onPress={handleLogout}>
-          <Text>Log out</Text>
+        profile && <TouchableOpacity onPress={handleLogout} style={styles.logout}>
+          <Text style={styles.textlogout}>Log out</Text>
         </TouchableOpacity>
       }
 
@@ -140,7 +152,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingTop: 50,
+    paddingTop: 10,
     backgroundColor: "#DBE9EC"
   },
 
@@ -187,6 +199,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     right: 30,
     marginBottom: 12
+  },
+  logout: {
+    borderWidth: 1, // Độ rộng của viền
+    borderColor: 'white', // Màu của viền
+    backgroundColor: 'black', // Màu nền
+    paddingVertical: 10, // Khoảng cách dọc giữa nội dung và viền
+    paddingHorizontal: 10, // Khoảng cách ngang giữa nội dung và viền
+    borderRadius: 5, // Độ cong của góc
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+  },
+  textlogout: {
+    color: 'white', // Màu của chữ
+    textAlign: 'center', // Căn giữa chữ
+    fontSize: 16,
   },
 });
 

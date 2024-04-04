@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   Dimensions,
+  Platform
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";

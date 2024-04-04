@@ -1,4 +1,10 @@
-import { View, Text, Pressable, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
@@ -9,7 +15,8 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { login } from "../features/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
-import useAuthContext from "../hooks/useAuthContext";
+import ROUTES from "../constants/routes";
+
 const Login = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     Pacifico_400Regular,
@@ -34,7 +41,7 @@ const Login = ({ navigation }) => {
         console.log(JSON.stringify(res.meta.requestStatus, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
           alert("Đăng nhập thành công");
-          onCompleteOnboarding();
+          // onCompleteOnboarding()
           // navigation.navigate("Home");
         } else {
           alert("Dang nhap that bai");
@@ -62,6 +69,20 @@ const Login = ({ navigation }) => {
         backgroundColor: "#DBE9EC",
       }}
     >
+      <View
+        style={{
+          position: "absolute",
+          top: 40,
+          left: 20,
+          padding: 7,
+          backgroundColor: "rgba(0,0,0,0.3)",
+          borderRadius: 50,
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
       <View>
         {fontsLoaded && (
           <Text
@@ -182,6 +203,22 @@ const Login = ({ navigation }) => {
         >
           Bạn chưa có tài khoản?
         </Text>
+        <TouchableOpacity>
+          <Text
+            style={{
+              color: COLORS.black,
+              fontWeight: "bold",
+              fontSize: 17,
+              justifyContent: "center",
+              marginLeft: 110,
+            }}
+            onPress={() => {
+              navigation.navigate("ForgotPassword");
+            }}
+          >
+            Quên mật khẩu
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

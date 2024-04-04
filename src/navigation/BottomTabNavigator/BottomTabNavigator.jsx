@@ -33,7 +33,7 @@ const BottomTabNavigator = ({ authenticated }) => {
     >
       <Stack.Screen
         name={ROUTES.HOME_NAVIGATOR}
-        component={HomeNavigator}
+        children={() => <HomeNavigator authenticated={authenticated} />}
         options={{
           headerShown: false,
           title: "Home",

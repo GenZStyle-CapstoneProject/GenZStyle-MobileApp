@@ -11,77 +11,41 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-const likeData = [
-  {
-    id: "1",
-    username: "user1",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-i3kyoe6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=af4100e59c80d5e8847b64f0ca68fa76e36547e5",
-  },
-  {
-    id: "2",
-    username: "user2",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-wby69l6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=61341c3ce447f8356da3146c1903395fc43d28dc",
-  },
-  {
-    id: "3",
-    username: "user3",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-i3kyoe6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=af4100e59c80d5e8847b64f0ca68fa76e36547e5",
-  },
-  {
-    id: "4",
-    username: "user4",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-wby69l6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=61341c3ce447f8356da3146c1903395fc43d28dc",
-  },
-  {
-    id: "5",
-    username: "user5",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-i3kyoe6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=af4100e59c80d5e8847b64f0ca68fa76e36547e5",
-  },
-  {
-    id: "6",
-    username: "user6",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-wby69l6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=61341c3ce447f8356da3146c1903395fc43d28dc",
-  },
-  {
-    id: "7",
-    username: "user7",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-i3kyoe6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=af4100e59c80d5e8847b64f0ca68fa76e36547e5",
-  },
-  {
-    id: "8",
-    username: "user8",
-    avatar:
-      "https://preview.redd.it/trying-to-come-up-with-a-new-avatar-for-my-various-social-v0-wby69l6e1lsb1.jpg?width=519&format=pjpg&auto=webp&s=61341c3ce447f8356da3146c1903395fc43d28dc",
-  },
-];
+
 const BackButton = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.backButton}>
     <Ionicons name="arrow-back" size={24} color="black" />
   </TouchableOpacity>
 );
 const ListLike = ({ route }) => {
+
   const navigation = useNavigation();
   const { dataLike } = route.params;
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredData, setFilteredData] = useState(likeData);
+  const [filteredData, setFilteredData] = useState(null);
+  const accountData = dataLike?.likes?.map((like) => like.account);
   console.log("Data like", dataLike);
   const handleSearch = (query) => {
     setSearchQuery(query);
-    const lowerCaseQuery = query.toLowerCase();
-    const filtered = likeData.filter((item) =>
-      item.username.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
+    if (query === "") {
+      setFilteredData(null);
+    } else {
+      const lowerCaseQuery = query.toLowerCase();
+      const filteredData = accountData.filter((account) =>
+        account.username.toLowerCase().includes(lowerCaseQuery)
+      );
+      setFilteredData(filteredData);
+    }
   };
 
-  const accountData = dataLike?.likes?.map((like) => like.account);
+
+
+
+
+
+
+
+
   const renderLikeItem = ({ item }) => (
     <View style={styles.followerItem}>
       <Image style={styles.avatar} source={{ uri: item?.user?.avatar }} />
@@ -91,7 +55,15 @@ const ListLike = ({ route }) => {
       </TouchableOpacity>
     </View>
   );
-
+  // const renderLikeItem = ({ item }) => (
+  //   <View style={styles.followerItem}>
+  //     <Image style={styles.avatar} source={{ uri: item?.user?.avatar }} />
+  //     <Text style={styles.username}>{item?.username}</Text>
+  //     <TouchableOpacity style={styles.followButton}>
+  //       <Text style={styles.followButtonText}>Theo dõi</Text>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -113,11 +85,15 @@ const ListLike = ({ route }) => {
         />
       </View>
       <FlatList
-        data={accountData}
+        data={filteredData ? filteredData : accountData}
+
+
         keyExtractor={(item) => item?.accountId.toString()}
         renderItem={renderLikeItem}
         contentContainerStyle={styles.listContainer}
       />
+
+
     </View>
   );
 };
@@ -132,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10,
-    marginTop: 20,
+marginTop: 20,
   },
   backButton: {
     position: "absolute",
@@ -149,6 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 26,
+    marginTop: 12,
   },
   avatar: {
     width: 50,
