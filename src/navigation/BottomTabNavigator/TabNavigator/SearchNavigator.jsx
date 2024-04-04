@@ -9,6 +9,7 @@ import ReportUser from "../../../screens/Friends/ReportUser";
 import MessagesScreen from "../../../screens/MessagesScreen";
 import ConversationsScreen from "../../../screens/ConversationsScreen";
 import HashtagResult from "../../../screens/Search/SearchBy/Hashtag/HashtagResult";
+import GroupMembersScreen from "../../../screens/GroupMembersScreen";
 
 const Stack = createNativeStackNavigator();
 const SearchNavigator = () => {
@@ -35,6 +36,7 @@ const SearchNavigator = () => {
         component={MessagesScreen}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name={ROUTES.REPORTUSER}
         component={ReportUser}

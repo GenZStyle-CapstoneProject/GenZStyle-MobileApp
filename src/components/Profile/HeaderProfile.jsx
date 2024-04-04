@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const HeaderProfile = ({ userInfo, profile, followersData }) => {
   const navigation = useNavigation();
-
+  console.log("profile", profile);
   const handleSetting = () => {
     console.log("userInfo in handleSetting: ", userInfo);
     navigation.navigate("Setting", { userInfo });
@@ -15,11 +15,19 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
     navigation.navigate("LoginInProfile");
   };
   const handleFollowers = () => {
-    navigation.navigate("ListFollow", { screen: "Người theo dõi", profile, followersData });
+    navigation.navigate("ListFollow", {
+      screen: "Người theo dõi",
+      profile,
+      followersData,
+    });
   };
 
   const handleFollowing = () => {
-    navigation.navigate("ListFollow", { screen: "Đang theo dõi", profile, followersData });
+    navigation.navigate("ListFollow", {
+      screen: "Đang theo dõi",
+      profile,
+      followersData,
+    });
   };
 
   return (
@@ -41,37 +49,42 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
             style={styles.profileImage}
           /> */}
           <Image
-            source={{ uri: profile?.data?.accounts[0]?.user?.avatar }}
+            source={{ uri: profile?.data?.account?.user?.avatar }}
             style={styles.profileImage}
           />
         </View>
         <View style={styles.userInfo}>
           <Text style={styles.username}>
-
             <Text style={styles.username}>
-              {profile?.data?.accounts[0]?.username || "Thông tin cá nhân"}
+              {profile?.data?.account?.username || "Thông tin cá nhân"}
             </Text>
           </Text>
 
           <Text style={styles.account}>
             <Text style={styles.account}>
-              {profile?.data?.accounts[0]?.email || "exmaple@gmail.com"}
+              {profile?.data?.account?.email || "exmaple@gmail.com"}
             </Text>
           </Text>
-          <Text style={styles.account}>{profile?.data?.height || "xxx cm"}</Text>
+          <Text style={styles.account}>
+            {profile?.data?.height || "xxx cm"}
+          </Text>
         </View>
       </View>
       <Text style={styles.bioContent}>Just do it </Text>
       <View style={styles.bioContainer}>
         <View style={styles.bioColumn}>
           <TouchableOpacity onPress={handleFollowers}>
-            <Text style={styles.bioCount}>{followersData?.followers?.length || "0"}</Text>
+            <Text style={styles.bioCount}>
+              {followersData?.followers?.length || "0"}
+            </Text>
             <Text style={styles.bioText}>Người theo dõi</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.bioColumn}>
           <TouchableOpacity onPress={handleFollowing}>
-            <Text style={styles.bioCount}>{followersData?.following?.length || "0"}</Text>
+            <Text style={styles.bioCount}>
+              {followersData?.following?.length || "0"}
+            </Text>
             <Text style={styles.bioText}>Đang theo dõi</Text>
           </TouchableOpacity>
         </View>
@@ -150,7 +163,7 @@ const styles = StyleSheet.create({
   },
   notLoggedInContainer: {
     alignItems: "center",
-    marginVertical: 10
+    marginVertical: 10,
   },
   notLoggedInText: {
     fontSize: 16,
@@ -165,12 +178,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 5,
     alignSelf: "center",
-
   },
   loginButtonText: {
     color: "white",
     fontWeight: "bold",
-    fontSize: 16
+    fontSize: 16,
   },
 });
 

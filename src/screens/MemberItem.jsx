@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons"; // Import the icons
-import ProfileInfo from "./common/ProfileInfo";
 
 import { theme } from "../constants/theme";
 import ROUTES from "../constants/routes";
+import ProfileInfo from "../components/common/ProfileInfo";
 
-const ConversationItem = ({
+const MemberItem = ({
   picture,
   username,
   bio,
@@ -27,7 +27,7 @@ const ConversationItem = ({
   isOnline,
   type,
   roomId,
-  members,
+  isHost,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -56,22 +56,7 @@ const ConversationItem = ({
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.conversation}
-        onPress={() =>
-          navigation.navigate(ROUTES.MESSAGESSCREEN, {
-            username: username,
-            bio: bio,
-            type: type,
-            picture: picture,
-            isBlocked: isBlocked,
-            isMuted: isMuted,
-            isOnline: isOnline,
-            roomId: roomId,
-            members: members,
-          })
-        }
-      >
+      <TouchableOpacity style={styles.conversation}>
         <View>
           <TouchableOpacity
             onPress={() => setModalVisible((currentValue) => !currentValue)}
@@ -81,7 +66,7 @@ const ConversationItem = ({
               <Image style={styles.image} source={{ uri: picture }} />
             ) : (
               <FontAwesome
-                name="group"
+                name="user"
                 size={30}
                 color={theme.colors.messageBackground}
               />
@@ -104,16 +89,7 @@ const ConversationItem = ({
             <Text numerOfLine={1} style={styles.username}>
               {username}
             </Text>
-            <Text style={styles.time}>{time}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={styles.message}>{lastMessage ?? ""}</Text>
-            {/* {showNotification("number")} */}
+            <Text>{isHost ? "Host" : ""}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -198,4 +174,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConversationItem;
+export default MemberItem;

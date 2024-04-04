@@ -1,2 +1,1 @@
-export const BASE_URL =
-  "https://genzstyle.azurewebsites.net";
+export const BASE_URL = "https://genzstyleapp.azurewebsites.net";

@@ -7,6 +7,7 @@ import ROUTES from "../../../constants/routes";
 import MessagesScreen from "../../../screens/MessagesScreen";
 import ConversationsScreen from "../../../screens/ConversationsScreen";
 import SuggestionAccount from "../../../components/Home/SuggestionAccount";
+import GroupMembersScreen from "../../../screens/GroupMembersScreen";
 const Stack = createNativeStackNavigator();
 const HomeNavigator = () => {
   return (
@@ -24,6 +25,11 @@ const HomeNavigator = () => {
       <Stack.Screen
         name={ROUTES.MESSAGESSCREEN}
         component={MessagesScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={ROUTES.GROUPMEMBERSSCREEN}
+        component={GroupMembersScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

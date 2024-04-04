@@ -9,13 +9,13 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { login } from "../features/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
+import useAuthContext from "../hooks/useAuthContext";
 const Login = ({ navigation }) => {
-
   let [fontsLoaded] = useFonts({
     Pacifico_400Regular,
   });
   const dispatch = useAppDispatch();
-
+  const { setCurrentUser } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onCompleteOnboarding = async () => {
@@ -24,14 +24,17 @@ const Login = ({ navigation }) => {
   };
   const handleLogin = async () => {
     try {
-      console.log("username: " + username, "password: " + password);
+      setCurrentUser({
+        username: username,
+        accessToken: "",
+      });
       await dispatch(
         login({ userName: username, passwordHash: password })
       ).then((res) => {
         console.log(JSON.stringify(res.meta.requestStatus, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
           alert("Đăng nhập thành công");
-          onCompleteOnboarding()
+          onCompleteOnboarding();
           // navigation.navigate("Home");
         } else {
           alert("Dang nhap that bai");
@@ -51,14 +54,26 @@ const Login = ({ navigation }) => {
   }, [getAccessToken]);
 
   return (
-
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EC" }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#DBE9EC",
+      }}
+    >
       <View>
-        {fontsLoaded && <Text style={{
-          fontFamily: "Pacifico_400Regular",
-          fontSize: 70,
-          color: "black",
-        }}>GenZStyle</Text>}
+        {fontsLoaded && (
+          <Text
+            style={{
+              fontFamily: "Pacifico_400Regular",
+              fontSize: 70,
+              color: "black",
+            }}
+          >
+            GenZStyle
+          </Text>
+        )}
       </View>
 
       {/* content */}
@@ -169,7 +184,6 @@ const Login = ({ navigation }) => {
         </Text>
       </View>
     </View>
-
   );
 };
 
