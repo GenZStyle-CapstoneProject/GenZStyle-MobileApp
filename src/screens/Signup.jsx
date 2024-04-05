@@ -58,8 +58,8 @@ const Signup = ({ navigation }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setAvatar(result.uri);
+    if (!result.canceled) {
+      setAvatar(result?.assets[0]?.uri);
     }
   };
 
@@ -102,7 +102,7 @@ const Signup = ({ navigation }) => {
       console.log("Data to Server", formData);
 
       const response = await axios.post(
-        "https://genzstyle.azurewebsites.net/odata/Users/Register",
+        "https://genzstyleapp.azurewebsites.net/odata/Users/Register",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

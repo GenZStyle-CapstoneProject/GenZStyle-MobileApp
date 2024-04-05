@@ -154,10 +154,10 @@ updatedAvatar = userProfile.data?.avatar || ""; // Sử dụng hình hiện có 
       allowsEditing: true,
       aspect: [4, 3],
     });
-
-    if (!pickerResult.cancelled) {
-      console.log("Hình ảnh đã được chọn từ máy ảnh:", pickerResult.uri);
-      setSelectedImage(pickerResult.uri);
+    console.log(pickerResult)
+    if (!pickerResult.canceled) {
+      console.log("Hình ảnh đã được chọn từ máy ảnh:", pickerResult?.assets[0]?.uri);
+      setSelectedImage(pickerResult?.assets[0]?.uri);
     }
   };
 
@@ -175,9 +175,9 @@ updatedAvatar = userProfile.data?.avatar || ""; // Sử dụng hình hiện có 
       aspect: [4, 3],
     });
 
-    if (!pickerResult.cancelled) {
-      console.log("Hình ảnh đã được chọn từ thư viện:", pickerResult.uri);
-      setSelectedImage(pickerResult.uri);
+    if (!pickerResult.canceled) {
+      console.log("Hình ảnh đã được chọn từ thư viện:", pickerResult?.assets[0]?.uri);
+      setSelectedImage(pickerResult?.assets[0]?.uri);
     }
   };
 

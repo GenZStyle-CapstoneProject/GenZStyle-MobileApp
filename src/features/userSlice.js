@@ -35,7 +35,25 @@ export const login = createAsyncThunk(
     }
   }
 );
-
+export const loginGoogle = createAsyncThunk(
+  "user/loginGoogle",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await userService.loginGoogle(token);
+      console.log("<UserSlice>: " + response?.data);
+      await AsyncStorage.setItem("ACCESS_TOKEN", response?.data?.data?.accessToken);
+      await AsyncStorage.setItem("EMAIL", response?.data?.data?.email);
+      await AsyncStorage.setItem(
+        "ACCOUNT_ID",
+        JSON.stringify(response?.data?.data?.accountId)
+      );
+      return response.data?.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
 export const logout = createAsyncThunk(
   "user/logout",
   async (_, { rejectWithValue }) => {
@@ -225,6 +243,22 @@ export const userSlice = createSlice({
         // AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
       })
       .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.authenticated = false;
+      })
+      .addCase(loginGoogle.pending, (state, action) => {
+        state.loading = true;
+        state.authenticated = false;
+      })
+      .addCase(loginGoogle.fulfilled, (state, action) => {
+        state.userInfo = action.payload;
+        state.loading = false;
+        state.authenticated = true;
+        state.accountId = action.payload.accountId; // Assuming accountId is a property in the user data
+        // Save userInfo to AsyncStorage
+        // AsyncStorage.setItem("USER_INFO", JSON.stringify(action.payload));
+      })
+      .addCase(loginGoogle.rejected, (state, action) => {
         state.loading = false;
         state.authenticated = false;
       })

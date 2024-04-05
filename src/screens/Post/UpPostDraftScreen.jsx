@@ -31,6 +31,13 @@ const UpPostDraftScreen = () => {
 
   // Lấy thông tin ảnh được chọn từ đường dẫn
   const object = route.params?.object;
+  console.log('object', JSON.stringify(object, null, 2))
+
+  // Remove object draft
+  function removeObjectById(array, id) {
+    console.log('array.filter(obj => obj?.id !== id)', JSON.stringify(array.filter(obj => obj?.id !== id), null, 2))
+    return array.filter(obj => obj?.id !== id);
+  }
 
   // State để lưu nội dung nhập vào ô input
   const [inputText, setInputText] = useState("");
@@ -42,10 +49,10 @@ const UpPostDraftScreen = () => {
   useEffect(() => {
     fetchDetailHashtag();
   }, []);
-  const fetchDetailHashtag = async () => {
+  const fetchDetailHashtag = async () => { 
     try {
       await dispatch(getDetailHashtag()).then((res) => {
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
       });
     } catch (error) {
       console.log("Error fetching hashtag data:", error);
@@ -91,11 +98,24 @@ const UpPostDraftScreen = () => {
           },
           Hashtags: hashtagData,
         })
-      ).then((res) => {
+      ).then(async (res) => {
         console.log(JSON.stringify(res, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
           alert(`Dang bai thanh cong ${res?.payload}`);
           Alert.alert("Thông báo", "Bài đăng đã được đăng thành công.");
+
+          const existingData = await AsyncStorage.getItem("DRAFT_ARRAY");
+          let dataArray = [];
+
+          if (existingData) {
+            dataArray = JSON.parse(existingData);
+          }
+
+
+
+          const newArray = removeObjectById(dataArray, object?.id)
+
+          await AsyncStorage.setItem("DRAFT_ARRAY", JSON.stringify(newArray));
           navigation.reset({
             index: 0,
             routes: [{ name: ROUTES.HOME_NAVIGATOR }],
