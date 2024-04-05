@@ -172,13 +172,13 @@ const GroupMembersScreen = ({ children, route }) => {
               const memberInfo =
                 member.id == profile?.account?.accountId
                   ? profile?.account
-                  : followData.following.find(
+                  : followData.following?.find(
                       (user) => user.accountId == member.id
                     );
               return (
                 <MemberItem
                   key={member.id}
-                  picture={memberInfo.user.avatar}
+                  picture={memberInfo?.user.avatar}
                   username={member.name}
                   userId={member.id}
                   isHost={member.isHost}
