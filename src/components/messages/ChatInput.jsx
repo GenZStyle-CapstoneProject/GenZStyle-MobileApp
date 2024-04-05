@@ -23,7 +23,7 @@ import EmojiPicker from "./emojis/EmojiPicker";
 import { theme } from "../../constants/theme";
 import { socket } from "../../services/chatService";
 
-const ChatInput = ({ reply, closeReply, isLeft, username }) => {
+const ChatInput = ({ reply, closeReply, isLeft, roomName }) => {
   const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const height = useSharedValue(70);
@@ -64,7 +64,7 @@ const ChatInput = ({ reply, closeReply, isLeft, username }) => {
             <Icon name="close" color="#000" size={20} />
           </TouchableOpacity>
           <Text style={styles.title}>
-            Response to {isLeft ? username : "Me"}
+            Response to {isLeft ? roomName : "Me"}
           </Text>
           <Text style={styles.reply}>{reply}</Text>
         </View>

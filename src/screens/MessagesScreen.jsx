@@ -12,7 +12,8 @@ import { groupByArray } from "../utils";
 
 const MessagesScreen = ({ navigation, route }) => {
   const {
-    username,
+    roomName,
+    fullName,
     bio,
     picture,
     isBlocked,
@@ -22,7 +23,6 @@ const MessagesScreen = ({ navigation, route }) => {
     roomId,
     members,
   } = route.params;
-  const { currentUser } = useAuthContext();
   const [isLoading, setIsLoading] = useState(true);
   const [reply, setReply] = useState("");
   const [isLeft, setIsLeft] = useState();
@@ -54,7 +54,7 @@ const MessagesScreen = ({ navigation, route }) => {
     switch (type) {
       case "personal": {
         socket.emit("join_room", {
-          to: username,
+          to: roomId,
           type: type,
         });
         return;
@@ -82,7 +82,7 @@ const MessagesScreen = ({ navigation, route }) => {
     <View style={{ flex: 1 }}>
       <ChatHeader
         onPress={() => {}}
-        username={username}
+        roomName={roomName}
         picture={picture}
         onlineStatus={
           type === "personal" ? (isOnline ? "Online" : "Offline") : "Active"
@@ -99,15 +99,16 @@ const MessagesScreen = ({ navigation, route }) => {
         <MessagesList
           onSwipeToReply={swipeToReply}
           messages={messages?.length > 0 ? groupMessageByDate(messages) : []}
-          currentName={currentUser.username}
+          fullName={fullName}
           type={type}
+          roomId={roomId}
         />
       )}
       <ChatInput
         reply={reply}
         isLeft={isLeft}
         closeReply={closeReply}
-        username={username}
+        roomName={roomName}
       />
     </View>
   );

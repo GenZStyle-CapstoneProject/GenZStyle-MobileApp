@@ -15,7 +15,7 @@ import Animated, {
 import { theme } from "../../constants/theme";
 import { parseMessageTime } from "../../utils";
 
-const Message = ({ time, isLeft, message, onSwipe, name, type }) => {
+const Message = ({ time, isLeft, message, onSwipe, name, username }) => {
   const startingPosition = 0;
   const x = useSharedValue(startingPosition);
 

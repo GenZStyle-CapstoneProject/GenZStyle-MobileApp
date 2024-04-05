@@ -12,5 +12,5 @@ export function groupByArray(xs, key) {
 }
 export const parseMessageTime = (timeString) => {
   const getTime = timeString?.split(",")[1];
-  return getTime.slice(0, 4) + " " + getTime.slice(7);
+  return getTime.slice(0, 5) + " " + getTime.slice(8);
 };

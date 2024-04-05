@@ -11,7 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../../constants/theme";
 import { useNavigation } from "@react-navigation/native";
 
-const SearchInput = () => {
+const SearchInput = ({ value, setValue }) => {
   const navigation = useNavigation();
 
   const goBack = () => {
@@ -35,7 +35,13 @@ const SearchInput = () => {
       <View style={styles.container}>
         <View style={styles.row}>
           <Icon name="search" size={20} color={theme.colors.searchIcon} />
-          <TextInput style={styles.input} placeholder="Search" maxLength={10} />
+          <TextInput
+            style={styles.input}
+            placeholder="Search"
+            maxLength={10}
+            value={value}
+            onChangeText={(text) => setValue(text)}
+          />
         </View>
       </View>
     </View>

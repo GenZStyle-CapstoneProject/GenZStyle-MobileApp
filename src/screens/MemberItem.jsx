@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Button,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons"; // Import the icons
@@ -13,6 +15,9 @@ import { FontAwesome } from "@expo/vector-icons"; // Import the icons
 import { theme } from "../constants/theme";
 import ROUTES from "../constants/routes";
 import ProfileInfo from "../components/common/ProfileInfo";
+import { useAppSelector } from "../app/hooks";
+import { socket } from "../services/chatService";
+import Icon from "@expo/vector-icons/MaterialIcons";
 
 const MemberItem = ({
   picture,
@@ -28,10 +33,14 @@ const MemberItem = ({
   type,
   roomId,
   isHost,
+  userId,
+  hostId,
+  onPress,
+  isSelected,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const profile = useAppSelector((state) => state.user.profile?.data);
   const navigation = useNavigation();
-
   const showStoryCircle = () => {
     if (hasStory) {
       return {
@@ -39,6 +48,28 @@ const MemberItem = ({
         borderWidth: 2,
       };
     }
+  };
+
+  const removerGroupMember = async () => {
+    Alert.alert(
+      `Remove ${username}?`,
+      "This user cannot access and view group messages anymore.",
+      [
+        {
+          text: "OK",
+          onPress: async () =>
+            await socket.emit("remove_group_member", {
+              roomId: roomId,
+              userId: userId,
+            }),
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ]
+    );
   };
 
   const showNotification = (type) => {
@@ -56,12 +87,9 @@ const MemberItem = ({
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.conversation}>
+      <TouchableOpacity style={styles.conversation} onPress={() => onPress()}>
         <View>
-          <TouchableOpacity
-            onPress={() => setModalVisible((currentValue) => !currentValue)}
-            style={[styles.imageContainer, showStoryCircle()]}
-          >
+          <View style={[styles.imageContainer, showStoryCircle()]}>
             {picture !== "" ? (
               <Image style={styles.image} source={{ uri: picture }} />
             ) : (
@@ -71,7 +99,7 @@ const MemberItem = ({
                 color={theme.colors.messageBackground}
               />
             )}
-          </TouchableOpacity>
+          </View>
           {isOnline && <View style={styles.online} />}
         </View>
         <View
@@ -86,10 +114,29 @@ const MemberItem = ({
               justifyContent: "space-between",
             }}
           >
-            <Text numerOfLine={1} style={styles.username}>
-              {username}
-            </Text>
-            <Text>{isHost ? "Host" : ""}</Text>
+            <View>
+              <Text numerOfLine={1} style={styles.username}>
+                {username}
+                {isSelected && (
+                  <View style={{ paddingLeft: 12 }}>
+                    <Icon name="check" size={20} color={theme.colors.primary} />
+                  </View>
+                )}
+              </Text>
+            </View>
+
+            {isHost && (
+              <Text style={{ fontSize: 16, color: theme.colors.primary }}>
+                Host
+              </Text>
+            )}
+            {hostId === profile?.account?.accountId && !isHost && (
+              <Button
+                title="Remove"
+                color={theme.colors.danger}
+                onPress={() => removerGroupMember()}
+              />
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -132,7 +179,7 @@ const styles = StyleSheet.create({
     width: 55,
   },
   username: {
-    fontSize: theme.fontSize.title,
+    fontSize: 20,
     color: theme.colors.title,
     width: 210,
   },

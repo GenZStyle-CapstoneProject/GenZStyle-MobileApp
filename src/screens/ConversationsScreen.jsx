@@ -50,9 +50,7 @@ const ConversationsScreen = () => {
     <View
       style={{ backgroundColor: theme.colors.white, flex: 1, marginTop: 30 }}
     >
-      <Conversations>
-        <SearchInput />
-      </Conversations>
+      <Conversations></Conversations>
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         style={fabStyles.style}

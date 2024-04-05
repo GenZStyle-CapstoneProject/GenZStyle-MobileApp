@@ -69,6 +69,20 @@ const LoginInProfile = ({ navigation }) => {
         backgroundColor: "#DBE9EC",
       }}
     >
+      <View
+        style={{
+          position: "absolute",
+          top: 40,
+          left: 20,
+          padding: 7,
+          backgroundColor: "rgba(0,0,0,0.3)",
+          borderRadius: 50,
+        }}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
       <View>
         {fontsLoaded && (
           <Text
@@ -83,220 +97,113 @@ const LoginInProfile = ({ navigation }) => {
         )}
       </View>
 
+      {/* content */}
       <View
         style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#DBE9EC",
+          paddingHorizontal: 42,
+          width: "100%",
         }}
       >
+        {/* Ô nhập tài khoản */}
         <View
           style={{
-            position: "absolute",
-            top: 40,
-            left: 20,
-            padding: 7,
-            backgroundColor: "rgba(0,0,0,0.3)",
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: COLORS.white,
+            paddingVertical: 12,
             borderRadius: 50,
+            marginBottom: 25,
+            marginTop: 90,
+            paddingHorizontal: 10,
           }}
         >
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
-        <View>
-          {fontsLoaded && (
-            <Text
-              style={{
-                fontFamily: "Pacifico_400Regular",
-                fontSize: 70,
-                color: "black",
-              }}
-            >
-              GenZStyle
-            </Text>
-          )}
+          <Ionicons
+            name="person"
+            size={24}
+            color={COLORS.grey}
+            style={{ marginRight: 10 }}
+          />
+          <TextInput
+            style={{
+              flex: 1,
+              fontSize: 18,
+            }}
+            placeholder="Tên tài khoản"
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+          />
         </View>
 
-        {/* content */}
+        {/* Ô nhập mật khẩu */}
         <View
           style={{
-            paddingHorizontal: 42,
-            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: COLORS.white,
+            paddingVertical: 12,
+            borderRadius: 50,
+            marginBottom: 12,
+            paddingHorizontal: 10,
           }}
         >
-          {/* Ô nhập tài khoản */}
-          <View
+          <Ionicons
+            name="lock-closed"
+            size={24}
+            color={COLORS.grey}
+            style={{ marginRight: 10 }}
+          />
+          <TextInput
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: COLORS.white,
-              paddingVertical: 12,
-              borderRadius: 50,
-              marginBottom: 25,
-              marginTop: 90,
-              paddingHorizontal: 10,
+              flex: 1,
+              fontSize: 18,
             }}
-          >
-            <Ionicons
-              name="person"
-              size={24}
-              color={COLORS.grey}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              style={{
-                flex: 1,
-                fontSize: 18,
-              }}
-              placeholder="Tên tài khoản"
-              value={username}
-              onChangeText={(text) => setUsername(text)}
-            />
-          </View>
+            placeholder="Mật khẩu"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+          />
+        </View>
 
-          {/* Ô nhập mật khẩu */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: COLORS.white,
-              paddingVertical: 12,
-              borderRadius: 50,
-              marginBottom: 12,
-              paddingHorizontal: 10,
-            }}
-          >
-            <Ionicons
-              name="lock-closed"
-              size={24}
-              color={COLORS.grey}
-              style={{ marginRight: 10 }}
-            />
-            <TextInput
-              style={{
-                flex: 1,
-                fontSize: 18,
-              }}
-              placeholder="Mật khẩu"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
-          </View>
-
-          {/* Nút Đăng Nhập */}
-          <Pressable
-            style={{
-              backgroundColor: COLORS.secondary,
-              marginTop: 20,
-              paddingVertical: 15,
-              borderRadius: 50,
-              alignItems: "center",
-            }}
-            onPress={handleLogin}
-          >
-            <Text
-              style={{
-                color: COLORS.white,
-                fontWeight: "bold",
-                fontSize: 20,
-              }}
-            >
-              Đăng nhập
-            </Text>
-          </Pressable>
-
+        {/* Nút Đăng Nhập */}
+        <Pressable
+          style={{
+            backgroundColor: COLORS.secondary,
+            marginTop: 20,
+            paddingVertical: 15,
+            borderRadius: 50,
+            alignItems: "center",
+          }}
+          onPress={handleLogin}
+        >
           <Text
             style={{
-              color: COLORS.black,
+              color: COLORS.white,
               fontWeight: "bold",
-              paddingVertical: 9,
-              fontSize: 17,
-              alignItems: "center",
-              marginTop: 10,
-              marginLeft: 10,
-              left: 70,
-            }}
-            onPress={() => {
-              navigation.navigate("Signup");
+              fontSize: 20,
             }}
           >
-            Bạn chưa có tài khoản?
+            Đăng nhập
           </Text>
-        </View>
-      </View>
+        </Pressable>
 
-      {/* Ô nhập mật khẩu */}
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: COLORS.white,
-          paddingVertical: 12,
-          borderRadius: 50,
-          marginBottom: 12,
-          paddingHorizontal: 10,
-        }}
-      >
-        <Ionicons
-          name="lock-closed"
-          size={24}
-          color={COLORS.grey}
-          style={{ marginRight: 10 }}
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            fontSize: 18,
-          }}
-          placeholder="Mật khẩu"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-      </View>
-
-      {/* Nút Đăng Nhập */}
-      <Pressable
-        style={{
-          backgroundColor: COLORS.secondary,
-          marginTop: 20,
-          paddingVertical: 15,
-          borderRadius: 50,
-          alignItems: "center",
-        }}
-        onPress={handleLogin}
-      >
         <Text
           style={{
-            color: COLORS.white,
+            color: COLORS.black,
             fontWeight: "bold",
-            fontSize: 20,
+            paddingVertical: 9,
+            fontSize: 17,
+            alignItems: "center",
+            marginTop: 10,
+            marginLeft: 10,
+            left: 70,
+          }}
+          onPress={() => {
+            navigation.navigate("Signup");
           }}
         >
-          Đăng nhập
+          Bạn chưa có tài khoản?
         </Text>
-      </Pressable>
-
-      <Text
-        style={{
-          color: COLORS.black,
-          fontWeight: "bold",
-          paddingVertical: 9,
-          fontSize: 17,
-          alignItems: "center",
-          marginTop: 10,
-          marginLeft: 10,
-          left: 70,
-        }}
-        onPress={() => {
-          navigation.navigate("Signup");
-        }}
-      >
-        Bạn chưa có tài khoản?
-      </Text>
+      </View>
     </View>
   );
 };

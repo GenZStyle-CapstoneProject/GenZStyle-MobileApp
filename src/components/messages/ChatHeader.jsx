@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Alert,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "@expo/vector-icons/FontAwesome";
 import { FontAwesome } from "@expo/vector-icons"; // Import the icons
@@ -8,9 +16,12 @@ import { Modal } from "react-native";
 import { useState } from "react";
 import { Pressable } from "react-native";
 import ROUTES from "../../constants/routes";
+import { socket } from "../../services/chatService";
+import { useAppSelector } from "../../app/hooks";
+import { useEffect } from "react";
 
 const ChatHeader = ({
-  username,
+  roomName,
   bio,
   picture,
   onlineStatus,
@@ -20,9 +31,61 @@ const ChatHeader = ({
   roomId,
 }) => {
   const navigation = useNavigation();
+  const [hostId, setHostId] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const profile = useAppSelector((state) => state.user.profile?.data);
+  const [changeGroupName, setChangeGroupName] = useState(false);
+  const [text, setText] = useState("");
+  useEffect(() => {
+    socket.emit("get_group_members", {
+      roomId: roomId,
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("group_members", (data) => {
+      const hostId = data.find((member) => member.isHost === true)?.id;
+      setHostId(hostId);
+    });
+  }, [socket]);
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const onChangeGroupName = async () => {
+    if (text !== "") {
+      await socket.emit("change_group_name", {
+        roomId: roomId,
+        name: text,
+      });
+      setModalVisible(false);
+      goBack();
+    } else {
+      setError("Enter group name.");
+    }
+  };
+
+  const onDeleteGroup = async () => {
+    Alert.alert(
+      `Delete this group?`,
+      "This group cannot be accessed anymore.",
+      [
+        {
+          text: "OK",
+          onPress: async () => {
+            await socket.emit("disable_group", {
+              roomId: roomId,
+            });
+            goBack();
+          },
+          style: "default",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ]
+    );
   };
 
   return (
@@ -38,7 +101,7 @@ const ChatHeader = ({
             <FontAwesome name="group" size={30} color="#c2c2c2" />
           )}
           <View style={styles.usernameAndOnlineStatus}>
-            <Text style={styles.username}>{username}</Text>
+            <Text style={styles.username}>{roomName}</Text>
             <View
               style={{
                 display: "flex",
@@ -62,37 +125,80 @@ const ChatHeader = ({
               >
                 <View style={styles.centeredView}>
                   <View style={styles.modalView}>
-                    <Pressable
-                      style={[styles.buttonMemberList, styles.actionButton]}
-                      // onPress={() => onCreateGroup()}
-                    >
-                      <Text
-                        style={styles.textStyle}
-                        onPress={() => {
-                          setModalVisible(false);
-                          navigation.navigate(ROUTES.GROUPMEMBERSSCREEN, {
-                            roomId: roomId,
-                          });
-                        }}
-                      >
-                        See members
-                      </Text>
-                    </Pressable>
-                    <Pressable
-                      style={[styles.buttonChangeName, styles.actionButton]}
-                      // onPress={() => onCreateGroup()}
-                    >
-                      <Text style={styles.textStyle}>Change group's name</Text>
-                    </Pressable>
-                    <View style={styles.betweenView}>
-                      <View></View>
-                      <Pressable
-                        style={[styles.button, styles.buttonCancel]}
-                        onPress={() => setModalVisible(!modalVisible)}
-                      >
-                        <Text style={styles.textStyle}>Close</Text>
-                      </Pressable>
-                    </View>
+                    {changeGroupName === false ? (
+                      <>
+                        <Pressable
+                          style={[styles.buttonMemberList, styles.actionButton]}
+                          // onPress={() => onCreateGroup()}
+                        >
+                          <Text
+                            style={styles.textStyle}
+                            onPress={() => {
+                              setModalVisible(false);
+                              navigation.navigate(ROUTES.GROUPMEMBERSSCREEN, {
+                                roomId: roomId,
+                              });
+                            }}
+                          >
+                            See members
+                          </Text>
+                        </Pressable>
+                        {hostId === profile.account.accountId && (
+                          <>
+                            <Pressable
+                              style={[
+                                styles.buttonChangeName,
+                                styles.actionButton,
+                              ]}
+                              onPress={() => setChangeGroupName(true)}
+                            >
+                              <Text style={styles.textStyle}>
+                                Change group's name
+                              </Text>
+                            </Pressable>
+                            <Pressable
+                              style={[styles.actionButton, styles.buttonRemove]}
+                              onPress={() => onDeleteGroup()}
+                            >
+                              <Text style={styles.textStyle}>Delete group</Text>
+                            </Pressable>
+                            <View style={styles.betweenView}>
+                              <View></View>
+                              <Pressable
+                                style={[styles.button, styles.buttonCancel]}
+                                onPress={() => setModalVisible(!modalVisible)}
+                              >
+                                <Text style={styles.textStyle}>Close</Text>
+                              </Pressable>
+                            </View>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <Text style={styles.modalText}>Change group name</Text>
+                        <TextInput
+                          placeholder={"New group name"}
+                          style={styles.input}
+                          value={text}
+                          onChangeText={(text) => setText(text)}
+                        />
+                        <View style={styles.betweenView}>
+                          <Pressable
+                            style={[styles.button, styles.buttonSubmit]}
+                            onPress={() => onChangeGroupName()}
+                          >
+                            <Text style={styles.textStyle}>Submit</Text>
+                          </Pressable>
+                          <Pressable
+                            style={[styles.button, styles.buttonCancel]}
+                            onPress={() => setChangeGroupName(!changeGroupName)}
+                          >
+                            <Text style={styles.textStyle}>Cancel</Text>
+                          </Pressable>
+                        </View>
+                      </>
+                    )}
                   </View>
                 </View>
               </Modal>
@@ -198,7 +304,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: 300,
-    height: 250,
+    height: 320,
     gap: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -233,6 +339,12 @@ const styles = StyleSheet.create({
   },
   buttonCancel: {
     backgroundColor: "#c2c2c2",
+  },
+  buttonRemove: {
+    backgroundColor: theme.colors.danger,
+  },
+  buttonSubmit: {
+    backgroundColor: theme.colors.primary,
   },
   textStyle: {
     color: "white",

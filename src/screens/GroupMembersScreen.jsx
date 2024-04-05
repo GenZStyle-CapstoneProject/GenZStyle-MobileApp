@@ -18,31 +18,49 @@ import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { useAppSelector } from "../app/hooks";
 
 const GroupMembersScreen = ({ children, route }) => {
   const { roomId } = route.params;
   const navigation = useNavigation();
-  const { currentUser } = useAuthContext();
-  const [onlineUser, setOnlineUsers] = useState([]);
-  const [userRooms, setUserRooms] = useState([]);
+  const [hostId, setHostId] = useState("");
   const [members, setMembers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
+  const [noUser, setNoUser] = useState(true);
+  const profile = useAppSelector((state) => state.user.profile?.data);
+  const followData = useAppSelector((state) => state.user.data);
 
   const goBack = () => {
     navigation.goBack();
   };
 
   const onAddMember = async () => {
-    if (text !== "") {
-      await socket.emit("add_to_group", {
-        roomId: roomId,
-        userId: text,
-      });
+    if (selectedUsers.length > 0) {
+      for (let user of selectedUsers) {
+        await socket.emit("add_to_group", {
+          roomId: roomId,
+          userId: user,
+        });
+      }
+      setSelectedUsers([]);
       setModalVisible(false);
     } else {
-      setError("Enter group name.");
+      setError("Enter member name.");
+    }
+  };
+
+  const onSelectUser = async (id) => {
+    let newSelecteds = [...selectedUsers];
+    const foundIndex = newSelecteds.findIndex((userId) => userId == id);
+    if (foundIndex > -1) {
+      newSelecteds = newSelecteds.filter((userId) => userId != id);
+      setSelectedUsers(newSelecteds);
+    } else {
+      newSelecteds.push(id);
+      setSelectedUsers(newSelecteds);
     }
   };
 
@@ -54,8 +72,9 @@ const GroupMembersScreen = ({ children, route }) => {
 
   useEffect(() => {
     socket.on("group_members", (data) => {
-      console.log("group member", data);
       setMembers(data);
+      const hostId = data.find((member) => member.isHost === true)?.id;
+      setHostId(hostId);
     });
   }, [socket]);
   return (
@@ -67,24 +86,66 @@ const GroupMembersScreen = ({ children, route }) => {
           <Icon name="angle-left" size={30} />
         </TouchableOpacity>
         <Text style={{ fontSize: 20 }}>Members</Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => setModalVisible(true)}
-        >
-          <Icon name="plus" size={10} color={theme.colors.black} />
-          <Text style={{ fontSize: 20 }}>Add</Text>
-        </TouchableOpacity>
+        {hostId == profile?.account?.accountId ? (
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <Icon name="plus" size={10} color={theme.colors.black} />
+            <Text style={{ fontSize: 20 }}>Add</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={{ width: 20 }}></View>
+        )}
       </View>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Add new member</Text>
-            <TextInput
-              placeholder={"Member name"}
-              style={styles.input}
-              value={text}
-              onChangeText={(text) => setText(text)}
-            />
+            <ScrollView>
+              {noUser && (
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: theme.colors.primary,
+                  }}
+                >
+                  {"No user to add"}
+                </Text>
+              )}
+              <View style={{ width: 350 }}>
+                {followData.following?.length > 0 &&
+                  followData.following?.map((followUser) => {
+                    if (
+                      members.findIndex(
+                        (member) => member.id == followUser.accountId
+                      ) < 0
+                    ) {
+                      if (noUser) {
+                        setNoUser(false);
+                      }
+                      return (
+                        <MemberItem
+                          key={followUser.accountId}
+                          picture={followUser.user.avatar}
+                          username={followUser.username}
+                          userId={followUser.accountId}
+                          roomId={roomId}
+                          bio=""
+                          lastMessage="Hello there"
+                          time="4:00 PM"
+                          isBlocked
+                          isMuted
+                          isSelected={selectedUsers.includes(
+                            followUser.accountId
+                          )}
+                          onPress={() => onSelectUser(followUser.accountId)}
+                        />
+                      );
+                    }
+                  })}
+              </View>
+            </ScrollView>
             <Text style={styles.errorText}>{error}</Text>
             <View style={styles.betweenView}>
               <Pressable
@@ -103,45 +164,37 @@ const GroupMembersScreen = ({ children, route }) => {
           </View>
         </View>
       </Modal>
-      <ScrollView>
-        {children}
-        {members?.length > 0 &&
-          members.map((member) => (
-            <MemberItem
-              key={member.id}
-              picture=""
-              username={member.name}
-              isHost={member.isHost}
-              bio="my name is Mercy Patrick"
-              lastMessage="Hello there"
-              time="4:00 PM"
-              isBlocked
-              isMuted
-            />
-          ))}
-
-        {/* <MemberItem
-          picture="https://images.pexels.com/photos/5486199/pexels-photo-5486199.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-          username="Jack Randolph"
-          bio="my name is Mercy Patrick"
-          lastMessage="Hello there"
-          time="4:00 PM"
-          isBlocked
-          isMuted
-        />
-
-        <MemberItem
-          picture="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-          username="Stephany Garcia"
-          bio="my name is Mercy Patrick"
-          lastMessage="Hello there"
-          time="4:00 PM"
-          notification="5"
-          isBlocked
-          isMuted
-          hasStory
-        /> */}
-      </ScrollView>
+      <View style={{ paddingTop: 5 }}>
+        <ScrollView>
+          {children}
+          {members?.length > 0 &&
+            members.map((member) => {
+              const memberInfo =
+                member.id == profile?.account?.accountId
+                  ? profile?.account
+                  : followData.following.find(
+                      (user) => user.accountId == member.id
+                    );
+              return (
+                <MemberItem
+                  key={member.id}
+                  picture={memberInfo.user.avatar}
+                  username={member.name}
+                  userId={member.id}
+                  isHost={member.isHost}
+                  roomId={roomId}
+                  hostId={hostId}
+                  bio=""
+                  lastMessage="Hello there"
+                  time="4:00 PM"
+                  isBlocked
+                  isMuted
+                  onPress={() => {}}
+                />
+              );
+            })}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -178,8 +231,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
-    width: 300,
-    height: 250,
+    width: 350,
+    height: 450,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,

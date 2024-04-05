@@ -16,7 +16,8 @@ import ROUTES from "../constants/routes";
 
 const ConversationItem = ({
   picture,
-  username,
+  roomName,
+  fullName,
   bio,
   lastMessage,
   time,
@@ -28,6 +29,7 @@ const ConversationItem = ({
   type,
   roomId,
   members,
+  isFriend,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -60,7 +62,8 @@ const ConversationItem = ({
         style={styles.conversation}
         onPress={() =>
           navigation.navigate(ROUTES.MESSAGESSCREEN, {
-            username: username,
+            roomName: roomName,
+            fullName: fullName,
             bio: bio,
             type: type,
             picture: picture,
@@ -102,7 +105,7 @@ const ConversationItem = ({
             }}
           >
             <Text numerOfLine={1} style={styles.username}>
-              {username}
+              {roomName}
             </Text>
             <Text style={styles.time}>{time}</Text>
           </View>
@@ -112,14 +115,18 @@ const ConversationItem = ({
               justifyContent: "space-between",
             }}
           >
-            <Text style={styles.message}>{lastMessage ?? ""}</Text>
+            {isFriend ? (
+              <Text style={styles.message}>{lastMessage ?? ""}</Text>
+            ) : (
+              <Text style={styles.message}>{}</Text>
+            )}
             {/* {showNotification("number")} */}
           </View>
         </View>
       </TouchableOpacity>
       <Modal animationType="slide" transparent visible={modalVisible}>
         <ProfileInfo
-          username={username}
+          roomName={roomName}
           picture={picture}
           bio={bio}
           isBlocked={isBlocked}

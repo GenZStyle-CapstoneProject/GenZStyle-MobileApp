@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 
 import ConversationItem from "./ConversationItem";
 import { useEffect } from "react";
@@ -8,12 +8,159 @@ import useAuthContext from "../hooks/useAuthContext";
 import { parseMessageTime } from "../utils";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import { theme } from "../constants/theme";
+import SearchInput from "./common/SearchInput";
 
 const Conversations = ({ children }) => {
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+  const loggedUsers = [];
   const { currentUser } = useAuthContext();
   const profile = useSelector((state) => state.user.profile?.data);
-  const [onlineUser, setOnlineUsers] = useState([]);
+  const followData = useSelector((state) => state.user.data);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
+  const fullName = `${profile?.account?.firstname} ${profile?.account?.lastname}`;
+  const FirstRoute = () => (
+    <>
+      <ScrollView>
+        {/* Group renders */}
+        {userRooms?.length > 0 &&
+          userRooms?.map((room) => {
+            if (room.type === "group") {
+              if (room.isActive) {
+                return (
+                  <ConversationItem
+                    key={room?.id}
+                    roomId={room?.id}
+                    picture={
+                      room.type === "personal"
+                        ? "https://images.pexels.com/photos/2078265/pexels-photo-2078265.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                        : ""
+                    }
+                    roomName={
+                      room?.type === "personal"
+                        ? room.users.find(
+                            (user) => user.id !== profile?.account?.accountId
+                          ).id
+                        : room.name
+                    }
+                    fullName={fullName}
+                    bio=""
+                    type={room?.type}
+                    lastMessage={room?.lastMessage?.text}
+                    time={
+                      room?.lastMessage && room?.lastMessage.time?.length > 0
+                        ? parseMessageTime(room?.lastMessage?.time)
+                        : ""
+                    }
+                    notification="3"
+                    isBlocked
+                    isMuted
+                    // hasStory
+                    isFriend={true}
+                    members={room.users}
+                    isOnline={true}
+                  />
+                );
+              }
+            }
+            if (room.type === "personal" && followData?.following?.length > 0) {
+              const anotherUserArr = room.users.filter(
+                (user) => user.id !== profile?.account?.accountId
+              );
+              const foundIndex = followData?.following?.findIndex(
+                (user) => user.accountId === anotherUserArr[0].id
+              );
+              const foundUser = followData?.following[foundIndex];
+              console.log("foundUser", foundUser);
+              const userFullName = foundUser?.account?.firstname
+                ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
+                : foundUser?.username;
+
+              loggedUsers.push(anotherUserArr[0].id);
+
+              return (
+                <ConversationItem
+                  key={foundUser?.accountId}
+                  roomId={foundUser?.accountId}
+                  picture={foundUser.user.avatar}
+                  roomName={userFullName}
+                  fullName={fullName}
+                  bio=""
+                  type="personal"
+                  lastMessage={room?.lastMessage?.text}
+                  time={
+                    room?.lastMessage && room?.lastMessage.time?.length > 0
+                      ? parseMessageTime(room?.lastMessage?.time)
+                      : ""
+                  }
+                  notification="3"
+                  isBlocked
+                  isMuted
+                  // hasStory
+                  isFriend={true}
+                  members={[]}
+                  isOnline={
+                    onlineUsers.findIndex(
+                      (onlUser) => foundUser.accountId === onlUser.id
+                    ) > -1
+                  }
+                />
+              );
+            }
+          })}
+      </ScrollView>
+    </>
+  );
+
+  const SecondRoute = () => (
+    <>
+      <ScrollView>
+        {/* User renders */}
+        {followData.followers?.length > 0 &&
+          followData.followers?.map((user) => {
+            const userFullName = user?.account?.firstname
+              ? `${user?.account?.firstname} ${user?.account?.lastname}`
+              : user?.username;
+            const isFriend =
+              loggedUsers.findIndex((userId) => userId === user.accountId) > -1;
+            if (!isFriend) {
+              return (
+                <ConversationItem
+                  key={user?.accountId}
+                  roomId={user?.accountId}
+                  picture={user.user.avatar}
+                  roomName={userFullName}
+                  fullName={fullName}
+                  bio=""
+                  type="personal"
+                  lastMessage=""
+                  time=""
+                  notification="3"
+                  isBlocked
+                  isMuted
+                  // hasStory
+                  isFriend={false}
+                  members={[]}
+                  isOnline={
+                    onlineUsers.findIndex(
+                      (onlUser) => user.accountId === onlUser.id
+                    ) > -1
+                  }
+                />
+              );
+            }
+          })}
+      </ScrollView>
+    </>
+  );
+  const [routes] = useState([
+    { key: "first", title: "Home" },
+    { key: "second", title: "Waiting" },
+  ]);
 
   useEffect(() => {
     if (profile) {
@@ -21,7 +168,9 @@ const Conversations = ({ children }) => {
         "login",
         {
           id: profile?.account?.accountId,
-          name: `${profile?.account?.firstname} ${profile?.account?.lastname}`,
+          name: profile?.account.firstname
+            ? fullName
+            : profile?.account?.username,
         },
         (response) => {
           if (response.error) {
@@ -45,73 +194,37 @@ const Conversations = ({ children }) => {
   }, [socket]);
 
   return (
-    <ScrollView>
+    <>
       {children}
-      {userRooms.length > 0 &&
-        userRooms?.map((room) => (
-          <ConversationItem
-            key={room?.id}
-            roomId={room?.id}
-            picture={
-              room.type === "personal"
-                ? "https://images.pexels.com/photos/2078265/pexels-photo-2078265.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                : ""
-            }
-            username={
-              room?.type === "personal"
-                ? room.users.find((user) => user.id !== currentUser.username).id
-                : room.name
-            }
-            bio="my name is Mercy Patrick"
-            type={room?.type}
-            lastMessage={room?.lastMessage?.text}
-            time={
-              room?.lastMessage && room?.lastMessage.time?.length > 0
-                ? parseMessageTime(room?.lastMessage?.time)
-                : ""
-            }
-            notification="3"
-            isBlocked
-            isMuted
-            // hasStory
-            members={room.users}
-            isOnline={onlineUser.findIndex((user) => user.id === "user-2") > -1}
-          />
-        ))}
-
-      {/* <ConversationItem
-        picture="https://images.pexels.com/photos/1239288/pexels-photo-1239288.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-        username="Nina Gomez"
-        bio="my name is Mercy Patrick"
-        lastMessage="Hello there"
-        time="4:00 PM"
-        isBlocked
-        isMuted
-        isOnline={onlineUser.findIndex((user) => user.id === "") > -1}
-      />
-
-      <ConversationItem
-        picture="https://images.pexels.com/photos/5486199/pexels-photo-5486199.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-        username="Jack Randolph"
-        bio="my name is Mercy Patrick"
-        lastMessage="Hello there"
-        time="4:00 PM"
-        isBlocked
-        isMuted
-      />
-
-      <ConversationItem
-        picture="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-        username="Stephany Garcia"
-        bio="my name is Mercy Patrick"
-        lastMessage="Hello there"
-        time="4:00 PM"
-        notification="5"
-        isBlocked
-        isMuted
-        hasStory
-      /> */}
-    </ScrollView>
+      <SearchInput value={searchValue} setValue={setSearchValue} />
+      {profile ? (
+        <TabView
+          renderTabBar={(props) => (
+            <TabBar
+              {...props}
+              labelStyle={{
+                color: theme.colors.primary,
+              }}
+              activeColor={theme.colors.messageBackground}
+              indicatorStyle={{
+                color: theme.colors.primary,
+              }}
+              style={{
+                backgroundColor: "transparent",
+              }}
+            />
+          )}
+          navigationState={{ index, routes }}
+          onIndexChange={setIndex}
+          renderScene={SceneMap({
+            first: FirstRoute,
+            second: SecondRoute,
+          })}
+        />
+      ) : (
+        <Text style={{ textAlign: "center" }}>Login to chat</Text>
+      )}
+    </>
   );
 };
 
