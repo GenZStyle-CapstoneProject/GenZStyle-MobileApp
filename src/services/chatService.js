@@ -3,11 +3,11 @@ import { io } from "socket.io-client";
 
 let baseUrl = "";
 if (__DEV__) {
-  baseUrl =
-    Platform.OS === "android"
-      ? "http://192.168.2.7:4000/"
-      : "http://localhost:4000";
-  // baseUrl = "https://genz-chatapp-be.up.railway.app";
+  // baseUrl =
+  //   Platform.OS === "android"
+  //     ? "http://192.168.2.7:4000/"
+  //     : "http://localhost:4000";
+  baseUrl = "https://genz-chatapp-be.up.railway.app";
 } else {
   baseUrl = "https://genz-chatapp-be.up.railway.app";
 }
