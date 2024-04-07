@@ -23,6 +23,7 @@ import { theme } from "../../constants/theme";
 import { socket } from "../../services/chatService";
 import { launchImageLibraryAsync } from "expo-image-picker";
 import axios from "axios";
+import { CHAT_BASE_URL } from "../../../env";
 
 const ChatInput = ({
   reply,
