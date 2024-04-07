@@ -82,12 +82,12 @@ const ChatInput = ({
         let base64 = uploadedPhoto?.assets[0]?.base64;
 
         if (__DEV__) {
-          baseUrl =
-            Platform.OS === "android"
-              ? "http://192.168.2.7:4000"
-              : "http://localhost:4000";
+          baseUrl = CHAT_BASE_URL;
+          // Platform.OS === "android"
+          //   ? "http://192.168.2.7:4000"
+          //   : "http://localhost:4000";
         } else {
-          baseUrl = "https://genz-chatapp-be.up.railway.app";
+          baseUrl = CHAT_BASE_URL;
         }
 
         const requestUrl = baseUrl + "/api/v1/upload-image";
