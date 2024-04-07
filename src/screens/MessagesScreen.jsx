@@ -22,6 +22,8 @@ const MessagesScreen = ({ navigation, route }) => {
     isOnline,
     roomId,
     members,
+    isFollower,
+    isFollowing,
   } = route.params;
   const [isLoading, setIsLoading] = useState(true);
   const [reply, setReply] = useState("");
@@ -79,7 +81,7 @@ const MessagesScreen = ({ navigation, route }) => {
   }, [socket]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingBottom: 5 }}>
       <ChatHeader
         onPress={() => {}}
         roomName={roomName}
@@ -102,6 +104,7 @@ const MessagesScreen = ({ navigation, route }) => {
           fullName={fullName}
           type={type}
           roomId={roomId}
+          isFollower={isFollower}
         />
       )}
       <ChatInput
@@ -109,6 +112,10 @@ const MessagesScreen = ({ navigation, route }) => {
         isLeft={isLeft}
         closeReply={closeReply}
         roomName={roomName}
+        isFollower={isFollower}
+        isFollowing={isFollowing}
+        type={type}
+        numberOfMessages={messages?.length}
       />
     </View>
   );

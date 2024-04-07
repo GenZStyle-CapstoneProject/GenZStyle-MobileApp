@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity } from "react-native";
 import Icon from "@expo/vector-icons/MaterialIcons";
 
 import Conversations from "../components/Conversations";
-import SearchInput from "../components/common/SearchInput";
 
 import { theme } from "../constants/theme";
 import { fabStyles } from "../constants/styles";
@@ -48,7 +47,11 @@ const ConversationsScreen = () => {
 
   return (
     <View
-      style={{ backgroundColor: theme.colors.white, flex: 1, marginTop: 30 }}
+      style={{
+        backgroundColor: theme.colors.white,
+        flex: 1,
+        marginTop: 30,
+      }}
     >
       <Conversations></Conversations>
       <TouchableOpacity
@@ -57,42 +60,35 @@ const ConversationsScreen = () => {
       >
         <Icon name="chat" size={30} color={theme.colors.primary} />
       </TouchableOpacity>
-      <View style={styles.centeredView}>
-        <Modal animationType="slide" transparent={true} visible={modalVisible}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Create new group</Text>
-              <TextInput
-                placeholder={"Group name"}
-                style={styles.input}
-                value={text}
-                onChangeText={(text) => setText(text)}
-              />
-              <Text style={styles.errorText}>{error}</Text>
-              <View style={styles.betweenView}>
-                <Pressable
-                  style={[styles.button, styles.buttonCreate]}
-                  onPress={() => onCreateGroup()}
-                >
-                  <Text style={styles.textStyle}>Create</Text>
-                </Pressable>
-                <Pressable
-                  style={[styles.button, styles.buttonCancel]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={styles.textStyle}>Cancel</Text>
-                </Pressable>
-              </View>
+
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Create new group</Text>
+            <TextInput
+              placeholder={"Group name"}
+              style={styles.input}
+              value={text}
+              onChangeText={(text) => setText(text)}
+            />
+            <Text style={styles.errorText}>{error}</Text>
+            <View style={styles.betweenView}>
+              <Pressable
+                style={[styles.button, styles.buttonCreate]}
+                onPress={() => onCreateGroup()}
+              >
+                <Text style={styles.textStyle}>Create</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button, styles.buttonCancel]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Cancel</Text>
+              </Pressable>
             </View>
           </View>
-        </Modal>
-        {/* <Pressable
-          style={[styles.button, styles.buttonOpen]}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.textStyle}>Show Modal</Text>
-        </Pressable> */}
-      </View>
+        </View>
+      </Modal>
     </View>
   );
 };

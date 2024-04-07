@@ -12,5 +12,10 @@ export function groupByArray(xs, key) {
 }
 export const parseMessageTime = (timeString) => {
   const getTime = timeString?.split(",")[1];
-  return getTime.slice(0, 5) + " " + getTime.slice(8);
+  const timeArr = getTime.split(":");
+  const messageTime = `${timeArr[0]}:${timeArr[1]} ${
+    timeArr[0] >= 12 ? "PM" : "AM"
+  }`;
+
+  return messageTime;
 };

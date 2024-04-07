@@ -9,11 +9,17 @@ import { useEffect } from "react";
 import { socket } from "../../services/chatService";
 import { useState } from "react";
 
-const MessagesList = ({ onSwipeToReply, messages, fullName, type, roomId }) => {
-  const scrollView = useRef();
+const MessagesList = ({
+  onSwipeToReply,
+  messages,
+  fullName,
+  type,
+  roomId,
+  isFollower,
+}) => {
   const profile = useAppSelector((state) => state.user.profile?.data);
   const [members, setMembers] = useState([]);
-
+  const scrollViewRef = useRef();
   useEffect(() => {
     socket.emit("get_group_members", {
       roomId: roomId,
@@ -25,13 +31,13 @@ const MessagesList = ({ onSwipeToReply, messages, fullName, type, roomId }) => {
       setMembers(data);
     });
   }, [socket]);
-
   return (
     <ScrollView
       style={{ backgroundColor: theme.colors.white, flex: 1 }}
-      ref={(ref) => (scrollView.current = ref)}
-      onContentChange={() => {
-        scrollView.current.scrollToEnd({ animated: true });
+      ref={scrollViewRef}
+      nestedScrollEnabled={true}
+      onContentSizeChange={(contentWidth, contentHeight) => {
+        scrollViewRef.current?.scrollTo({ y: contentHeight });
       }}
     >
       {type === "group" ? (
@@ -45,8 +51,9 @@ const MessagesList = ({ onSwipeToReply, messages, fullName, type, roomId }) => {
                 <Message
                   key={index}
                   time={message.time}
-                  isLeft={message.name !== profile?.account?.accountId}
+                  isLeft={message.name != profile?.account?.accountId}
                   message={message.text}
+                  image={message.image}
                   onSwipe={onSwipeToReply}
                   name={
                     members.find(
@@ -61,11 +68,10 @@ const MessagesList = ({ onSwipeToReply, messages, fullName, type, roomId }) => {
           ))
         ) : (
           <Text style={{ textAlign: "center", padding: 12 }}>
-            {"No message yet. Say hi!"}
+            {"Chưa có tin nhắn, chào cái nào!"}
           </Text>
         )
-      ) : (
-        messages.length > 0 &&
+      ) : messages.length > 0 ? (
         messages.map((messageGroup) => (
           <View key={messageGroup.key}>
             <Text style={{ textAlign: "center", padding: 12 }}>
@@ -75,8 +81,9 @@ const MessagesList = ({ onSwipeToReply, messages, fullName, type, roomId }) => {
               <Message
                 key={index}
                 time={message.time}
-                isLeft={message.name !== profile?.account?.accountId}
+                isLeft={message.name != profile?.account?.accountId}
                 message={message.text}
+                image={message.image}
                 onSwipe={onSwipeToReply}
                 name={
                   members.find(
@@ -89,6 +96,10 @@ const MessagesList = ({ onSwipeToReply, messages, fullName, type, roomId }) => {
             ))}
           </View>
         ))
+      ) : (
+        <Text style={{ textAlign: "center", padding: 12 }}>
+          {"Chưa có tin nhắn, chào cái nào!"}
+        </Text>
       )}
     </ScrollView>
   );

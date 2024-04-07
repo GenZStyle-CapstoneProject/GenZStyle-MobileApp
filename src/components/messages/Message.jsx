@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert, Image } from "react-native";
 import {
   FlingGestureHandler,
   Directions,
@@ -15,12 +15,12 @@ import Animated, {
 import { theme } from "../../constants/theme";
 import { parseMessageTime } from "../../utils";
 
-const Message = ({ time, isLeft, message, onSwipe, name, username }) => {
+const Message = ({ time, isLeft, message, onSwipe, name, image }) => {
   const startingPosition = 0;
   const x = useSharedValue(startingPosition);
 
   const isOnLeft = (type) => {
-    if (isLeft && type === "messageContainer") {
+    if (isLeft && (type === "messageContainer" || type === "imageContainer")) {
       return {
         alignSelf: "flex-start",
         backgroundColor: "#f0f0f0",
@@ -34,7 +34,7 @@ const Message = ({ time, isLeft, message, onSwipe, name, username }) => {
       return {
         color: "darkgray",
       };
-    } else if (isLeft && type === "name") {
+    } else if (isLeft && (type === "name" || type === "image")) {
       return {
         alignSelf: "flex-start",
       };
@@ -44,7 +44,6 @@ const Message = ({ time, isLeft, message, onSwipe, name, username }) => {
       };
     }
   };
-
   const eventHandler = useAnimatedGestureHandler({
     onStart: (event, ctx) => {},
     onActive: (event, ctx) => {
@@ -73,16 +72,29 @@ const Message = ({ time, isLeft, message, onSwipe, name, username }) => {
     >
       <Animated.View style={[styles.container, uas]}>
         <Text style={[styles.name, isOnLeft("name")]}>{name}</Text>
-        <View style={[styles.messageContainer, isOnLeft("messageContainer")]}>
-          <View style={styles.messageView}>
-            <Text style={[styles.message, isOnLeft("message")]}>{message}</Text>
+        {image ? (
+          <View style={[styles.imageContainer, isOnLeft("imageContainer")]}>
+            <Image src={image} style={[styles.image, isOnLeft("image")]} />
+            <View style={styles.timeView}>
+              <Text style={[styles.time, isOnLeft("time")]}>
+                {parseMessageTime(time)}
+              </Text>
+            </View>
           </View>
-          <View style={styles.timeView}>
-            <Text style={[styles.time, isOnLeft("time")]}>
-              {parseMessageTime(time)}
-            </Text>
+        ) : (
+          <View style={[styles.messageContainer, isOnLeft("messageContainer")]}>
+            <View style={styles.messageView}>
+              <Text style={[styles.message, isOnLeft("message")]}>
+                {message}
+              </Text>
+            </View>
+            <View style={styles.timeView}>
+              <Text style={[styles.time, isOnLeft("time")]}>
+                {parseMessageTime(time)}
+              </Text>
+            </View>
           </View>
-        </View>
+        )}
       </Animated.View>
     </FlingGestureHandler>
   );
@@ -98,6 +110,16 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     alignSelf: "flex-end",
     flexDirection: "row",
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 10,
+  },
+  imageContainer: {
+    maxWidth: "100%",
+    alignSelf: "flex-end",
+    flexDirection: "column",
     borderRadius: 15,
     paddingHorizontal: 10,
     marginHorizontal: 10,
@@ -122,6 +144,11 @@ const styles = StyleSheet.create({
     color: "lightgray",
     alignSelf: "flex-end",
     fontSize: 10,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 12,
   },
   name: {
     maxWidth: "80%",

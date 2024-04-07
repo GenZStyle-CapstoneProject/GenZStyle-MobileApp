@@ -30,6 +30,8 @@ const ConversationItem = ({
   roomId,
   members,
   isFriend,
+  isFollower,
+  isFollowing,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -72,6 +74,8 @@ const ConversationItem = ({
             isOnline: isOnline,
             roomId: roomId,
             members: members,
+            isFollower: isFollower,
+            isFollowing: isFollowing,
           })
         }
       >

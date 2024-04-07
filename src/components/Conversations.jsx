@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 
 import ConversationItem from "./ConversationItem";
@@ -17,14 +17,16 @@ const Conversations = ({ children }) => {
   const [index, setIndex] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const loggedUsers = [];
-  const { currentUser } = useAuthContext();
-  const profile = useSelector((state) => state.user.profile?.data);
-  const followData = useSelector((state) => state.user.data);
+
+  const profile = useSelector((state) => state?.user?.profile?.data);
+  const followData = useSelector((state) => state?.user?.data);
+
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
   const fullName = `${profile?.account?.firstname} ${profile?.account?.lastname}`;
-  const FirstRoute = () => (
-    <>
+
+  const HomeTab = () => (
+    <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
       <ScrollView>
         {/* Group renders */}
         {userRooms?.length > 0 &&
@@ -42,8 +44,8 @@ const Conversations = ({ children }) => {
                     }
                     roomName={
                       room?.type === "personal"
-                        ? room.users.find(
-                            (user) => user.id !== profile?.account?.accountId
+                        ? room?.users.find(
+                            (user) => user?.id !== profile?.account?.accountId
                           ).id
                         : room.name
                     }
@@ -61,73 +63,85 @@ const Conversations = ({ children }) => {
                     isMuted
                     // hasStory
                     isFriend={true}
-                    members={room.users}
+                    members={room?.users}
                     isOnline={true}
                   />
                 );
               }
             }
             if (room.type === "personal" && followData?.following?.length > 0) {
-              const anotherUserArr = room.users.filter(
-                (user) => user.id !== profile?.account?.accountId
+              const anotherUserArr = room?.users.filter(
+                (user) => user?.id != profile?.account?.accountId
               );
               const foundIndex = followData?.following?.findIndex(
-                (user) => user.accountId === anotherUserArr[0].id
+                (user) => user?.accountId == anotherUserArr[0].id
               );
               const foundUser = followData?.following[foundIndex];
-              console.log("foundUser", foundUser);
+
               const userFullName = foundUser?.account?.firstname
                 ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
                 : foundUser?.username;
 
-              loggedUsers.push(anotherUserArr[0].id);
-
-              return (
-                <ConversationItem
-                  key={foundUser?.accountId}
-                  roomId={foundUser?.accountId}
-                  picture={foundUser.user.avatar}
-                  roomName={userFullName}
-                  fullName={fullName}
-                  bio=""
-                  type="personal"
-                  lastMessage={room?.lastMessage?.text}
-                  time={
-                    room?.lastMessage && room?.lastMessage.time?.length > 0
-                      ? parseMessageTime(room?.lastMessage?.time)
-                      : ""
-                  }
-                  notification="3"
-                  isBlocked
-                  isMuted
-                  // hasStory
-                  isFriend={true}
-                  members={[]}
-                  isOnline={
-                    onlineUsers.findIndex(
-                      (onlUser) => foundUser.accountId === onlUser.id
-                    ) > -1
-                  }
-                />
-              );
+              loggedUsers.push(anotherUserArr[0]?.id);
+              const isFollower =
+                followData.followers.findIndex(
+                  (follower) => follower?.accountId == foundUser?.accountId
+                ) > -1;
+              const isFollowing =
+                followData.following.findIndex(
+                  (follow) => follow.accountId == foundUser?.accountId
+                ) > -1;
+              if (isFollowing) {
+                return (
+                  <ConversationItem
+                    key={foundUser?.accountId}
+                    roomId={foundUser?.accountId}
+                    picture={foundUser?.user?.avatar}
+                    roomName={userFullName}
+                    fullName={fullName}
+                    bio=""
+                    type="personal"
+                    lastMessage={room?.lastMessage?.text}
+                    time={
+                      room?.lastMessage && room?.lastMessage.time?.length > 0
+                        ? parseMessageTime(room?.lastMessage?.time)
+                        : ""
+                    }
+                    notification="3"
+                    isBlocked
+                    isMuted
+                    // hasStory
+                    isFollower={isFollower}
+                    isFollowing={isFollowing}
+                    isFriend={true}
+                    members={[]}
+                    isOnline={
+                      onlineUsers.findIndex(
+                        (onlUser) => foundUser?.accountId == onlUser.id
+                      ) > -1
+                    }
+                  />
+                );
+              }
             }
           })}
-      </ScrollView>
-    </>
-  );
-
-  const SecondRoute = () => (
-    <>
-      <ScrollView>
         {/* User renders */}
-        {followData.followers?.length > 0 &&
-          followData.followers?.map((user) => {
+        {followData.following?.length > 0 &&
+          followData.following?.map((user) => {
             const userFullName = user?.account?.firstname
               ? `${user?.account?.firstname} ${user?.account?.lastname}`
               : user?.username;
-            const isFriend =
-              loggedUsers.findIndex((userId) => userId === user.accountId) > -1;
-            if (!isFriend) {
+            const isLogged =
+              loggedUsers.findIndex((userId) => userId == user?.accountId) > -1;
+            const isFollower =
+              followData.followers.findIndex(
+                (follower) => follower.accountId == user.accountId
+              ) > -1;
+            const isFollowing =
+              followData.following.findIndex(
+                (follow) => follow.accountId == user?.accountId
+              ) > -1;
+            if (!isLogged && isFollowing) {
               return (
                 <ConversationItem
                   key={user?.accountId}
@@ -147,15 +161,127 @@ const Conversations = ({ children }) => {
                   members={[]}
                   isOnline={
                     onlineUsers.findIndex(
-                      (onlUser) => user.accountId === onlUser.id
+                      (onlUser) => user?.accountId == onlUser.id
                     ) > -1
                   }
+                  isFollower={isFollower}
+                  isFollowing={isFollowing}
                 />
               );
             }
           })}
       </ScrollView>
-    </>
+    </View>
+  );
+
+  const WaitingTab = () => (
+    <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
+      <ScrollView>
+        {/* Group renders */}
+        {userRooms?.length > 0 &&
+          userRooms?.map((room) => {
+            if (room.type === "personal" && followData?.following?.length > 0) {
+              const anotherUserArr = room?.users.filter(
+                (user) => user?.id != profile?.account?.accountId
+              );
+              const foundIndex = followData?.followers?.findIndex(
+                (user) => user?.accountId == anotherUserArr[0].id
+              );
+              const foundUser = followData?.followers[foundIndex];
+
+              const userFullName = foundUser?.account?.firstname
+                ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
+                : foundUser?.username;
+
+              loggedUsers.push(anotherUserArr[0]?.id);
+              const isFollower =
+                followData.followers.findIndex(
+                  (follower) => follower?.accountId == foundUser?.accountId
+                ) > -1;
+              const isFollowing =
+                followData.following.findIndex(
+                  (follow) => follow.accountId == foundUser?.accountId
+                ) > -1;
+              if (!isFollowing && isFollower) {
+                return (
+                  <ConversationItem
+                    key={foundUser?.accountId}
+                    roomId={foundUser?.accountId}
+                    picture={foundUser?.user?.avatar}
+                    roomName={userFullName}
+                    fullName={fullName}
+                    bio=""
+                    type="personal"
+                    lastMessage={room?.lastMessage?.text}
+                    time={
+                      room?.lastMessage && room?.lastMessage.time?.length > 0
+                        ? parseMessageTime(room?.lastMessage?.time)
+                        : ""
+                    }
+                    notification="3"
+                    isBlocked
+                    isMuted
+                    // hasStory
+                    isFollower={isFollower}
+                    isFollowing={isFollowing}
+                    isFriend={true}
+                    members={[]}
+                    isOnline={
+                      onlineUsers.findIndex(
+                        (onlUser) => foundUser?.accountId == onlUser.id
+                      ) > -1
+                    }
+                  />
+                );
+              }
+            }
+          })}
+        {/* User renders */}
+        {followData.followers?.length > 0 &&
+          followData.followers?.map((user) => {
+            const userFullName = user?.account?.firstname
+              ? `${user?.account?.firstname} ${user?.account?.lastname}`
+              : user?.username;
+            const isFollower =
+              followData.followers.findIndex(
+                (follower) => follower?.accountId == user?.accountId
+              ) > -1;
+            const isFollowing =
+              followData.following.findIndex(
+                (follow) => follow.accountId == user?.accountId
+              ) > -1;
+            const isLogged =
+              loggedUsers.findIndex((userId) => userId == user?.accountId) > -1;
+            if (isFollower && !isLogged) {
+              return (
+                <ConversationItem
+                  key={user?.accountId}
+                  roomId={user?.accountId}
+                  picture={user?.user?.avatar}
+                  roomName={userFullName}
+                  fullName={fullName}
+                  bio=""
+                  type="personal"
+                  lastMessage=""
+                  time=""
+                  notification="3"
+                  isBlocked
+                  isMuted
+                  // hasStory
+                  isFriend={false}
+                  members={[]}
+                  isOnline={
+                    onlineUsers.findIndex(
+                      (onlUser) => user?.accountId === onlUser?.id
+                    ) > -1
+                  }
+                  isFollowing={isFollowing}
+                />
+              );
+            }
+          })}
+      </ScrollView>
+    </View>
   );
   const [routes] = useState([
     { key: "first", title: "Home" },
@@ -210,15 +336,15 @@ const Conversations = ({ children }) => {
                 color: theme.colors.primary,
               }}
               style={{
-                backgroundColor: "transparent",
+                backgroundColor: "white",
               }}
             />
           )}
           navigationState={{ index, routes }}
           onIndexChange={setIndex}
           renderScene={SceneMap({
-            first: FirstRoute,
-            second: SecondRoute,
+            first: HomeTab,
+            second: WaitingTab,
           })}
         />
       ) : (
