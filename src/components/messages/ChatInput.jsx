@@ -15,7 +15,6 @@ import Animated, {
   withTiming,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { launchImageLibrary } from "react-native-image-picker";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import EmojiPicker from "./emojis/EmojiPicker";
 // import { useKeyboard } from "@react-native-community/hooks";
