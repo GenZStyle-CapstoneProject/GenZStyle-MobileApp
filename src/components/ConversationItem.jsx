@@ -32,6 +32,7 @@ const ConversationItem = ({
   isFriend,
   isFollower,
   isFollowing,
+  foundUser,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
@@ -136,6 +137,7 @@ const ConversationItem = ({
           isBlocked={isBlocked}
           isMuted={isMuted}
           hide={() => setModalVisible(false)}
+          foundUser={foundUser}
         />
       </Modal>
     </View>

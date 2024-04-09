@@ -132,7 +132,7 @@ const MemberItem = ({
             )}
             {hostId === profile?.account?.accountId && !isHost && (
               <Button
-                title="Remove"
+                title="Xóa"
                 color={theme.colors.danger}
                 onPress={() => removerGroupMember()}
               />

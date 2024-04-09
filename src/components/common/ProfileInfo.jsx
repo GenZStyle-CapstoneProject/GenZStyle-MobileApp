@@ -3,8 +3,24 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome";
 
 import { theme } from "../../constants/theme";
+import { useNavigation } from "@react-navigation/native";
+import ROUTES from "../../constants/routes";
 
-const ProfileInfo = ({ roomName, bio, picture, isBlocked, isMuted, hide }) => {
+const ProfileInfo = ({
+  roomName,
+  bio,
+  picture,
+  isBlocked,
+  isMuted,
+  hide,
+  foundUser,
+}) => {
+  const navigation = useNavigation();
+  const navigateToFriend = (foundUser) => {
+    console.log("navigate to ", foundUser);
+    navigation.navigate(ROUTES.FRIENDS, { foundUser });
+  };
+
   return (
     <TouchableOpacity
       style={styles.modalContainer}
@@ -18,13 +34,16 @@ const ProfileInfo = ({ roomName, bio, picture, isBlocked, isMuted, hide }) => {
             <Text style={styles.username}>{roomName}</Text>
           </View>
           <View style={styles.modalOptionsContainer}>
-            <TouchableOpacity style={styles.modalIconContainer}>
+            {/* <TouchableOpacity style={styles.modalIconContainer}>
               <Icon name="align-left" size={25} color={theme.colors.primary} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalIconContainer}>
               <Icon name="phone" size={25} color={theme.colors.primary} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalIconContainer}>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              style={styles.modalIconContainer}
+              onPress={() => navigateToFriend()}
+            >
               <Icon name="info-circle" size={25} color={theme.colors.primary} />
             </TouchableOpacity>
           </View>

@@ -263,18 +263,10 @@ const ChatInput = ({
             style={[
               styles.sendButton,
               {
-                backgroundColor:
-                  (!isFollower && numberOfMessages >= 3) || message === ""
-                    ? "#c2c2c2"
-                    : theme.colors.primary,
+                backgroundColor: theme.colors.primary,
               },
             ]}
             onPress={() => sendMessage()}
-            disabled={
-              (!isFollower && numberOfMessages >= 3) || message === ""
-                ? true
-                : false
-            }
           >
             <Icon
               // name={message ? "send" : "microphone"}

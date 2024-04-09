@@ -64,9 +64,9 @@ const ConversationsScreen = () => {
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Create new group</Text>
+            <Text style={styles.modalText}>Tạo nhóm mới</Text>
             <TextInput
-              placeholder={"Group name"}
+              placeholder={"Tên nhóm"}
               style={styles.input}
               value={text}
               onChangeText={(text) => setText(text)}
@@ -77,13 +77,13 @@ const ConversationsScreen = () => {
                 style={[styles.button, styles.buttonCreate]}
                 onPress={() => onCreateGroup()}
               >
-                <Text style={styles.textStyle}>Create</Text>
+                <Text style={styles.textStyle}>Tạo</Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonCancel]}
                 onPress={() => setModalVisible(!modalVisible)}
               >
-                <Text style={styles.textStyle}>Cancel</Text>
+                <Text style={styles.textStyle}>Hủy</Text>
               </Pressable>
             </View>
           </View>

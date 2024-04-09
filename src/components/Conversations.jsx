@@ -7,23 +7,31 @@ import { socket } from "../services/chatService";
 import useAuthContext from "../hooks/useAuthContext";
 import { parseMessageTime } from "../utils";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { theme } from "../constants/theme";
 import SearchInput from "./common/SearchInput";
+import { useAppSelector } from "../app/hooks";
 
 const Conversations = ({ children }) => {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const loggedUsers = [];
-
+  const dispatch = useDispatch();
   const profile = useSelector((state) => state?.user?.profile?.data);
   const followData = useSelector((state) => state?.user?.data);
 
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
   const fullName = `${profile?.account?.firstname} ${profile?.account?.lastname}`;
+
+  const accountSuggestionList = useAppSelector(
+    (state) => state.account.accountSuggestionList
+  );
+  const accountFollowingList = useAppSelector(
+    (state) => state.account.accountFollowingList
+  );
 
   const HomeTab = () => (
     <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
@@ -84,13 +92,16 @@ const Conversations = ({ children }) => {
 
               loggedUsers.push(anotherUserArr[0]?.id);
               const isFollower =
-                followData.followers.findIndex(
+                followData?.followers.findIndex(
                   (follower) => follower?.accountId == foundUser?.accountId
                 ) > -1;
               const isFollowing =
-                followData.following.findIndex(
+                followData?.following.findIndex(
                   (follow) => follow.accountId == foundUser?.accountId
                 ) > -1;
+              const foundUserInfo = accountSuggestionList.find(
+                (account) => account?.accountId == foundUser?.accountId
+              );
               if (isFollowing) {
                 return (
                   <ConversationItem
@@ -99,6 +110,7 @@ const Conversations = ({ children }) => {
                     picture={foundUser?.user?.avatar}
                     roomName={userFullName}
                     fullName={fullName}
+                    foundUser={foundUser}
                     bio=""
                     type="personal"
                     lastMessage={room?.lastMessage?.text}
@@ -126,21 +138,24 @@ const Conversations = ({ children }) => {
             }
           })}
         {/* User renders */}
-        {followData.following?.length > 0 &&
-          followData.following?.map((user) => {
+        {followData?.following?.length > 0 &&
+          followData?.following?.map((user) => {
             const userFullName = user?.account?.firstname
               ? `${user?.account?.firstname} ${user?.account?.lastname}`
               : user?.username;
             const isLogged =
               loggedUsers.findIndex((userId) => userId == user?.accountId) > -1;
             const isFollower =
-              followData.followers.findIndex(
+              followData?.followers.findIndex(
                 (follower) => follower.accountId == user.accountId
               ) > -1;
             const isFollowing =
-              followData.following.findIndex(
+              followData?.following.findIndex(
                 (follow) => follow.accountId == user?.accountId
               ) > -1;
+            const foundUserInfo = accountSuggestionList.find(
+              (account) => account?.accountId == user?.accountId
+            );
             if (!isLogged && isFollowing) {
               return (
                 <ConversationItem
@@ -195,11 +210,11 @@ const Conversations = ({ children }) => {
 
               loggedUsers.push(anotherUserArr[0]?.id);
               const isFollower =
-                followData.followers.findIndex(
+                followData?.followers.findIndex(
                   (follower) => follower?.accountId == foundUser?.accountId
                 ) > -1;
               const isFollowing =
-                followData.following.findIndex(
+                followData?.following.findIndex(
                   (follow) => follow.accountId == foundUser?.accountId
                 ) > -1;
               if (!isFollowing && isFollower) {
@@ -237,17 +252,17 @@ const Conversations = ({ children }) => {
             }
           })}
         {/* User renders */}
-        {followData.followers?.length > 0 &&
-          followData.followers?.map((user) => {
+        {followData?.followers?.length > 0 &&
+          followData?.followers?.map((user) => {
             const userFullName = user?.account?.firstname
               ? `${user?.account?.firstname} ${user?.account?.lastname}`
               : user?.username;
             const isFollower =
-              followData.followers.findIndex(
+              followData?.followers.findIndex(
                 (follower) => follower?.accountId == user?.accountId
               ) > -1;
             const isFollowing =
-              followData.following.findIndex(
+              followData?.following.findIndex(
                 (follow) => follow.accountId == user?.accountId
               ) > -1;
             const isLogged =
@@ -284,9 +299,17 @@ const Conversations = ({ children }) => {
     </View>
   );
   const [routes] = useState([
-    { key: "first", title: "Home" },
-    { key: "second", title: "Waiting" },
+    { key: "first", title: "Chính" },
+    { key: "second", title: "Chờ" },
   ]);
+
+  const fetchAllAccountSuggestionForCheck = async () => {
+    await dispatch(getSuggestionAccount()).then((res) => {});
+  };
+
+  const fetchAllFetFollowingAccountWithPosts = async () => {
+    await dispatch(getFollowingAccountWithPosts()).then((res) => {});
+  };
 
   useEffect(() => {
     if (profile) {
@@ -307,6 +330,11 @@ const Conversations = ({ children }) => {
     }
   }, []);
 
+  const fetch = async () => {
+    await fetchAllAccountSuggestionForCheck();
+    await fetchAllFetFollowingAccountWithPosts();
+  };
+
   useEffect(() => {
     socket.on("online_users", (data) => {
       setOnlineUsers(data);
@@ -318,6 +346,10 @@ const Conversations = ({ children }) => {
       setUserRooms(data);
     });
   }, [socket]);
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   return (
     <>
@@ -348,7 +380,9 @@ const Conversations = ({ children }) => {
           })}
         />
       ) : (
-        <Text style={{ textAlign: "center" }}>Login to chat</Text>
+        <Text style={{ textAlign: "center" }}>
+          Đăng nhập để có thể trò chuyện.
+        </Text>
       )}
     </>
   );

@@ -140,7 +140,7 @@ const ChatHeader = ({
                               });
                             }}
                           >
-                            See members
+                            Xem thành viên
                           </Text>
                         </Pressable>
                         {hostId === profile.account.accountId && (
@@ -152,31 +152,29 @@ const ChatHeader = ({
                               ]}
                               onPress={() => setChangeGroupName(true)}
                             >
-                              <Text style={styles.textStyle}>
-                                Change group's name
-                              </Text>
+                              <Text style={styles.textStyle}>Đổi tên nhóm</Text>
                             </Pressable>
                             <Pressable
                               style={[styles.actionButton, styles.buttonRemove]}
                               onPress={() => onDeleteGroup()}
                             >
-                              <Text style={styles.textStyle}>Delete group</Text>
+                              <Text style={styles.textStyle}>Xóa nhóm</Text>
                             </Pressable>
-                            <View style={styles.betweenView}>
-                              <View></View>
-                              <Pressable
-                                style={[styles.button, styles.buttonCancel]}
-                                onPress={() => setModalVisible(!modalVisible)}
-                              >
-                                <Text style={styles.textStyle}>Close</Text>
-                              </Pressable>
-                            </View>
                           </>
                         )}
+                        <View style={styles.betweenView}>
+                          <View></View>
+                          <Pressable
+                            style={[styles.button, styles.buttonCancel]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                          >
+                            <Text style={styles.textStyle}>Đóng</Text>
+                          </Pressable>
+                        </View>
                       </>
                     ) : (
                       <>
-                        <Text style={styles.modalText}>Change group name</Text>
+                        <Text style={styles.modalText}>Đổi tên</Text>
                         <TextInput
                           placeholder={"New group name"}
                           style={styles.input}
@@ -188,13 +186,22 @@ const ChatHeader = ({
                             style={[styles.button, styles.buttonSubmit]}
                             onPress={() => onChangeGroupName()}
                           >
-                            <Text style={styles.textStyle}>Submit</Text>
+                            <Text style={styles.textStyle}>Đổi</Text>
                           </Pressable>
                           <Pressable
                             style={[styles.button, styles.buttonCancel]}
                             onPress={() => setChangeGroupName(!changeGroupName)}
                           >
-                            <Text style={styles.textStyle}>Cancel</Text>
+                            <Text style={styles.textStyle}>Hủy</Text>
+                          </Pressable>
+                        </View>
+                        <View style={styles.betweenView}>
+                          <View></View>
+                          <Pressable
+                            style={[styles.button, styles.buttonCancel]}
+                            onPress={() => setModalVisible(!modalVisible)}
+                          >
+                            <Text style={styles.textStyle}>Đóng</Text>
                           </Pressable>
                         </View>
                       </>

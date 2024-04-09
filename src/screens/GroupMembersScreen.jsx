@@ -85,14 +85,14 @@ const GroupMembersScreen = ({ children, route }) => {
         <TouchableOpacity style={styles.backButton} onPress={goBack}>
           <Icon name="angle-left" size={30} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 20 }}>Members</Text>
+        <Text style={{ fontSize: 20 }}>Thành viên</Text>
         {hostId == profile?.account?.accountId ? (
           <TouchableOpacity
             style={styles.addButton}
             onPress={() => setModalVisible(true)}
           >
             <Icon name="plus" size={10} color={theme.colors.black} />
-            <Text style={{ fontSize: 20 }}>Add</Text>
+            <Text style={{ fontSize: 20 }}>Thêm</Text>
           </TouchableOpacity>
         ) : (
           <View style={{ width: 20 }}></View>
@@ -101,64 +101,66 @@ const GroupMembersScreen = ({ children, route }) => {
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Add new member</Text>
-            <ScrollView>
-              {noUser && (
-                <Text
-                  style={{
-                    fontSize: 18,
-                    color: theme.colors.primary,
-                  }}
-                >
-                  {"No user to add"}
-                </Text>
-              )}
-              <View style={{ width: 350 }}>
-                {followData.following?.length > 0 &&
-                  followData.following?.map((followUser) => {
-                    if (
-                      members.findIndex(
-                        (member) => member.id == followUser.accountId
-                      ) < 0
-                    ) {
-                      if (noUser) {
-                        setNoUser(false);
+            <Text style={styles.modalText}>Thêm thành viên nhóm</Text>
+            <View style={{ height: 300 }}>
+              <ScrollView>
+                {noUser && (
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: theme.colors.primary,
+                    }}
+                  >
+                    {"Không có người nào để thêm"}
+                  </Text>
+                )}
+                <View style={{ width: 350 }}>
+                  {followData.following?.length > 0 &&
+                    followData.following?.map((followUser) => {
+                      if (
+                        members.findIndex(
+                          (member) => member.id == followUser.accountId
+                        ) < 0
+                      ) {
+                        if (noUser) {
+                          setNoUser(false);
+                        }
+                        return (
+                          <MemberItem
+                            key={followUser.accountId}
+                            picture={followUser.user.avatar}
+                            username={followUser.username}
+                            userId={followUser.accountId}
+                            roomId={roomId}
+                            bio=""
+                            lastMessage="Hello there"
+                            time="4:00 PM"
+                            isBlocked
+                            isMuted
+                            isSelected={selectedUsers.includes(
+                              followUser.accountId
+                            )}
+                            onPress={() => onSelectUser(followUser.accountId)}
+                          />
+                        );
                       }
-                      return (
-                        <MemberItem
-                          key={followUser.accountId}
-                          picture={followUser.user.avatar}
-                          username={followUser.username}
-                          userId={followUser.accountId}
-                          roomId={roomId}
-                          bio=""
-                          lastMessage="Hello there"
-                          time="4:00 PM"
-                          isBlocked
-                          isMuted
-                          isSelected={selectedUsers.includes(
-                            followUser.accountId
-                          )}
-                          onPress={() => onSelectUser(followUser.accountId)}
-                        />
-                      );
-                    }
-                  })}
-              </View>
-            </ScrollView>
+                    })}
+                </View>
+              </ScrollView>
+            </View>
             <Text style={styles.errorText}>{error}</Text>
             <View style={styles.betweenView}>
               <Pressable
                 style={[styles.button, styles.buttonCreate]}
                 onPress={() => onAddMember()}
               >
-                <Text style={styles.textStyle}>Add</Text>
+                <Text style={styles.textStyle}>Thêm</Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonCancel]}
                 onPress={() => setModalVisible(!modalVisible)}
               >
-                <Text style={styles.textStyle}>Cancel</Text>
+                <Text style={styles.textStyle}>Hủy</Text>
               </Pressable>
             </View>
           </View>
@@ -232,7 +234,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: 350,
-    height: 450,
+    height: 500,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
