@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { IconButton } from "react-native-paper";
+import ROUTES from "../../constants/routes";
 
 const HeaderProfile = ({ userInfo, profile, followersData }) => {
   const navigation = useNavigation();
@@ -33,15 +35,31 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
   return (
     <View style={styles.header}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={handleSetting}>
-          <Ionicons
-            name="settings-outline"
-            size={24}
-            color="black"
-            style={styles.icon}
+        <Text style={{ fontSize: 30 }}>Xu hướng hàng đầu</Text>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
+          <TouchableOpacity onPress={handleSetting}>
+            <Ionicons
+              name="settings-outline"
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+          <IconButton
+            icon="chat"
+            color="#000"
+            // onPress={() => console.log('Chat button pressed')}
+            onPress={() => navigation.navigate(ROUTES.CONVERSATIONS)}
           />
-        </TouchableOpacity>
+        </View>
       </View>
+
       <View style={styles.topRow}>
         <View style={styles.avatarContainer}>
           {/* <Image

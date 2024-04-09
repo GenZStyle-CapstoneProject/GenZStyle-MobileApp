@@ -11,18 +11,16 @@ import {
   getSuggestionAccountByAccountId,
 } from "../../app/Account/actions";
 import ROUTES from "../../constants/routes";
-const HeaderFriend = ({ navigation }) => {
+const HeaderFriend = ({ navigation, accountSuggestion }) => {
   // const navigation = useNavigation();
   const SettingFriends = () => {
     // Chuyển đến trang Setting khi người dùng nhấn vào icon Setting
     navigation.navigate("SettingFriends");
   };
-  const accountSuggestion = useSelector(
-    (state) => state.account.accountSuggestion
-  );
+
   const authenticated = useSelector((state) => state.user.authenticated);
   const dispatch = useDispatch();
-
+  console.log("accountSuggestion", accountSuggestion);
   const fetchAllAccountSuggestion = async () => {
     await dispatch(getSuggestionAccount()).then((res) => {
       // console.log("res", JSON.stringify(res, null, 2));
@@ -68,6 +66,7 @@ const HeaderFriend = ({ navigation }) => {
               size={24}
               color="black"
               style={styles.icon}
+              onPress={() => navigation.navigate(ROUTES.CONVERSATIONS)}
             />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -107,10 +106,6 @@ const HeaderFriend = ({ navigation }) => {
         </View>
         <View style={{ marginTop: 15, gap: 10 }}>
           <Text>{"NAM" + " | " + accountSuggestion?.user?.height + " cm"}</Text>
-          <Text>
-            Đây chỉ là user story fix cứng, vì Database làm gì có khúc này nên
-            tự sửa nhé~
-          </Text>
           {/* <TouchableOpacity>
             <Text style={{ textDecorationLine: "underline" }}>
               www.uniqlo.com/ph/en/

@@ -16,9 +16,8 @@ const ProfileInfo = ({
   foundUser,
 }) => {
   const navigation = useNavigation();
-  const navigateToFriend = (foundUser) => {
-    console.log("navigate to ", foundUser);
-    navigation.navigate(ROUTES.FRIENDS, { foundUser });
+  const navigateToFriend = () => {
+    navigation.navigate(ROUTES.FRIENDS, { item: foundUser });
   };
 
   return (

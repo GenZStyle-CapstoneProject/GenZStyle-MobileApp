@@ -30,13 +30,13 @@ const ProfileScreen = () => {
         // const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
 
         try {
-          console.log("truockhi fecthFollow", followersData);
+          // console.log("truockhi fecthFollow", followersData);
           await dispatch(fecthListFollow());
         } catch (error) {
           // Handle the error or implement a retry mechanism
-          console.error("Error in fecthFollow:", error);
+          // console.error("Error in fecthFollow:", error);
         }
-        console.log("saukhi fecthFollow:", followersData);
+        // console.log("saukhi fecthFollow:", followersData);
       };
 
       const fetchAsync = async () => {

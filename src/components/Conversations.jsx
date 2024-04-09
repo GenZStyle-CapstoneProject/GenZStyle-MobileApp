@@ -99,9 +99,7 @@ const Conversations = ({ children }) => {
                 followData?.following.findIndex(
                   (follow) => follow.accountId == foundUser?.accountId
                 ) > -1;
-              const foundUserInfo = accountSuggestionList.find(
-                (account) => account?.accountId == foundUser?.accountId
-              );
+
               if (isFollowing) {
                 return (
                   <ConversationItem
@@ -153,9 +151,7 @@ const Conversations = ({ children }) => {
               followData?.following.findIndex(
                 (follow) => follow.accountId == user?.accountId
               ) > -1;
-            const foundUserInfo = accountSuggestionList.find(
-              (account) => account?.accountId == user?.accountId
-            );
+
             if (!isLogged && isFollowing) {
               return (
                 <ConversationItem
@@ -181,6 +177,7 @@ const Conversations = ({ children }) => {
                   }
                   isFollower={isFollower}
                   isFollowing={isFollowing}
+                  foundUser={user}
                 />
               );
             }

@@ -20,7 +20,6 @@ const FriendScreen = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const { item } = route?.params;
-  console.log("item:", item);
 
   const accountSuggestion = useSelector(
     (state) => state.account.accountSuggestion
@@ -38,12 +37,15 @@ const FriendScreen = ({ route }) => {
   };
 
   useEffect(() => {
+    fetchAccountSuggestion();
     fetchFollowerAndFollowingByAccountId();
-  }, []);
-
+  }, [item]);
   return (
     <View style={styles.container}>
-      <HeaderFriend navigation={navigation} />
+      <HeaderFriend
+        navigation={navigation}
+        accountSuggestion={accountSuggestion}
+      />
       <View style={styles.hr} />
       {/* <CartFriends /> */}
 

@@ -82,7 +82,10 @@ const ConversationItem = ({
       >
         <View>
           <TouchableOpacity
-            onPress={() => setModalVisible((currentValue) => !currentValue)}
+            onPress={() =>
+              type === "personal" &&
+              setModalVisible((currentValue) => !currentValue)
+            }
             style={[styles.imageContainer, showStoryCircle()]}
           >
             {picture !== "" ? (

@@ -19,6 +19,7 @@ import { TouchableOpacity } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../app/hooks";
+import ROUTES from "../constants/routes";
 
 const GroupMembersScreen = ({ children, route }) => {
   const { roomId } = route.params;
@@ -35,6 +36,10 @@ const GroupMembersScreen = ({ children, route }) => {
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const navigateToFriend = (user) => {
+    navigation.navigate(ROUTES.FRIENDS, { item: user });
   };
 
   const onAddMember = async () => {
@@ -177,6 +182,7 @@ const GroupMembersScreen = ({ children, route }) => {
                   : followData.following?.find(
                       (user) => user.accountId == member.id
                     );
+
               return (
                 <MemberItem
                   key={member.id}
@@ -191,7 +197,10 @@ const GroupMembersScreen = ({ children, route }) => {
                   time="4:00 PM"
                   isBlocked
                   isMuted
-                  onPress={() => {}}
+                  onPress={() => {
+                    member.id != profile?.account?.accountId &&
+                      navigateToFriend(memberInfo);
+                  }}
                 />
               );
             })}
