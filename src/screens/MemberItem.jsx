@@ -52,8 +52,8 @@ const MemberItem = ({
 
   const removerGroupMember = async () => {
     Alert.alert(
-      `Remove ${username}?`,
-      "This user cannot access and view group messages anymore.",
+      `Xóa ${username} ra khỏi nhóm?`,
+      `${username} sẽ không thể truy cập và xem tin nhắn của nhóm nữa`,
       [
         {
           text: "OK",
@@ -65,7 +65,7 @@ const MemberItem = ({
           style: "default",
         },
         {
-          text: "Cancel",
+          text: "Hủy",
           style: "cancel",
         },
       ]
@@ -127,7 +127,7 @@ const MemberItem = ({
 
             {isHost && (
               <Text style={{ fontSize: 16, color: theme.colors.primary }}>
-                Host
+                Chủ nhóm
               </Text>
             )}
             {hostId === profile?.account?.accountId && !isHost && (

@@ -87,7 +87,7 @@ const MessagesScreen = ({ navigation, route }) => {
         roomName={roomName}
         picture={picture}
         onlineStatus={
-          type === "personal" ? (isOnline ? "Online" : "Offline") : "Active"
+          type === "personal" ? (isOnline ? "Online" : "Offline") : "Hoạt động"
         }
         isOnline={isOnline}
         type={type}

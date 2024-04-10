@@ -7,6 +7,9 @@ import {
   Platform,
   TouchableOpacity,
   Image,
+  Modal,
+  Pressable,
+  useWindowDimensions,
 } from "react-native";
 
 import Animated, {
@@ -35,8 +38,12 @@ const ChatInput = ({
   numberOfMessages,
   type,
 }) => {
+  const screenSize = useWindowDimensions();
   const [message, setMessage] = useState("");
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [uploadedPhoto, setUploadedPhoto] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const height = useSharedValue(70);
 
@@ -76,9 +83,10 @@ const ChatInput = ({
     };
   });
 
-  const handleUploadPhoto = async (uploadedPhoto) => {
+  const handleUploadPhoto = async () => {
     try {
       if (uploadedPhoto) {
+        setLoading(true);
         let baseUrl = "";
         let base64 = uploadedPhoto?.assets[0]?.base64;
 
@@ -106,9 +114,12 @@ const ChatInput = ({
           }
         );
         await sendMessage("image", res.data.url);
+        setModalVisible(false);
       }
     } catch (err) {
       console.log("upload photo error", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,7 +131,9 @@ const ChatInput = ({
       base64: true,
     };
     const uploadedPhoto = await launchImageLibraryAsync(options);
-    await handleUploadPhoto(uploadedPhoto);
+    setPhoto(uploadedPhoto?.assets[0]?.uri);
+    setUploadedPhoto(uploadedPhoto);
+    setModalVisible(true);
   };
 
   return (
@@ -279,6 +292,51 @@ const ChatInput = ({
       ) : (
         <></>
       )}
+      {photo !== "" && (
+        <Modal animationType="fade" transparent={true} visible={modalVisible}>
+          <View style={styles.centeredView}>
+            <View
+              style={[
+                styles.modalView,
+                {
+                  width: screenSize.width,
+                  height: screenSize.height,
+                  paddingTop: screenSize.height * 0.2,
+                },
+              ]}
+            >
+              <Image
+                src={photo}
+                style={{
+                  width: screenSize.width - 10,
+                  height: screenSize.height / 2,
+                }}
+              />
+              <View style={styles.buttonContainer}>
+                <Pressable
+                  style={
+                    loading
+                      ? [styles.button, styles.disabledButton]
+                      : [styles.button, styles.buttonCreate]
+                  }
+                  onPress={() => handleUploadPhoto()}
+                  disabled={loading}
+                >
+                  <Text style={styles.textUpload}>
+                    {loading ? "Đang tải ảnh lên..." : "Gửi"}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[styles.button, styles.buttonCancel]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={styles.textStyle}>Đóng</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
       {/* <EmojiPicker /> */}
     </Animated.View>
   );
@@ -386,6 +444,87 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: "center",
     justifyContent: "center",
+  },
+  imageContainer: {
+    maxWidth: "100%",
+    alignSelf: "flex-end",
+    flexDirection: "column",
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 10,
+  },
+
+  time: {
+    color: "lightgray",
+    alignSelf: "flex-end",
+    fontSize: 10,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    borderRadius: 12,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonContainer: {
+    flex: 1,
+    marginTop: 20,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 4,
+  },
+  modalView: {
+    justifyContent: "center",
+    backgroundColor: "#44444493",
+    borderRadius: 20,
+    alignItems: "center",
+    shadowColor: "#44444493",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    width: 200,
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonCreate: {
+    backgroundColor: theme.colors.primary,
+  },
+  buttonCancel: {
+    backgroundColor: "white",
+  },
+  disabledButton: {
+    backgroundColor: "#c2c2c2",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    fontSize: 25,
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+  },
+  textUpload: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
   },
 });
 

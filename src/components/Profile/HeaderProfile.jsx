@@ -35,7 +35,6 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
   return (
     <View style={styles.header}>
       <View style={styles.iconContainer}>
-        <Text style={{ fontSize: 30 }}>Xu hướng hàng đầu</Text>
         <View
           style={{
             display: "flex",

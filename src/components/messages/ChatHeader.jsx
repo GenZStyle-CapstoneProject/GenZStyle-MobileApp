@@ -66,26 +66,22 @@ const ChatHeader = ({
   };
 
   const onDeleteGroup = async () => {
-    Alert.alert(
-      `Delete this group?`,
-      "This group cannot be accessed anymore.",
-      [
-        {
-          text: "OK",
-          onPress: async () => {
-            await socket.emit("disable_group", {
-              roomId: roomId,
-            });
-            goBack();
-          },
-          style: "default",
+    Alert.alert(`Xóa nhóm này?`, "Nhóm này sẽ không thể truy cập được nữa.", [
+      {
+        text: "OK",
+        onPress: async () => {
+          await socket.emit("disable_group", {
+            roomId: roomId,
+          });
+          goBack();
         },
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-      ]
-    );
+        style: "default",
+      },
+      {
+        text: "Hủy",
+        style: "cancel",
+      },
+    ]);
   };
 
   return (
@@ -176,7 +172,7 @@ const ChatHeader = ({
                       <>
                         <Text style={styles.modalText}>Đổi tên</Text>
                         <TextInput
-                          placeholder={"New group name"}
+                          placeholder={"Tên nhóm mới"}
                           style={styles.input}
                           value={text}
                           onChangeText={(text) => setText(text)}
@@ -193,15 +189,6 @@ const ChatHeader = ({
                             onPress={() => setChangeGroupName(!changeGroupName)}
                           >
                             <Text style={styles.textStyle}>Hủy</Text>
-                          </Pressable>
-                        </View>
-                        <View style={styles.betweenView}>
-                          <View></View>
-                          <Pressable
-                            style={[styles.button, styles.buttonCancel]}
-                            onPress={() => setModalVisible(!modalVisible)}
-                          >
-                            <Text style={styles.textStyle}>Đóng</Text>
                           </Pressable>
                         </View>
                       </>
