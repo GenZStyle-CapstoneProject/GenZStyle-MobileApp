@@ -12,7 +12,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Alert,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
@@ -27,7 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { savePost, unsavePost } from "../app/SavePost/action";
 import { fetchDeleteComment } from "../app/DeleteComment/action";
 
-import { Swipeable } from 'react-native-gesture-handler';
+import { Swipeable } from "react-native-gesture-handler";
 
 const CartDetail = ({ route }) => {
   const navigation = useNavigation();
@@ -41,7 +41,6 @@ const CartDetail = ({ route }) => {
   const [showAllComments, setShowAllComments] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
 
-
   const [isLiked, setIsLiked] = useState(null);
   const [sttState, setSttState] = useState(
     item?.likes?.filter((item) => item.isLike === true).length
@@ -53,8 +52,10 @@ const CartDetail = ({ route }) => {
   const handleDeleteComment = async (commentId) => {
     try {
       await dispatch(fetchDeleteComment(commentId));
-      setComments(prevComments => prevComments.filter(comment => comment.CommentId !== commentId));
-      setCommentCount(prevCount => prevCount - 1);
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.CommentId !== commentId)
+      );
+      setCommentCount((prevCount) => prevCount - 1);
       dispatch(fetchCommentPost(item.postId)).then((result) => {
         if (result.payload && result.payload.value) {
           const data = result.payload.value.map((comment) => ({
@@ -62,7 +63,6 @@ const CartDetail = ({ route }) => {
             username: comment.Username,
             content: comment.Content,
             commentId: comment.CommentId,
-
           }));
           setComments(data);
           setCommentCount(data.length);
@@ -72,12 +72,8 @@ const CartDetail = ({ route }) => {
       });
     } catch (error) {
       console.error("Error deleting comment:", error.message);
-
     }
   };
-
-
-
 
   useEffect(() => {
     const getAccountId = async () => {
@@ -85,7 +81,7 @@ const CartDetail = ({ route }) => {
         const accountId2 = await AsyncStorage.getItem("ACCOUNT_ID");
         console.log("Account loaded: ", accountId2);
         setAccountId(accountId2);
-const hasAccountWithIdOne = item.likes.some(
+        const hasAccountWithIdOne = item.likes.some(
           (like) => like.isLike && like.likeBy == accountId2
         );
         const filteredLikes = item.likes.filter(
@@ -108,17 +104,7 @@ const hasAccountWithIdOne = item.likes.some(
 
   console.log(likes);
 
-
-
   const handleLikePress = async () => {
-    setIsLiked(!isLiked);
-
-    setSttState((prevSttState) => {
-      const likeChange = isLiked ? -1 : 1;
-
-      return prevSttState + likeChange;
-    });
-
     try {
       await dispatch(
         fetchLikePost({
@@ -126,17 +112,25 @@ const hasAccountWithIdOne = item.likes.some(
         })
       ).then(async (res) => {
         console.log("Data like: ", JSON.stringify(res, null, 2));
-        await dispatch(fetchNumberLikeOfPost({ postId: item?.postId })).then(
-          (res) => {
-            console.log("Length like: ", JSON.stringify(res, null, 2));
-          }
-        );
+        if (res?.payload) {
+          setIsLiked(!isLiked);
+
+          setSttState((prevSttState) => {
+            const likeChange = isLiked ? -1 : 1;
+
+            return prevSttState + likeChange;
+          });
+          await dispatch(fetchNumberLikeOfPost({ postId: item?.postId })).then(
+            (res) => {
+              console.log("Length like: ", JSON.stringify(res, null, 2));
+            }
+          );
+        }
       });
     } catch (error) {
       console.error("Error dispatching likePost:", error.message);
     }
   };
-
 
   const navigateToListLike = (item) => {
     navigation.navigate("ListLike", {
@@ -149,7 +143,7 @@ const hasAccountWithIdOne = item.likes.some(
     if (comment.trim() !== "") {
       try {
         // const newComment = {
-        //   // image: profile.image, 
+        //   // image: profile.image,
         //   // username: profile.username,
         //   content: comment,
         // };
@@ -178,7 +172,6 @@ const hasAccountWithIdOne = item.likes.some(
 
         // setComments((prevComments) => [...prevComments, newComment]);
 
-
         setComment("");
       } catch (error) {
         console.error("Error dispatching fetchAddCommentPost:", error.message);
@@ -186,15 +179,9 @@ const hasAccountWithIdOne = item.likes.some(
     }
   };
 
-
-
-
-
-
   const savedPosts = useSelector((state) => state.save.savedPosts) || [];
   const [saving, setSaving] = useState(false);
-const [saved, setSaved] = useState(savedPosts.includes(item.postId));
-
+  const [saved, setSaved] = useState(savedPosts.includes(item.postId));
 
   const handleSave = async () => {
     try {
@@ -203,13 +190,11 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
       setSaving(true);
 
       if (saved) {
-
         await dispatch(unsavePost(item.postId));
         setSaved(false);
         await AsyncStorage.removeItem("SAVED_POST_" + item.postId);
         Alert.alert("Thông báo", "Đã hủy lưu bài viết thành công!");
       } else {
-
         await dispatch(savePost(item.postId));
         setSaved(true);
         await AsyncStorage.setItem("SAVED_POST_" + item.postId, "true");
@@ -227,7 +212,9 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
   useEffect(() => {
     const getSavedState = async () => {
       try {
-        const savedState = await AsyncStorage.getItem("SAVED_POST_" + item.postId);
+        const savedState = await AsyncStorage.getItem(
+          "SAVED_POST_" + item.postId
+        );
         if (savedState === "true") {
           setSaved(true);
         } else {
@@ -240,12 +227,6 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
 
     getSavedState();
   }, []);
-
-
-
-
-
-
 
   const openReportModal = () => {
     setReportModalVisible(true);
@@ -261,11 +242,10 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
   };
   const handleReporPost = () => {
     closeReportModal();
-    navigation.navigate("ReportPost");
+    navigation.navigate("ReportPost", { postId: item.postId });
   };
 
   console.log("Item id", item.postId);
-
 
   useEffect(() => {
     dispatch(fetchCommentPost(item.postId)).then((result) => {
@@ -275,7 +255,6 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
           username: comment.Username,
           content: comment.Content,
           commentId: comment.CommentId,
-
         }));
         setComments(data);
         setCommentCount(data.length);
@@ -292,13 +271,11 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
     }
   };
   const handleComment = () => {
-
     commentInputRef.current.focus();
   };
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <ScrollView style={styles.container}>
-
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -310,7 +287,7 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
 
         {/* Icon trái tim và bình luận */}
         <View style={styles.iconContainer}>
-<TouchableOpacity style={styles.icon} onPress={handleLikePress}>
+          <TouchableOpacity style={styles.icon} onPress={handleLikePress}>
             <Icon
               name={isLiked ? "heart" : "heart-outline"}
               size={24}
@@ -328,7 +305,11 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
             <Text style={styles.iconText}>({commentCount})</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Icon name={saved ? "bookmark" : "bookmark-outline"} size={30} color={saved ? "green" : "black"} />
+            <Icon
+              name={saved ? "bookmark" : "bookmark-outline"}
+              size={30}
+              color={saved ? "green" : "black"}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.moreOptionsIcon}
@@ -360,13 +341,9 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
           <Text style={styles.titleText}>{item.content}</Text>
         </View>
 
-
         <View style={styles.textRow}>
-          <Text style={styles.hashtagText}>
-            {item.hashtags}
-          </Text>
+          <Text style={styles.hashtagText}>{item.hashtags}</Text>
         </View>
-
 
         {/* Danh sách bình luận */}
 
@@ -397,23 +374,38 @@ const [saved, setSaved] = useState(savedPosts.includes(item.postId));
 
  */}
         <FlatList
-data={(showAllComments && comments) ? comments : (comments ? comments.slice(0, 4) : [])}
+          data={
+            showAllComments && comments
+              ? comments
+              : comments
+              ? comments.slice(0, 4)
+              : []
+          }
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <Swipeable renderRightActions={() => (
-              <View style={{
-                width: 70, backgroundColor: 'red', justifyContent: 'center', marginBottom: 8,
+            <Swipeable
+              renderRightActions={() => (
+                <View
+                  style={{
+                    width: 70,
+                    backgroundColor: "red",
+                    justifyContent: "center",
+                    marginBottom: 8,
 
-                borderRadius: 10,
-                padding: 10,
-
-              }}>
-                <TouchableOpacity onPress={() => handleDeleteComment(item.commentId)} style={styles.deleteButton}>
-                  <Icon name="delete" size={24} color="white" />
-                  {/* <Text style={styles.deleteButtonText}>Xóa</Text> */}
-                </TouchableOpacity>
-              </View>
-            )}>
+                    borderRadius: 10,
+                    padding: 10,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => handleDeleteComment(item.commentId)}
+                    style={styles.deleteButton}
+                  >
+                    <Icon name="delete" size={24} color="white" />
+                    {/* <Text style={styles.deleteButtonText}>Xóa</Text> */}
+                  </TouchableOpacity>
+                </View>
+              )}
+            >
               <View style={styles.commentContainer}>
                 <View style={styles.avatarContainer}>
                   <Image
@@ -428,7 +420,6 @@ data={(showAllComments && comments) ? comments : (comments ? comments.slice(0, 4
           )}
         />
 
-
         {/* "Read more" button */}
         {comments && comments.length > 4 && !showAllComments && (
           <TouchableOpacity onPress={() => setShowAllComments(true)}>
@@ -442,7 +433,6 @@ data={(showAllComments && comments) ? comments : (comments ? comments.slice(0, 4
             <Text style={styles.readMoreButton}>Thu gọn</Text>
           </TouchableOpacity>
         )}
-
 
         {/* Phần nhập bình luận */}
         <View style={styles.commentInputContainer}>
@@ -459,13 +449,17 @@ data={(showAllComments && comments) ? comments : (comments ? comments.slice(0, 4
         </View>
 
         {/* Link sản phẩm */}
-        <Text style={styles.linkSPText}>Link sản phẩm:</Text>
-        <Text
-          style={styles.linkText}
-          onPress={() => Linking.openURL("https://www.fptshop.com")}
-        >
-          www.fptshop.com
-        </Text>
+        {item?.link !== "" && item?.link !== null && (
+          <>
+            <Text style={styles.linkSPText}>Link sản phẩm:</Text>
+            <Text
+              style={styles.linkText}
+              onPress={() => Linking.openURL(item?.link)}
+            >
+              {item?.link}
+            </Text>
+          </>
+        )}
 
         {/* Các sản phẩm liên quan 
       <View style={styles.relatedProductsContainer}>
@@ -510,24 +504,21 @@ const styles = StyleSheet.create({
     marginLeft: -10,
     marginBottom: 10,
     left: 20,
-
   },
   iconContainer: {
     flexDirection: "row",
     justifyContent: "start",
     marginBottom: 5,
     left: 20,
-
   },
 
   commentContainer: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 8,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
     borderRadius: 20,
     padding: 10,
-
   },
   avatarContainer: {
     marginRight: 5,
@@ -588,7 +579,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: 10,
-
   },
   iconText: {
     marginLeft: 5,
@@ -603,7 +593,7 @@ const styles = StyleSheet.create({
   linkSPText: {
     color: "black",
     marginTop: 20,
-    marginBottom: 10,
+    // marginBottom: 10,
     fontSize: 16,
     // textDecorationLine: 'underline',
   },
@@ -651,23 +641,22 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     marginBottom: 6,
   },
-usernameText: {
-    fontWeight: 'bold',
+  usernameText: {
+    fontWeight: "bold",
   },
   deleteButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     right: 10,
 
     width: 70,
-    justifyContent: 'center',
+    justifyContent: "center",
     borderRadius: 10,
   },
   deleteButtonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
   },
-
 });
 
 export default CartDetail;

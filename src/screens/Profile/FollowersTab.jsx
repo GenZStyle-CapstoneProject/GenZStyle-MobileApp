@@ -77,7 +77,7 @@ const FollowersTab = ({ route }) => {
 
     const renderFollowingItem = ({ item }) => (
         <View style={styles.followerItem}>
-            <Image style={styles.avatar} source={{ uri: item?.user?.avatar }} />
+            <Image style={styles.avatar} source={{ uri: item?.avatar }} />
             <Text style={styles.username}>{item?.username}</Text>
             <TouchableOpacity style={styles.unfollowButton}>
                 <Text style={styles.unfollowButtonText}>Gỡ</Text>
@@ -89,7 +89,7 @@ const FollowersTab = ({ route }) => {
         <View style={styles.tabContent}>
             <FlatList
                 data={followersData.followers}
-                keyExtractor={(item) => item.accountId.toString()}
+                keyExtractor={(item) => item.accountId}
                 renderItem={renderFollowingItem}
                 contentContainerStyle={styles.listContainer}
             />

@@ -18,6 +18,9 @@ import saveReducer from "../app/SavePost/slice";
 import listSaveReducer from "../app/ListSave/slice";
 import deleteCommentReducer from "../app/DeleteComment/slice";
 import hiddenPostReducer from "../app/HidePosts/slice";
+import reportReducer from "../app/ReportPost/slice";
+import reportUserReducer from "../app/ReportUser/slice";
+
 export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
@@ -44,5 +47,7 @@ export const store = configureStore({
     listSave: listSaveReducer,
     deleteComment: deleteCommentReducer,
     hiddenPost: hiddenPostReducer,
+    report: reportReducer,
+    reportUser: reportUserReducer,
   },
 });

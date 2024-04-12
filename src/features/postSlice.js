@@ -13,12 +13,13 @@ const initialState = {
 };
 export const createnewpost = createAsyncThunk(
   "post/createnewpost",
-  async ({ Content, Image, Hashtags }, { rejectWithValue }) => {
+  async ({ Content, Image, Hashtags, Link }, { rejectWithValue }) => {
     try {
       const response = await postService.createnewpost({
         Content,
         Image,
         Hashtags,
+        Link,
       });
       console.log("<PostSlice>: " + response?.data);
       return response.data;
@@ -30,13 +31,14 @@ export const createnewpost = createAsyncThunk(
 );
 export const updatePost = createAsyncThunk(
   "post/updatePost",
-  async ({ key, Content, Image, Hashtags }, { rejectWithValue }) => {
+  async ({ key, Content, Image, Hashtags, Link }, { rejectWithValue }) => {
     try {
       const response = await postService.updatePost({
         key,
         Content,
         Image,
         Hashtags,
+        Link,
       });
       console.log("<PostSlice>: " + response?.data);
       return response.data;

@@ -27,6 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon } from "react-native-paper";
 import * as MediaLibrary from "expo-media-library";
 import { ScreenWidth } from "../Post/CameraScreen";
+import { validateUrl } from "../../utils/format";
 
 const EditPost = () => {
   const navigation = useNavigation();
@@ -35,10 +36,12 @@ const EditPost = () => {
   const goBack = () => {
     navigation.goBack();
   };
-
+  const userInfo = useAppSelector((state) => state.user.profile);
+  const accountId = useAppSelector((state) => state.user.accountId);
   const [libraryImages, setLibraryImages] = useState([]);
   const [selectedImageClick, setSelectedImageClick] = useState(null);
   const [selectedImageEdit, setSelectedImageEdit] = useState(null);
+  const [link, setLink] = useState("");
 
   const fetchLibraryImages = async () => {
     try {
@@ -109,10 +112,10 @@ const EditPost = () => {
   };
   console.log(hashtagData);
   console.log(selectedImage);
+
   const handlePost = async (item) => {
     try {
       // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);
-
       await dispatch(
         updatePost({
           key: item?.postId,
@@ -126,6 +129,7 @@ const EditPost = () => {
                 }
               : null,
           Hashtags: hashtagData,
+          Link: link,
         })
       ).then((res) => {
         console.log(JSON.stringify(res, null, 2));
@@ -136,6 +140,42 @@ const EditPost = () => {
           alert(`Cập nhật bài đăng thất bại ${res?.payload?.message}`);
         }
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handlePostForKOL = async (item) => {
+    try {
+      // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);
+      if (validateUrl(link)) {
+        await dispatch(
+          updatePost({
+            key: item?.postId,
+            Content: content,
+            Image:
+              selectedImageEdit !== null
+                ? {
+                    uri: selectedImageEdit?.uri,
+                    type: "image/jpg",
+                    name: selectedImageEdit.filename,
+                  }
+                : null,
+            Hashtags: hashtagData,
+            Link: link,
+          })
+        ).then((res) => {
+          console.log(JSON.stringify(res, null, 2));
+          if (res?.meta?.requestStatus === "fulfilled") {
+            Alert.alert("Thông báo", "Cập nhật bài đăng thành công");
+            navigation.goBack();
+          } else {
+            alert(`Cập nhật bài đăng thất bại ${res?.payload?.message}`);
+          }
+        });
+      } else {
+        Alert.alert("Thông báo", "Vui lòng nhập đúng định dạng url");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -152,6 +192,7 @@ const EditPost = () => {
       setContent(item?.content);
       setSelectedImage(item?.image);
       setHashtagData(extractHashtags(item?.hashPosts));
+      setLink(item?.link);
     }
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
@@ -358,11 +399,34 @@ const EditPost = () => {
               horizontal
             />
           </View>
+          {userInfo?.data?.role === "KOL" && (
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: "gray",
+                borderRadius: 8,
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+                marginTop: 10,
+              }}
+            >
+              <TextInput
+                placeholder="Điền link sản phẩm"
+                placeholderTextColor={"grey"}
+                value={link}
+                onChangeText={(text) => setLink(text)}
+              />
+            </View>
+          )}
         </KeyboardAwareScrollView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={[styles.button, styles.postButton]}
-            onPress={() => handlePost(item)}
+            onPress={() => {
+              userInfo?.data?.role === "PLAYER"
+                ? handlePost(item)
+                : handlePostForKOL(item);
+            }}
           >
             <Text style={styles.buttonText}>Đăng lại</Text>
           </TouchableOpacity>

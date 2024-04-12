@@ -18,7 +18,10 @@
       "favicon": "./assets/favicon.png"
     },
     "android": {
-      "package": "com.duybpz389.stylegenz"
+      "package": "com.duybpz389.stylegenz",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       [
@@ -27,6 +30,11 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "6015af7d-0b8a-4b8e-a04f-117eb6a63e06"
+      }
+    }
   }
 }
