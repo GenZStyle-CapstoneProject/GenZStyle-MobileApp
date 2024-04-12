@@ -120,7 +120,15 @@ const ChatHeader = ({
                 visible={modalVisible}
               >
                 <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
+                  <View
+                    style={[
+                      styles.modalView,
+                      {
+                        height:
+                          hostId === profile.account.accountId ? 320 : 220,
+                      },
+                    ]}
+                  >
                     {changeGroupName === false ? (
                       <>
                         <Pressable
@@ -298,7 +306,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: 300,
-    height: 320,
+
     gap: 20,
     backgroundColor: "white",
     borderRadius: 20,

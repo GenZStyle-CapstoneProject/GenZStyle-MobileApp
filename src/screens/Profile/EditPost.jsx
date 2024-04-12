@@ -99,7 +99,7 @@ const EditPost = () => {
 
   const selectHashtag = (hashtagName) => {
     const index = hashtagData.indexOf(hashtagName);
-    console.log(index);
+    // console.log(index);
     if (hashtagData.includes(hashtagName)) {
       const updatedArray = hashtagData.splice(index, 1);
       setHashtags(updatedArray);
@@ -107,8 +107,8 @@ const EditPost = () => {
       setHashtags(hashtagData.push(hashtagName));
     }
   };
-  console.log(hashtagData);
-  console.log(selectedImage);
+  // console.log(hashtagData);
+  // console.log(selectedImage);
   const handlePost = async (item) => {
     try {
       // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);

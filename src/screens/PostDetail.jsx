@@ -47,7 +47,7 @@ const PostDetail = ({ route }) => {
     const getAccountId = async () => {
       try {
         const accountId2 = await AsyncStorage.getItem("ACCOUNT_ID");
-        console.log("Account loaded: ", accountId2);
+        // console.log("Account loaded: ", accountId2);
         setAccountId(accountId2);
         const hasAccountWithIdOne = item?.post?.likes.some(
           (like) => like.isLike && like.likeBy == accountId2
@@ -55,8 +55,8 @@ const PostDetail = ({ route }) => {
         const filteredLikes = item?.post?.likes.filter(
           (like) => like.isLike && like.likeBy == accountId2
         );
-        console.log("Filtered data: ", filteredLikes);
-        console.log("hasAccountWithIdOne", hasAccountWithIdOne);
+        // console.log("Filtered data: ", filteredLikes);
+        // console.log("hasAccountWithIdOne", hasAccountWithIdOne);
         if (hasAccountWithIdOne === true) {
           setIsLiked(true);
         } else {
@@ -87,12 +87,12 @@ const PostDetail = ({ route }) => {
           postId: item?.post?.postId,
         })
       ).then(async (res) => {
-        console.log("Data like: ", JSON.stringify(res, null, 2));
-        await dispatch(fetchNumberLikeOfPost({ postId: item?.post?.postId })).then(
-          (res) => {
-            console.log("Length like: ", JSON.stringify(res, null, 2));
-          }
-        );
+        // console.log("Data like: ", JSON.stringify(res, null, 2));
+        await dispatch(
+          fetchNumberLikeOfPost({ postId: item?.post?.postId })
+        ).then((res) => {
+          console.log("Length like: ", JSON.stringify(res, null, 2));
+        });
       });
     } catch (error) {
       console.error("Error dispatching likePost:", error.message);

@@ -73,7 +73,7 @@ const EveryOneSearch = () => {
   const followOneAccountById = async (accountId) => {
     try {
       await dispatch(followOneAccount(accountId)).then(async (res) => {
-        console.log("res", JSON.stringify(res, null, 2));
+        // console.log("res", JSON.stringify(res, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
           await fetchAllAccountSuggestion();
         }

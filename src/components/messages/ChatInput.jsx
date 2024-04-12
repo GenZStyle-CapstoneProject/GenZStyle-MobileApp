@@ -19,9 +19,6 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import EmojiPicker from "./emojis/EmojiPicker";
-// import { useKeyboard } from "@react-native-community/hooks";
-import { Blob, Buffer } from "buffer";
 import { theme } from "../../constants/theme";
 import { socket } from "../../services/chatService";
 import { launchImageLibraryAsync } from "expo-image-picker";

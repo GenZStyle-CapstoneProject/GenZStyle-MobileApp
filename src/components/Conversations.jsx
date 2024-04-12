@@ -105,7 +105,7 @@ const Conversations = ({ children }) => {
                   <ConversationItem
                     key={foundUser?.accountId}
                     roomId={foundUser?.accountId}
-                    picture={foundUser?.user?.avatar}
+                    picture={foundUser?.avatar}
                     roomName={userFullName}
                     fullName={fullName}
                     foundUser={foundUser}
@@ -157,7 +157,7 @@ const Conversations = ({ children }) => {
                 <ConversationItem
                   key={user?.accountId}
                   roomId={user?.accountId}
-                  picture={user.user.avatar}
+                  picture={user.avatar}
                   roomName={userFullName}
                   fullName={fullName}
                   bio=""
@@ -219,7 +219,7 @@ const Conversations = ({ children }) => {
                   <ConversationItem
                     key={foundUser?.accountId}
                     roomId={foundUser?.accountId}
-                    picture={foundUser?.user?.avatar}
+                    picture={foundUser?.avatar}
                     roomName={userFullName}
                     fullName={fullName}
                     bio=""
@@ -269,7 +269,7 @@ const Conversations = ({ children }) => {
                 <ConversationItem
                   key={user?.accountId}
                   roomId={user?.accountId}
-                  picture={user?.user?.avatar}
+                  picture={user?.avatar}
                   roomName={userFullName}
                   fullName={fullName}
                   bio=""

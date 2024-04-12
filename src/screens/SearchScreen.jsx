@@ -102,7 +102,7 @@ const SearchScreen = () => {
       keySearch !== ""
     ) {
       newArray.push(keySearch);
-      console.log(newArray);
+      // console.log(newArray);
       setSearchHistoryList(newArray);
       await AsyncStorage.setItem(
         "SEARCH_EVERYONE_HISTORY",
@@ -199,7 +199,7 @@ const SearchScreen = () => {
           }}
           value={searchQuery}
           onFocus={() => setIsFocusSearchBar(true)}
-        //   onBlur={() => setIsFocusSearchBar(false)}
+          //   onBlur={() => setIsFocusSearchBar(false)}
         />
         {isFocusSearchBar === true && (
           <TouchableOpacity onPress={handleBlur}>
@@ -350,7 +350,11 @@ const SearchScreen = () => {
                   marginBottom: 10,
                   alignSelf: "center",
                 },
-                tabBarLabelStyle: { textTransform: "none", fontWeight: 500, fontSize: 15 },
+                tabBarLabelStyle: {
+                  textTransform: "none",
+                  fontWeight: 500,
+                  fontSize: 15,
+                },
                 swipeEnabled: false,
               }}
             >

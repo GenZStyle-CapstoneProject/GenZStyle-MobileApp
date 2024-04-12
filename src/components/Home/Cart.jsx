@@ -31,7 +31,7 @@ const Cart = ({ item }) => {
     const getAccountId = async () => {
       try {
         const accountId2 = await AsyncStorage.getItem("ACCOUNT_ID");
-        console.log("Account loaded: ", accountId2);
+        // console.log("Account loaded: ", accountId2);
         setAccountId(accountId2);
       } catch (error) {
         console.error("Error getting access accountId:", error);
@@ -44,7 +44,7 @@ const Cart = ({ item }) => {
     useCallback(() => {
       dispatch(fecthActivePost()).then((result) => {
         if (result.payload) {
-          console.log("Data received:", result.payload);
+          // console.log("Data received:", result.payload);
           const data = result.payload.map((post) => ({
             ...post,
             isLiked: false,
@@ -68,7 +68,7 @@ const Cart = ({ item }) => {
       );
       await dispatch(fecthActivePost()).then((result) => {
         if (result.payload) {
-          console.log("Data received:", result.payload);
+          // console.log("Data received:", result.payload);
           const data = result.payload.map((post) => ({
             ...post,
             isLiked: false,
@@ -84,7 +84,7 @@ const Cart = ({ item }) => {
     }
     setDataActivePost((prevData) => {
       const newData = [...prevData];
-      console.log("Id", postId);
+      // console.log("Id", postId);
       newData[index] = {
         ...newData[index],
         isLiked: !newData[index]?.isLiked,
@@ -146,7 +146,10 @@ const Cart = ({ item }) => {
             >
               <Text style={styles.iconText}>({item.likes.length})</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.icon} onPress={() => navigation.navigate("CartDetail", { item })}>
+            <TouchableOpacity
+              style={styles.icon}
+              onPress={() => navigation.navigate("CartDetail", { item })}
+            >
               <Icon name="chat-outline" size={27} color="black" />
               <Text style={styles.iconText}></Text>
             </TouchableOpacity>

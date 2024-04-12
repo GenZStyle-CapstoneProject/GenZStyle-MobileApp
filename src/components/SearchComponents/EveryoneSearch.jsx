@@ -45,7 +45,7 @@ const EveryoneSearch = () => {
   const fetchAllHashTagIncludePostList = async () => {
     try {
       await dispatch(getDetailHashtag()).then((res) => {
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
       });
     } catch (error) {
       console.log("Error fetching hashtag data:", error);
@@ -54,7 +54,7 @@ const EveryoneSearch = () => {
   const fetchHashtagByIdIncludePostList = async (id) => {
     try {
       await dispatch(getHashtagById(id)).then((res) => {
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
       });
     } catch (error) {
       console.log("Error fetching hashtag data:", error);
