@@ -132,7 +132,7 @@ const GroupMembersScreen = ({ children, route }) => {
                         return (
                           <MemberItem
                             key={followUser.accountId}
-                            picture={followUser.user.avatar}
+                            picture={followUser.avatar}
                             username={followUser.username}
                             userId={followUser.accountId}
                             roomId={roomId}
@@ -185,7 +185,7 @@ const GroupMembersScreen = ({ children, route }) => {
               return (
                 <MemberItem
                   key={member.id}
-                  picture={memberInfo?.user.avatar}
+                  picture={memberInfo?.avatar}
                   username={member.name}
                   userId={member.id}
                   isHost={member.isHost}

@@ -29,10 +29,6 @@ const LoginInProfile = ({ navigation }) => {
   };
   const handleLogin = async () => {
     try {
-      setCurrentUser({
-        username: username,
-        accessToken: "",
-      });
       await dispatch(
         login({ userName: username, passwordHash: password })
       ).then((res) => {
