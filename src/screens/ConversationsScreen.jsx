@@ -12,12 +12,10 @@ import { Pressable } from "react-native";
 import { StyleSheet } from "react-native";
 import { useState } from "react";
 import { TextInput } from "react-native";
-import useAuthContext from "../hooks/useAuthContext";
 import { socket } from "../services/chatService";
 import { useAppSelector } from "../app/hooks";
 
 const ConversationsScreen = () => {
-  const { currentUser } = useAuthContext();
   const profile = useAppSelector((state) => state.user.profile?.data);
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");

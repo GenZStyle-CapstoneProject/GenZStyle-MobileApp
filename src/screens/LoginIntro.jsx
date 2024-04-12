@@ -7,7 +7,6 @@ import { useFonts } from "@use-expo/font";
 import { useAppDispatch } from "../app/hooks";
 import Spinner from "react-native-loading-spinner-overlay";
 import { login } from "../features/userSlice";
-import useAuthContext from "../hooks/useAuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
@@ -16,7 +15,6 @@ const LoginIntro = ({ navigation }) => {
     Pacifico_400Regular,
   });
   const dispatch = useAppDispatch();
-  const { setCurrentUser } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onCompleteOnboarding = async () => {

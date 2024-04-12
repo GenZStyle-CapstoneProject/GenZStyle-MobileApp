@@ -8,7 +8,6 @@ import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { store } from "./src/app/store";
-import { AuthContextProvider } from "./src/contexts/AuthContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,11 +15,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <AuthContextProvider>
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
-        </AuthContextProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
       </GestureHandlerRootView>
     </Provider>
   );

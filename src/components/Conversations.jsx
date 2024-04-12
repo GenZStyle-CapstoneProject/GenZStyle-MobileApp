@@ -4,7 +4,6 @@ import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 import ConversationItem from "./ConversationItem";
 import { useEffect } from "react";
 import { socket } from "../services/chatService";
-import useAuthContext from "../hooks/useAuthContext";
 import { parseMessageTime } from "../utils";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";

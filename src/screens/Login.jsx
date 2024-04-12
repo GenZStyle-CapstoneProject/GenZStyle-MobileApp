@@ -16,14 +16,12 @@ import { login } from "../features/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import ROUTES from "../constants/routes";
-import useAuthContext from "../hooks/useAuthContext";
 
 const Login = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     Pacifico_400Regular,
   });
   const dispatch = useAppDispatch();
-  const { setCurrentUser } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const onCompleteOnboarding = async () => {

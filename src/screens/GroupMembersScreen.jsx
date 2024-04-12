@@ -10,7 +10,6 @@ import {
 
 import { useEffect } from "react";
 import { socket } from "../services/chatService";
-import useAuthContext from "../hooks/useAuthContext";
 import { parseMessageTime } from "../utils";
 import MemberItem from "./MemberItem";
 import { theme } from "../constants/theme";

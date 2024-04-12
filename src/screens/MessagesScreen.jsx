@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import useAuthContext from "../hooks/useAuthContext";
 import ChatHeader from "../components/messages/ChatHeader";
 import ChatInput from "../components/messages/ChatInput";
 import MessagesList from "../components/messages/MessagesList";
