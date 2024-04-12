@@ -234,7 +234,7 @@ const HomeFollowing = () => {
             <View style={{ gap: 10 }}>
               <View style={{ flexDirection: "row", marginTop: 10 }}>
                 <View style={{ flexDirection: "row" }}>
-                  <Icon source="star-outline" color={"black"} size={24} />
+                  <Icon source="heart-outline" color={"black"} size={24} />
                   <Badge
                     style={{
                       alignSelf: "flex-start",
@@ -247,7 +247,7 @@ const HomeFollowing = () => {
                   </Badge>
                 </View>
                 <View style={{ flexDirection: "row" }}>
-                  <Icon source="comment-outline" color={"black"} size={24} />
+                  <Icon source="chat-outline" color={"black"} size={24} />
                   <Badge
                     style={{
                       alignSelf: "flex-start",
@@ -260,7 +260,7 @@ const HomeFollowing = () => {
                   </Badge>
                 </View>
                 <View style={{ flexDirection: "row" }}>
-                  <Icon source="upload-outline" color={"black"} size={24} />
+                  <Icon source="bookmark-outline" color={"black"} size={24} />
                   <Badge
                     style={{
                       alignSelf: "flex-start",

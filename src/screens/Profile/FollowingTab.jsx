@@ -6,9 +6,17 @@ import {
 } from "../../app/Account/actions";
 import { useDispatch } from 'react-redux';
 import { fetchAllAccountSuggestion } from "../../services/accountService";
+import { useNavigation } from "@react-navigation/native";
+import ROUTES from "../../constants/routes";
+
 const FollowingTab = ({ route }) => {
     const followersData = route.params?.followersData || [];
     const dispatch = useDispatch();
+    const navigation = useNavigation();
+
+    const navigateToFriend = (item) => {
+        navigation.navigate(ROUTES.FRIENDS, { item });
+      };
 
     const followOneAccountById = async (accountId) => {
         try {
@@ -45,7 +53,9 @@ const FollowingTab = ({ route }) => {
 
     const renderFollowingItem = ({ item }) => (
         <View style={styles.followerItem}>
-            <Image style={styles.avatar} source={{ uri: item?.avatar }} />
+            <TouchableOpacity onPress={() => navigateToFriend(item)}>
+                <Image style={styles.avatar} source={{ uri: item?.avatar }} />
+            </TouchableOpacity>
             <Text style={styles.username}>{item?.username}</Text>
             <TouchableOpacity style={styles.unfollowButton} onPress={() => followOneAccountById(item.accountId)}>
                 <Text style={styles.unfollowButtonText}>Gỡ</Text>

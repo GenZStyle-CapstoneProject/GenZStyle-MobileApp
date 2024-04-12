@@ -1,43 +1,48 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 const NotificationTab = () => {
   const [notifications, setNotifications] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
-        const response = await axios.get(
-          "https://genzstyleapp.azurewebsites.net/odata/Notification",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setNotifications(response.data.value);
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
+      const response = await axios.get(
+        "https://genzstyleapp.azurewebsites.net/odata/Notification",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setNotifications(response.data.value);
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+  };
 
-    fetchData();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   return (
-    <View style={styles.container}>
-      {notifications.map((notification) => (
-        <View key={notification.NotificationId}>
-          <Text style={styles.activityText}>
-            <Text style={styles.boldText}>{notification.Message} </Text>
-          </Text>
-          <View style={styles.hr} />
-        </View>
-      ))}
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        {notifications.map((notification) => (
+          <View key={notification.NotificationId}>
+            <Text style={styles.activityText}>
+              <Text style={styles.boldText}>{notification.Message} </Text>
+            </Text>
+            <View style={styles.hr} />
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
