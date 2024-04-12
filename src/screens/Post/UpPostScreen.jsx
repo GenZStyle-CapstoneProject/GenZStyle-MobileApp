@@ -20,6 +20,8 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { useSelector } from "react-redux";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getProfile } from "../../features/userSlice";
+import { validateUrl } from "../../utils/format";
 
 const UpPostScreen = () => {
   const navigation = useNavigation();
@@ -37,18 +39,36 @@ const UpPostScreen = () => {
 
   const dispatch = useAppDispatch();
   const hashtagList = useAppSelector((state) => state.post.hashtagList);
+  const userInfo = useAppSelector((state) => state.user.profile);
+  const accountId = useAppSelector((state) => state.user.accountId);
   const loading = useSelector((state) => state.user.loading);
   const [hashtagData, setHashtagData] = useState([]);
+
   useEffect(() => {
     fetchDetailHashtag();
   }, []);
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
   const fetchDetailHashtag = async () => {
     try {
       await dispatch(getDetailHashtag()).then((res) => {
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
       });
     } catch (error) {
       console.log("Error fetching hashtag data:", error);
+    }
+  };
+
+  const fetchUserInfo = async () => {
+    try {
+      await dispatch(getProfile(accountId)).then((res) => {
+        console.log(JSON.stringify(res, null, 2));
+      });
+    } catch (error) {
+      console.log("Error fetching user Info", error);
     }
   };
 
@@ -64,6 +84,7 @@ const UpPostScreen = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
   const [hashtags, setHashtags] = useState([]);
+  const [link, setLink] = useState("");
 
   const selectHashtag = (hashtagName) => {
     const index = hashtagData.indexOf(hashtagName);
@@ -77,10 +98,10 @@ const UpPostScreen = () => {
   };
   console.log(hashtagData);
   console.log(selectedImage);
+
   const handlePost = async () => {
     try {
       // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);
-
       await dispatch(
         createnewpost({
           Content: content,
@@ -90,6 +111,7 @@ const UpPostScreen = () => {
             name: selectedImage.filename,
           },
           Hashtags: hashtagData,
+          Link: link,
         })
       ).then((res) => {
         console.log(JSON.stringify(res, null, 2));
@@ -109,6 +131,42 @@ const UpPostScreen = () => {
     }
   };
 
+  const handlePostForKOL = async () => {
+    try {
+      // console.log("Content: " + content, "Image: " + image, "Hashtags" + hashtags);
+      if (validateUrl(link)) {
+        await dispatch(
+          createnewpost({
+            Content: content,
+            Image: {
+              uri: selectedImage?.uri,
+              type: "image/jpg",
+              name: selectedImage.filename,
+            },
+            Hashtags: hashtagData,
+            Link: link,
+          })
+        ).then((res) => {
+          console.log(JSON.stringify(res, null, 2));
+          if (res?.meta?.requestStatus === "fulfilled") {
+            alert(`Dang bai thanh cong ${res?.payload}`);
+            Alert.alert("Thông báo", "Bài đăng đã được đăng thành công.");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: ROUTES.HOME_NAVIGATOR }],
+            });
+          } else {
+            alert(`Dang bai that bai ${res?.payload?.message}`);
+          }
+        });
+      } else {
+        Alert.alert("Thông báo", "Vui lòng nhập đúng định dạng url");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSaveToStorage = async () => {
     try {
       const existingData = await AsyncStorage.getItem("DRAFT_ARRAY");
@@ -123,6 +181,7 @@ const UpPostScreen = () => {
         content: content,
         selectedImage: selectedImage,
         hashtagData: hashtagData,
+        link: link,
       });
 
       await AsyncStorage.setItem("DRAFT_ARRAY", JSON.stringify(dataArray)).then(
@@ -227,6 +286,25 @@ const UpPostScreen = () => {
               horizontal
             />
           </View>
+          {userInfo?.data?.role === "KOL" && (
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: "gray",
+                borderRadius: 8,
+                paddingVertical: 6,
+                paddingHorizontal: 10,
+                marginTop: 10,
+              }}
+            >
+              <TextInput
+                placeholder="Điền link sản phẩm"
+                placeholderTextColor={"grey"}
+                value={link}
+                onChangeText={(text) => setLink(text)}
+              />
+            </View>
+          )}
         </KeyboardAwareScrollView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -239,7 +317,9 @@ const UpPostScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.postButton]}
-            onPress={handlePost}
+            onPress={
+              userInfo?.data?.role === "PLAYER" ? handlePost : handlePostForKOL
+            }
           >
             <Text style={styles.buttonText}>Đăng</Text>
           </TouchableOpacity>

@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch } from "../app/hooks";
 import { setExitIntro } from "../features/userSlice";
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
-import { useFonts } from '@use-expo/font';
+import { useFonts } from "@use-expo/font";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { useEffect, useState } from "react";
@@ -43,7 +43,6 @@ const Welcome = ({ navigation }) => {
     webClientId:
       "904403290668-ignc5s8guh4aq4ih4bqphglajjkprtqc.apps.googleusercontent.com",
     scopes: ["profile", "email"],
-
   });
 
   useEffect(() => {
@@ -55,8 +54,14 @@ const Welcome = ({ navigation }) => {
       console.log(
         JSON.stringify(response.authentication?.accessToken, null, 2)
       );
-     const res = await dispatch(loginGoogle(response.authentication?.accessToken));
-     console.log('res', JSON.stringify(res, null, 2))
+      const res = await dispatch(
+        loginGoogle(response.authentication?.accessToken)
+      ).then((res) => {
+        if (res?.meta?.requestStatus === "fulfilled") {
+          onCompleteOnboarding();
+        }
+      });
+      console.log("res", JSON.stringify(res, null, 2));
     }
   };
 
@@ -76,7 +81,6 @@ const Welcome = ({ navigation }) => {
   };
 
   return (
-
     <View style={{ flex: 1, backgroundColor: "#DBE9EC" }}>
       <View>
         <Image
@@ -86,7 +90,7 @@ const Welcome = ({ navigation }) => {
             width: 410,
             position: "absolute",
             top: 40,
-            borderRadius: 10
+            borderRadius: 10,
           }}
         />
       </View>
@@ -101,12 +105,18 @@ const Welcome = ({ navigation }) => {
           width: "100%",
         }}
       >
-        {fontsLoaded && <Text style={{
-          fontFamily: "Pacifico_400Regular",
-          fontSize: 40,
-          color: "black",
-          left: 70,
-        }}>Welcome</Text>}
+        {fontsLoaded && (
+          <Text
+            style={{
+              fontFamily: "Pacifico_400Regular",
+              fontSize: 40,
+              color: "black",
+              left: 70,
+            }}
+          >
+            Welcome
+          </Text>
+        )}
 
         {/* Nút Đăng Nhập Bằng Gmail */}
         <Pressable
@@ -130,7 +140,9 @@ const Welcome = ({ navigation }) => {
             color={COLORS.white}
             style={{ marginRight: 50, marginLeft: 20 }}
           />
-          <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15 }}>
+          <Text
+            style={{ color: COLORS.white, fontWeight: "bold", fontSize: 15 }}
+          >
             Đăng nhập bằng Gmail
           </Text>
         </Pressable>
@@ -149,7 +161,9 @@ const Welcome = ({ navigation }) => {
             navigation.navigate("LoginIntro");
           }}
         >
-          <Text style={{ color: COLORS.white, fontWeight: "bold", fontSize: 16 }}>
+          <Text
+            style={{ color: COLORS.white, fontWeight: "bold", fontSize: 16 }}
+          >
             Đăng nhập
           </Text>
         </Pressable>
@@ -169,11 +183,9 @@ const Welcome = ({ navigation }) => {
           >
             Không phải bây giờ{" "}
           </Text>
-
         </TouchableOpacity>
       </View>
     </View>
-
   );
 };
 

@@ -45,7 +45,7 @@ const FollowingTab = ({ route }) => {
 
     const renderFollowingItem = ({ item }) => (
         <View style={styles.followerItem}>
-            <Image style={styles.avatar} source={{ uri: item?.user?.avatar }} />
+            <Image style={styles.avatar} source={{ uri: item?.avatar }} />
             <Text style={styles.username}>{item?.username}</Text>
             <TouchableOpacity style={styles.unfollowButton} onPress={() => followOneAccountById(item.accountId)}>
                 <Text style={styles.unfollowButtonText}>Gỡ</Text>
@@ -57,7 +57,7 @@ const FollowingTab = ({ route }) => {
         <View style={styles.tabContent}>
             <FlatList
                 data={followersData.following}
-                keyExtractor={(item) => item.accountId.toString()}
+                keyExtractor={(item) => item.accountId}
                 renderItem={renderFollowingItem}
                 contentContainerStyle={styles.listContainer}
             />
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     unfollowButton: {
-backgroundColor: '#FF5C5C',
+        backgroundColor: '#FF5C5C',
         paddingVertical: 8,
         paddingHorizontal: 12,
         borderRadius: 5,

@@ -154,7 +154,7 @@ const WelcomeBack = ({ navigation }) => {
           </Text>
         </Pressable>
 
-        <TouchableOpacity onPress={onCompleteOnboarding}>
+        {/* <TouchableOpacity onPress={onCompleteOnboarding}>
           <Text
             style={{
               color: "black",
@@ -170,7 +170,7 @@ const WelcomeBack = ({ navigation }) => {
             Không phải bây giờ{" "}
           </Text>
 
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
 

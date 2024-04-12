@@ -25,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import EmptyResult from "../../EmptyResult";
 import ROUTES from "../../../../constants/routes";
 import { searchPostByHashtag } from "../../../../features/postSlice";
+import { fetchLikePost } from "../../../../app/LikePost/action";
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
 const GAP = 4;
@@ -50,6 +51,20 @@ const HashtagResult = () => {
       searchByHashtag();
     }, [])
   );
+
+  const handleLikePress = async (postId) => {
+    try {
+      await dispatch(
+        fetchLikePost({
+          postId,
+        })
+      );
+      await searchByHashtag();
+    } catch (error) {
+      console.error("Error dispatching likePost:", error.message);
+    }
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -145,6 +160,7 @@ const HashtagResult = () => {
                     style={{ flexDirection: "row", marginTop: 10, gap: 10 }}
                   >
                     <Icon
+                      onPress={() => handleLikePress(item?.postId)}
                       name={
                         item.likes.some(
                           (like) =>

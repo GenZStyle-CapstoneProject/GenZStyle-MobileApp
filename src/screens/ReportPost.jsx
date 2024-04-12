@@ -5,12 +5,20 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-
+import { useDispatch } from "react-redux";
+import { addNewReport } from "../app/ReportPost/action";
+import { useRoute } from "@react-navigation/native";
 const ReportPost = () => {
+  const route = useRoute();
+
+  const postId = route.params.postId;
+
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [reasons, setReasons] = useState({
     behavior: false,
     dislike: false,
@@ -19,6 +27,14 @@ const ReportPost = () => {
     notSuitable: false,
     other: false,
   });
+  const reasonMappings = {
+    behavior: "Bài đăng này không phù hợp",
+    dislike: "Tôi không thích bài đăng này",
+    spamOrScam: "Bài đăng này là thư rác hoặc lừa đảo",
+    dangerousContent: "Bài đăng này khiến mọi người gặp nguy hiểm",
+    notSuitable: "Bài đăng này không nên có trên GenZStyle",
+    other: `Lý do khác: ${otherReason}`,
+  };
 
   const [otherReason, setOtherReason] = useState("");
 
@@ -26,9 +42,23 @@ const ReportPost = () => {
     navigation.goBack();
   };
 
-  const handleSave = () => {
-    // console.log('Selected reasons:', reasons);
-    // console.log('Other reason:', otherReason);
+  const handleSave = async () => {
+    try {
+      const selectedReasons = Object.keys(reasons).filter(
+        (reason) => reasons[reason]
+      );
+      const description = selectedReasons
+        .map((reason) => reasonMappings[reason])
+        .join(", ");
+
+      await dispatch(addNewReport({ description, postId }));
+
+      console.log("Báo cáo thành công!");
+      Alert.alert("Thông báo", "Báo cáo thành công!");
+      navigation.goBack();
+    } catch (error) {
+      console.error("Lỗi khi báo cáo bài viết:", error);
+    }
   };
 
   const toggleReason = (reason) => {
@@ -109,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    paddingTop: 50,
+    paddingTop: 20,
     backgroundColor: "white",
   },
   headerContainer: {
@@ -157,5 +187,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
 export default ReportPost;

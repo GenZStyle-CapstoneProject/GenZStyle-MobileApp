@@ -1,24 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
-import { useNavigation } from '@react-navigation/native';
-import ROUTES from '../../constants/routes';
-import { AntDesign } from '@expo/vector-icons';
-import { Text } from 'react-native-elements';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import * as MediaLibrary from "expo-media-library";
+import { useNavigation } from "@react-navigation/native";
+import ROUTES from "../../constants/routes";
+import { AntDesign } from "@expo/vector-icons";
+import { Text } from "react-native-elements";
+import { getProfile } from "../../features/userSlice";
+import { useAppSelector } from "../../app/hooks";
+import { useDispatch } from "react-redux";
 
 const LibraryScreen = () => {
-
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [libraryImages, setLibraryImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const accountId = useAppSelector((state) => state.user.accountId);
 
   const fetchLibraryImages = async () => {
     try {
       const { status } = await MediaLibrary.requestPermissionsAsync();
 
-      if (status !== 'granted') {
-        throw new Error('Permission to access media library not granted');
+      if (status !== "granted") {
+        throw new Error("Permission to access media library not granted");
       }
 
       const { assets } = await MediaLibrary.getAssetsAsync({
@@ -28,7 +38,7 @@ const LibraryScreen = () => {
 
       setLibraryImages(assets);
     } catch (error) {
-      console.error('Error fetching library images:', error.message);
+      console.error("Error fetching library images:", error.message);
     }
   };
 
@@ -47,7 +57,21 @@ const LibraryScreen = () => {
       navigation.navigate(ROUTES.UPPOST, { selectedImage });
     }
   };
-  
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  const fetchUserInfo = async () => {
+    try {
+      await dispatch(getProfile(accountId)).then((res) => {
+        console.log(JSON.stringify(res, null, 2));
+      });
+    } catch (error) {
+      console.log("Error fetching user Info", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -55,7 +79,12 @@ const LibraryScreen = () => {
           <AntDesign name="close" size={24} color="black" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleNextPress} disabled={!selectedImage}>
-          <Text style={[styles.nextButton, { color: selectedImage ? 'black' : 'gray' }]}>
+          <Text
+            style={[
+              styles.nextButton,
+              { color: selectedImage ? "black" : "gray" },
+            ]}
+          >
             Tiếp theo
           </Text>
         </TouchableOpacity>
@@ -67,7 +96,10 @@ const LibraryScreen = () => {
           <TouchableOpacity onPress={() => handleImagePress(item)}>
             <Image
               source={{ uri: item.uri }}
-              style={[styles.image, { opacity: selectedImage === item ? 0.5 : 1 }]}
+              style={[
+                styles.image,
+                { opacity: selectedImage === item ? 0.5 : 1 },
+              ]}
             />
           </TouchableOpacity>
         )}
@@ -84,9 +116,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   image: {
@@ -96,7 +128,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

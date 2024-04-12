@@ -9,12 +9,12 @@ const NotificationTab = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN"); 
+        const accessToken = await AsyncStorage.getItem("ACCESS_TOKEN");
         const response = await axios.get(
-          "https://genzstyle.azurewebsites.net//odata/Notification",
+          "https://genzstyleapp.azurewebsites.net/odata/Notification",
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`, 
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );

@@ -23,6 +23,8 @@ const Signup = ({ navigation }) => {
   LogBox.ignoreLogs(['Key "uri"']);
   LogBox.ignoreLogs(['Key "uri" in the image picker result']);
   LogBox.ignoreAllLogs();
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [username, setUsername] = useState("");
   const [passwordHash, setPasswordHash] = useState("");
   const [password2, setPassword2] = useState("");
@@ -83,6 +85,8 @@ const Signup = ({ navigation }) => {
         Email: email,
         Dob: dob,
         Height: heightPerson,
+        FirstName: firstname,
+        LastName: lastname,
       };
 
       const formData = new FormData();
@@ -93,6 +97,8 @@ const Signup = ({ navigation }) => {
       });
 
       formData.append("UserName", username);
+      formData.append("FirstName", firstname);
+      formData.append("LastName", lastname);
       formData.append("PasswordHash", passwordHash);
       formData.append("Phone", phone);
       formData.append("Email", email);
@@ -140,252 +146,299 @@ const Signup = ({ navigation }) => {
 
 
   return (
+    <ScrollView>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EC" }}>
+        <View style={{ position: 'absolute', top: 40, left: 20, padding: 7, backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50 }}>
+          <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="arrow-back" size={30} color="white" /></TouchableOpacity>
+        </View>
+        <View>
+          {fontsLoaded && <Text style={{
+            fontFamily: "Pacifico_400Regular",
+            fontSize: 50,
+            color: "black",
+          }}>GenZStyle</Text>}
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity onPress={pickImage}>
 
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#DBE9EC" }}>
-      <View style={{ position: 'absolute', top: 40, left: 20, padding: 7, backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 50 }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}><Ionicons name="arrow-back" size={30} color="white" /></TouchableOpacity>
-      </View>
-      <View>
-        {fontsLoaded && <Text style={{
-          fontFamily: "Pacifico_400Regular",
-          fontSize: 50,
-          color: "black",
-        }}>GenZStyle</Text>}
-      </View>
-      <View style={{ alignItems: "center" }}>
-        <TouchableOpacity onPress={pickImage}>
+            <View
+              style={{
+                width: 90,
+                height: 90,
+                borderRadius: 60,
+                backgroundColor: COLORS.white,
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+
+              }}
+            >
+              {avatar ? (
+                <Image source={{ uri: avatar }} style={{ width: 90, height: 90, borderRadius: 60 }} />
+              ) : (
+                <Ionicons name="camera" size={40} color={COLORS.secondary} />
+              )}
+
+            </View>
+            <Text style={{
+              color: COLORS.black, fontSize: 20, left: 16,
+
+            }}>
+              Avatar
+            </Text>
+          </TouchableOpacity>
+          {isAvatarSelected && (
+            <Text style={{ color: COLORS.black, fontSize: 16 }}>
+              Avatar selected successfully!
+            </Text>
+          )}
+        </View>
+        {/* content */}
+        <View
+          style={{
+            paddingHorizontal: 42,
+            width: "100%",
+          }}
+        >
+
+
+          {/* Ô nhập tài khoản */}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              marginTop: 10,
+              paddingHorizontal: 10,
+            }}
+          >
+            <Ionicons
+              name="person"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{
+                flex: 1,
+                fontSize: 16,
+              }}
+              placeholder="Tên tài khoản"
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+              required={true}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 12,
+              // paddingHorizontal: 10,
+            }}
+          >
+            {/* Ô nhập First Name */}
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", marginRight: 10 }}>
+
+
+              <TextInput
+                style={{
+                  backgroundColor: COLORS.white,
+                  paddingVertical: 10,
+                  borderRadius: 50,
+                  paddingHorizontal: 10,
+                  fontSize: 16,
+                  flex: 1,
+                }}
+                placeholder="First Name"
+                value={firstname}
+                onChangeText={(text) => setFirstname(text)}
+                required={true}
+              />
+            </View>
+
+            {/* Ô nhập Last Name */}
+            <View style={{ flex: 1 }}>
+              <TextInput
+                style={{
+                  backgroundColor: COLORS.white,
+                  paddingVertical: 10,
+                  borderRadius: 50,
+                  paddingHorizontal: 10,
+                  fontSize: 16,
+                }}
+                placeholder="Last Name"
+                value={lastname}
+                onChangeText={(text) => setLastname(text)}
+                required={true}
+              />
+            </View>
+          </View>
+
+
 
           <View
             style={{
-              width: 90,
-              height: 90,
-              borderRadius: 60,
-              backgroundColor: COLORS.white,
-              justifyContent: "center",
+              flexDirection: "row",
               alignItems: "center",
-              overflow: "hidden",
-
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
             }}
           >
-            {avatar ? (
-              <Image source={{ uri: avatar }} style={{ width: 90, height: 90, borderRadius: 60 }} />
-            ) : (
-              <Ionicons name="camera" size={40} color={COLORS.secondary} />
-            )}
-
+            <Ionicons
+              name="lock-closed"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{
+                flex: 1,
+                fontSize: 16,
+              }}
+              placeholder="Mật khẩu"
+              secureTextEntry={!showPassword1}
+              value={passwordHash}
+              onChangeText={(text) => setPasswordHash(text)}
+              required={true}
+            />
+            <Pressable onPress={() => setShowPassword1(!showPassword1)}>
+              <Ionicons
+                name={showPassword1 ? "eye-off" : "eye"}
+                size={24}
+                color={COLORS.grey}
+              />
+            </Pressable>
           </View>
-          <Text style={{
-            color: COLORS.black, fontSize: 20, left: 16,
-
-          }}>
-            Avatar
-          </Text>
-        </TouchableOpacity>
-        {isAvatarSelected && (
-          <Text style={{ color: COLORS.black, fontSize: 16 }}>
-            Avatar selected successfully!
-          </Text>
-        )}
-      </View>
-      {/* content */}
-      <View
-        style={{
-          paddingHorizontal: 42,
-          width: "100%",
-        }}
-      >
-
-
-        {/* Ô nhập tài khoản */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            marginTop: 10,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Ionicons
-            name="person"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
+          <View
             style={{
-              flex: 1,
-              fontSize: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
             }}
-            placeholder="Tên tài khoản"
-            value={username}
-            onChangeText={(text) => setUsername(text)}
-            required={true}
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Ionicons
-            name="lock-closed"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            style={{
-              flex: 1,
-              fontSize: 16,
-            }}
-            placeholder="Mật khẩu"
-            secureTextEntry={!showPassword1}
-            value={passwordHash}
-            onChangeText={(text) => setPasswordHash(text)}
-            required={true}
-          />
-          <Pressable onPress={() => setShowPassword1(!showPassword1)}>
+          >
             <Ionicons
-              name={showPassword1 ? "eye-off" : "eye"}
+              name="lock-closed"
               size={24}
               color={COLORS.grey}
+              style={{ marginRight: 10 }}
             />
-          </Pressable>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Ionicons
-            name="lock-closed"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
+            <TextInput
+              style={{
+                flex: 1,
+                fontSize: 16,
+              }}
+              placeholder="Nhập lại mật khẩu"
+              secureTextEntry={!showPassword2}
+              value={password2}
+              onChangeText={(text) => setPassword2(text)}
+            />
+            <Pressable onPress={() => setShowPassword2(!showPassword2)}>
+              <Ionicons
+                name={showPassword2 ? "eye-off" : "eye"}
+                size={24}
+                color={COLORS.grey}
+              />
+            </Pressable>
+          </View>
+
+          {/* Ô nhập số điện thoại với biểu tượng */}
+          <View
             style={{
-              flex: 1,
-              fontSize: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
             }}
-            placeholder="Nhập lại mật khẩu"
-            secureTextEntry={!showPassword2}
-            value={password2}
-            onChangeText={(text) => setPassword2(text)}
-          />
-          <Pressable onPress={() => setShowPassword2(!showPassword2)}>
+          >
             <Ionicons
-              name={showPassword2 ? "eye-off" : "eye"}
+              name="call"
               size={24}
               color={COLORS.grey}
+              style={{ marginRight: 10 }}
             />
-          </Pressable>
-        </View>
-
-        {/* Ô nhập số điện thoại với biểu tượng */}
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Ionicons
-            name="call"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <PhoneInput
+            <PhoneInput
+              style={{
+                flex: 1,
+                fontSize: 16,
+              }}
+              textStyle={{ fontSize: 16 }}
+              initialCountry="vn"
+              value={phone}
+              onChangePhoneNumber={(number) => {
+                console.log("Phone Number Changed:", number);
+                if (number.startsWith("+84")) {
+                  number = "0" + number.slice(3);
+                }
+                setPhone(number);
+              }}
+              required={true}
+            />
+          </View>
+          <View
             style={{
-              flex: 1,
-              fontSize: 16,
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
             }}
-            textStyle={{ fontSize: 16 }}
-            initialCountry="vn"
-            value={phone}
-            onChangePhoneNumber={(number) => {
-              console.log("Phone Number Changed:", number);
-              if (number.startsWith("+84")) {
-                number = "0" + number.slice(3);
-              }
-              setPhone(number);
-            }}
-            required={true}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            paddingHorizontal: 10,
-          }}
-        >
-          <Ionicons
-            name="mail"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            style={{ flex: 1, fontSize: 16 }}
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            required={true}
-          />
-        </View>
+          >
+            <Ionicons
+              name="mail"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{ flex: 1, fontSize: 16 }}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              required={true}
+            />
+          </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            paddingHorizontal: 10,
-          }}
-        >
-          <FontAwesome
-            name="birthday-cake"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            style={{ flex: 1, fontSize: 16 }}
-            placeholder="Ngày sinh"
-            value={dob}
-            onChangeText={(text) => setDob(text)}
-            required={true}
-          />
-          {/* <Pressable onPress={showDatepicker} style={{ flex: 1, alignItems: 'flex-end' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
+            }}
+          >
+            <FontAwesome
+              name="birthday-cake"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{ flex: 1, fontSize: 16 }}
+              placeholder="Ngày sinh"
+              value={dob}
+              onChangeText={(text) => setDob(text)}
+              required={true}
+            />
+            {/* <Pressable onPress={showDatepicker} style={{ flex: 1, alignItems: 'flex-end' }}>
                             <FontAwesome name="calendar" size={24} color={COLORS.grey} style={{ marginRight: 10 }} />
                         </Pressable>
                         {showDatePicker && (
@@ -398,35 +451,35 @@ value={selectedDate}
                                 onChange={handleDateChange}
                             />
                         )} */}
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: COLORS.white,
-            paddingVertical: 10,
-            borderRadius: 50,
-            marginBottom: 12,
-            paddingHorizontal: 10,
-          }}
-        >
-          <FontAwesome
-            name="arrow-up"
-            size={24}
-            color={COLORS.grey}
-            style={{ marginRight: 10 }}
-          />
-          <TextInput
-            style={{ flex: 1, fontSize: 16 }}
-            placeholder="Chiều cao"
-            value={heightPerson}
-            onChangeText={(text) => setHeightPersion(text)}
-            required={true}
-          />
-        </View>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              backgroundColor: COLORS.white,
+              paddingVertical: 10,
+              borderRadius: 50,
+              marginBottom: 12,
+              paddingHorizontal: 10,
+            }}
+          >
+            <FontAwesome
+              name="arrow-up"
+              size={24}
+              color={COLORS.grey}
+              style={{ marginRight: 10 }}
+            />
+            <TextInput
+              style={{ flex: 1, fontSize: 16 }}
+              placeholder="Chiều cao (cm)"
+              value={heightPerson}
+              onChangeText={(text) => setHeightPersion(text)}
+              required={true}
+            />
+          </View>
 
 
-        {/* <RadioButton.Group onValueChange={newValue => setGender(newValue)} value={gender}>
+          {/* <RadioButton.Group onValueChange={newValue => setGender(newValue)} value={gender}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <RadioButton.Android
                 value="Nam"
@@ -447,95 +500,95 @@ value={selectedDate}
             </View>
           </RadioButton.Group> */}
 
-        <View style={{
-          flexDirection: "row",
-          alignItems: "center",
-          backgroundColor: COLORS.white,
-          paddingVertical: 10,
-          borderRadius: 50,
-          marginBottom: 12,
-          paddingHorizontal: 10,
-        }}>
-          <Text style={{ fontSize: 16 }}>Giới tính:</Text>
-          <RadioButton.Group onValueChange={newValue => setGender(newValue)} value={gender}>
-            <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
-              <RadioButton.Android
-                value="Nam"
-                color={COLORS.primary}
-                uncheckedColor={COLORS.grey}
-                style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
-              />
-              <Text style={{ fontSize: 16, color: COLORS.black, marginLeft: 5 }}>Nam</Text>
-              <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: COLORS.white,
+            paddingVertical: 10,
+            borderRadius: 50,
+            marginBottom: 12,
+            paddingHorizontal: 10,
+          }}>
+            <Text style={{ fontSize: 16 }}>Giới tính:</Text>
+            <RadioButton.Group onValueChange={newValue => setGender(newValue)} value={gender}>
+              <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}>
                 <RadioButton.Android
-                  value="Nữ"
+                  value="Nam"
                   color={COLORS.primary}
                   uncheckedColor={COLORS.grey}
                   style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
                 />
-                <Text style={{ fontSize: 16, color: COLORS.black, marginLeft: 5 }}>Nữ</Text>
+                <Text style={{ fontSize: 16, color: COLORS.black, marginLeft: 5 }}>Nam</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 20 }}>
+                  <RadioButton.Android
+                    value="Nữ"
+                    color={COLORS.primary}
+                    uncheckedColor={COLORS.grey}
+                    style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
+                  />
+                  <Text style={{ fontSize: 16, color: COLORS.black, marginLeft: 5 }}>Nữ</Text>
+                </View>
               </View>
-            </View>
-          </RadioButton.Group>
+            </RadioButton.Group>
+          </View>
+
+
+
+
+
+
+
+          {/* Nút Đăng ký */}
+          <Pressable
+            style={{
+              backgroundColor: COLORS.secondary,
+              marginTop: 20,
+              paddingVertical: 15,
+              borderRadius: 50,
+              alignItems: "center",
+            }}
+            onPress={handleSignup}
+          >
+            <Text
+              style={{
+                color: COLORS.white,
+                fontWeight: "bold",
+                fontSize: 20,
+              }}
+            >
+              Đăng ký
+            </Text>
+          </Pressable>
+
+          <Text
+            style={{
+              color: COLORS.black,
+              fontWeight: "bold",
+              paddingVertical: 5,
+              alignItems: "center",
+              marginTop: 5,
+              marginLeft: 10,
+              left: 50,
+              flexDirection: "row",
+            }}
+          >
+            Bạn đã có tài khoản?
+            <Text
+              onPress={() => {
+                navigation.navigate("LoginIntro");
+              }}
+              style={{
+                color: COLORS.secondary,
+                fontWeight: "bold",
+                marginLeft: 5,
+              }}
+            >
+              Đăng nhập tại đây
+            </Text>
+          </Text>
         </View>
-
-
-
-
-
-
-
-        {/* Nút Đăng ký */}
-        <Pressable
-          style={{
-            backgroundColor: COLORS.secondary,
-            marginTop: 20,
-            paddingVertical: 15,
-            borderRadius: 50,
-            alignItems: "center",
-          }}
-          onPress={handleSignup}
-        >
-          <Text
-            style={{
-              color: COLORS.white,
-              fontWeight: "bold",
-              fontSize: 20,
-            }}
-          >
-            Đăng ký
-          </Text>
-        </Pressable>
-
-        <Text
-          style={{
-            color: COLORS.black,
-            fontWeight: "bold",
-            paddingVertical: 5,
-            alignItems: "center",
-            marginTop: 5,
-            marginLeft: 10,
-            left: 50,
-            flexDirection: "row",
-          }}
-        >
-          Bạn đã có tài khoản?
-          <Text
-            onPress={() => {
-              navigation.navigate("LoginIntro");
-            }}
-            style={{
-              color: COLORS.secondary,
-              fontWeight: "bold",
-              marginLeft: 5,
-            }}
-          >
-            Đăng nhập tại đây
-          </Text>
-        </Text>
       </View>
-    </View>
-
+    </ScrollView>
   );
 };
 

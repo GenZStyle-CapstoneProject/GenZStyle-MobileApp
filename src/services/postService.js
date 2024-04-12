@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 
 export const postService = {
-  createnewpost: ({ Content, Image, Hashtags }) => {
+  createnewpost: ({ Content, Image, Hashtags, Link }) => {
     const formData = new FormData();
 
     formData.append("Content", Content);
@@ -9,13 +9,14 @@ export const postService = {
     Hashtags.forEach((hashtag) => {
       formData.append("Hashtags", hashtag);
     });
+    formData.append("Link", Link);
 
     const url = "/odata/Post/AddNewPost";
     return axiosClient.post(url, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  updatePost: ({ key, Content, Image, Hashtags }) => {
+  updatePost: ({ key, Content, Image, Hashtags, Link }) => {
     const formData = new FormData();
 
     formData.append("Content", Content);
@@ -23,6 +24,7 @@ export const postService = {
     Hashtags.forEach((hashtag) => {
       formData.append("Hashtags", hashtag);
     });
+    formData.append("Link", Link);
 
     const url = `/Post/${key}/UpdatePost`;
     return axiosClient.put(url, formData, {

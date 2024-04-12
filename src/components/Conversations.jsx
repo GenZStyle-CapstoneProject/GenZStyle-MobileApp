@@ -157,7 +157,7 @@ const Conversations = ({ children }) => {
                 <ConversationItem
                   key={user?.accountId}
                   roomId={user?.accountId}
-                  picture={user.avatar}
+                  picture={user?.user?.avatar}
                   roomName={userFullName}
                   fullName={fullName}
                   bio=""

@@ -59,7 +59,7 @@ const DraftScreen = () => {
     }
   };
 
-  const removeAllDratf = async () => {
+  const removeAllDraft = async () => {
     try {
       await AsyncStorage.removeItem("DRAFT_ARRAY").finally(() => {
         fetchAllDraftInStorage();
@@ -111,6 +111,26 @@ const DraftScreen = () => {
           Tất cả các bản nháp sẽ bị xóa nếu bạn đăng xuất hoặc gỡ cài đặt ứng
           dụng.
         </Text>
+      </View>
+      <View
+        style={{
+          marginHorizontal: 15,
+          alignItems: "flex-end",
+          marginBottom: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={removeAllDraft}
+          style={{
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: "red",
+            paddingVertical: 6,
+            paddingHorizontal: 10,
+          }}
+        >
+          <Text style={{ color: "red" }}>Xoá tất cả</Text>
+        </TouchableOpacity>
       </View>
       <FlatList
         data={draftData}
