@@ -29,6 +29,7 @@ const ChatHeader = ({
   isOnline,
   type,
   roomId,
+  foundUser,
 }) => {
   const navigation = useNavigation();
   const [hostId, setHostId] = useState("");
@@ -51,7 +52,11 @@ const ChatHeader = ({
   const goBack = () => {
     navigation.goBack();
   };
-
+  const navigateToFriend = () => {
+    if (foundUser) {
+      navigation.navigate(ROUTES.FRIENDS, { item: foundUser });
+    }
+  };
   const onChangeGroupName = async () => {
     if (text !== "") {
       await socket.emit("change_group_name", {
@@ -90,7 +95,10 @@ const ChatHeader = ({
         <Icon name="angle-left" size={30} color={theme.colors.white} />
       </TouchableOpacity>
       <View style={styles.profileOptions}>
-        <TouchableOpacity style={styles.profile}>
+        <TouchableOpacity
+          style={styles.profile}
+          onPress={() => (type === "personal" ? navigateToFriend() : {})}
+        >
           {picture !== "" ? (
             <Image style={styles.image} source={{ uri: picture }} />
           ) : (

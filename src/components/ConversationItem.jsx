@@ -77,6 +77,7 @@ const ConversationItem = ({
             members: members,
             isFollower: isFollower,
             isFollowing: isFollowing,
+            foundUser: foundUser,
           })
         }
       >

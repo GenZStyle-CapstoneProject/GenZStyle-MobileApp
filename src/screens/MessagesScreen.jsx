@@ -23,6 +23,7 @@ const MessagesScreen = ({ navigation, route }) => {
     members,
     isFollower,
     isFollowing,
+    foundUser,
   } = route.params;
   const [isLoading, setIsLoading] = useState(true);
   const [reply, setReply] = useState("");
@@ -91,6 +92,7 @@ const MessagesScreen = ({ navigation, route }) => {
         isOnline={isOnline}
         type={type}
         roomId={roomId}
+        foundUser={foundUser}
       />
       {isLoading ? (
         <View style={[styles.container, styles.horizontal]}>

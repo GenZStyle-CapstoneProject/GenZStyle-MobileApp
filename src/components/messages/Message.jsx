@@ -30,10 +30,15 @@ const Message = ({ time, isLeft, message, onSwipe, name, image }) => {
   const x = useSharedValue(startingPosition);
   const [modalVisible, setModalVisible] = useState(false);
   const isOnLeft = (type) => {
-    if (isLeft && (type === "messageContainer" || type === "imageContainer")) {
+    if (isLeft && type === "messageContainer") {
       return {
         alignSelf: "flex-start",
         backgroundColor: "#f0f0f0",
+        borderTopLeftRadius: 0,
+      };
+    } else if (isLeft && type === "imageContainer") {
+      return {
+        alignSelf: "flex-start",
         borderTopLeftRadius: 0,
       };
     } else if (isLeft && type === "message") {

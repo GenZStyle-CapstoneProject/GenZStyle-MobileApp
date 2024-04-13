@@ -25,13 +25,6 @@ const Conversations = ({ children }) => {
   const [userRooms, setUserRooms] = useState([]);
   const fullName = `${profile?.account?.firstname} ${profile?.account?.lastname}`;
 
-  const accountSuggestionList = useAppSelector(
-    (state) => state.account.accountSuggestionList
-  );
-  const accountFollowingList = useAppSelector(
-    (state) => state.account.accountFollowingList
-  );
-
   const HomeTab = () => (
     <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
       <ScrollView>
@@ -339,6 +332,9 @@ const Conversations = ({ children }) => {
 
   useEffect(() => {
     socket.on("user_rooms", (data) => {
+      data.sort(function (a, b) {
+        return b.lastMessage.id - a.lastMessage.id;
+      });
       setUserRooms(data);
     });
   }, [socket]);
