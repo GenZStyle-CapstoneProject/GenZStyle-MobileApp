@@ -18,6 +18,7 @@ import {
 import { Avatar, Button } from "react-native-elements";
 import { Icon } from "react-native-paper";
 import ROUTES from "../../constants/routes";
+import { fecthListFollow } from "../../features/userSlice";
 
 const SuggestionAccount = ({ navigation }) => {
   const navigateToFriend = (item) => {
@@ -39,6 +40,7 @@ const SuggestionAccount = ({ navigation }) => {
   };
 
   const followOneAccountById = async (accountId) => {
+    console.log("follow");
     try {
       await dispatch(followOneAccount(accountId)).then(async (res) => {
         console.log("res", JSON.stringify(res, null, 2));
@@ -46,6 +48,7 @@ const SuggestionAccount = ({ navigation }) => {
           await fetchAllAccountSuggestion();
         }
       });
+      dispatch(fecthListFollow());
     } catch (error) {}
   };
   useEffect(() => {

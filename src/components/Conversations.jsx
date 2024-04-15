@@ -20,160 +20,236 @@ const Conversations = ({ children }) => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state?.user?.profile?.data);
   const followData = useSelector((state) => state?.user?.data);
-
+  const [availableChats, setAvailableChats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
   const fullName = `${profile?.account?.firstname} ${profile?.account?.lastname}`;
-
   const HomeTab = () => (
     <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
       <ScrollView>
-        {/* Group renders */}
-        {userRooms?.length > 0 &&
-          userRooms?.map((room) => {
-            if (room.type === "group") {
-              if (room.isActive) {
-                return (
-                  <ConversationItem
-                    key={room?.id}
-                    roomId={room?.id}
-                    picture={
-                      room.type === "personal"
-                        ? "https://images.pexels.com/photos/2078265/pexels-photo-2078265.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-                        : ""
-                    }
-                    roomName={
-                      room?.type === "personal"
-                        ? room?.users.find(
-                            (user) => user?.id !== profile?.account?.accountId
-                          ).id
-                        : room.name
-                    }
-                    fullName={fullName}
-                    bio=""
-                    type={room?.type}
-                    lastMessage={room?.lastMessage?.text}
-                    time={
-                      room?.lastMessage && room?.lastMessage.time?.length > 0
-                        ? parseMessageTime(room?.lastMessage?.time)
-                        : ""
-                    }
-                    notification="3"
-                    isBlocked
-                    isMuted
-                    // hasStory
-                    isFriend={true}
-                    members={room?.users}
-                    isOnline={true}
-                  />
-                );
-              }
-            }
-            if (room.type === "personal" && followData?.following?.length > 0) {
-              const anotherUserArr = room?.users.filter(
-                (user) => user?.id != profile?.account?.accountId
-              );
-              const foundIndex = followData?.following?.findIndex(
-                (user) => user?.accountId == anotherUserArr[0].id
-              );
-              const foundUser = followData?.following[foundIndex];
+        {searchValue != "" ? (
+          <>
+            {availableChats.length > 0 &&
+              availableChats.map((chat) => {
+                const userFullName = chat?.account?.firstname
+                  ? `${chat?.account?.firstname} ${chat?.account?.lastname}`
+                  : chat?.username;
+                const isFollower =
+                  followData?.followers.findIndex(
+                    (follower) => follower.accountId == chat.accountId
+                  ) > -1;
+                const isFollowing =
+                  followData?.following.findIndex(
+                    (follow) => follow.accountId == chat?.accountId
+                  ) > -1;
 
-              const userFullName = foundUser?.account?.firstname
-                ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
-                : foundUser?.username;
-
-              loggedUsers.push(anotherUserArr[0]?.id);
-              const isFollower =
-                followData?.followers.findIndex(
-                  (follower) => follower?.accountId == foundUser?.accountId
-                ) > -1;
-              const isFollowing =
-                followData?.following.findIndex(
-                  (follow) => follow.accountId == foundUser?.accountId
-                ) > -1;
-
-              if (isFollowing) {
-                return (
-                  <ConversationItem
-                    key={foundUser?.accountId}
-                    roomId={foundUser?.accountId}
-                    picture={foundUser?.avatar}
-                    roomName={userFullName}
-                    fullName={fullName}
-                    foundUser={foundUser}
-                    bio=""
-                    type="personal"
-                    lastMessage={room?.lastMessage?.text}
-                    time={
-                      room?.lastMessage && room?.lastMessage.time?.length > 0
-                        ? parseMessageTime(room?.lastMessage?.time)
-                        : ""
-                    }
-                    notification="3"
-                    isBlocked
-                    isMuted
-                    // hasStory
-                    isFollower={isFollower}
-                    isFollowing={isFollowing}
-                    isFriend={true}
-                    members={[]}
-                    isOnline={
-                      onlineUsers.findIndex(
-                        (onlUser) => foundUser?.accountId == onlUser.id
-                      ) > -1
-                    }
-                  />
-                );
-              }
-            }
-          })}
-        {/* User renders */}
-        {followData?.following?.length > 0 &&
-          followData?.following?.map((user) => {
-            const userFullName = user?.account?.firstname
-              ? `${user?.account?.firstname} ${user?.account?.lastname}`
-              : user?.username;
-            const isLogged =
-              loggedUsers.findIndex((userId) => userId == user?.accountId) > -1;
-            const isFollower =
-              followData?.followers.findIndex(
-                (follower) => follower.accountId == user.accountId
-              ) > -1;
-            const isFollowing =
-              followData?.following.findIndex(
-                (follow) => follow.accountId == user?.accountId
-              ) > -1;
-
-            if (!isLogged && isFollowing) {
-              return (
-                <ConversationItem
-                  key={user?.accountId}
-                  roomId={user?.accountId}
-                  picture={user?.user?.avatar}
-                  roomName={userFullName}
-                  fullName={fullName}
-                  bio=""
-                  type="personal"
-                  lastMessage=""
-                  time=""
-                  notification="3"
-                  isBlocked
-                  isMuted
-                  // hasStory
-                  isFriend={false}
-                  members={[]}
-                  isOnline={
-                    onlineUsers.findIndex(
-                      (onlUser) => user?.accountId == onlUser.id
-                    ) > -1
+                if (
+                  userFullName
+                    ?.trim()
+                    ?.toLowerCase()
+                    ?.includes(searchValue.toLowerCase())
+                ) {
+                  return (
+                    <ConversationItem
+                      key={chat?.id}
+                      roomId={chat?.accountId}
+                      picture={chat.avatar}
+                      roomName={userFullName}
+                      fullName={fullName}
+                      foundUser={chat}
+                      bio=""
+                      type="personal"
+                      lastMessage={""}
+                      time={""}
+                      notification="3"
+                      isBlocked
+                      isMuted
+                      // hasStory
+                      isFollower={isFollower}
+                      isFollowing={isFollowing}
+                      isFriend={true}
+                      members={[]}
+                      isOnline={
+                        onlineUsers.findIndex(
+                          (onlUser) => chat?.accountId == onlUser.id
+                        ) > -1
+                      }
+                    />
+                  );
+                }
+              })}
+          </>
+        ) : (
+          <>
+            {/* Group renders */}
+            {userRooms?.length > 0 &&
+              userRooms?.map((room) => {
+                if (room.type === "group") {
+                  if (room.isActive) {
+                    return (
+                      <ConversationItem
+                        key={room?.id}
+                        roomId={room?.id}
+                        picture={
+                          room.type === "personal"
+                            ? "https://images.pexels.com/photos/2078265/pexels-photo-2078265.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                            : ""
+                        }
+                        roomName={
+                          room?.type === "personal"
+                            ? room?.users.find(
+                                (user) =>
+                                  user?.id !== profile?.account?.accountId
+                              ).id
+                            : room.name
+                        }
+                        fullName={fullName}
+                        bio=""
+                        type={room?.type}
+                        lastMessage={room?.lastMessage?.text}
+                        time={
+                          room?.lastMessage &&
+                          room?.lastMessage.time?.length > 0
+                            ? parseMessageTime(room?.lastMessage?.time)
+                            : ""
+                        }
+                        notification="3"
+                        isBlocked
+                        isMuted
+                        // hasStory
+                        isFriend={true}
+                        members={room?.users}
+                        isOnline={true}
+                      />
+                    );
                   }
-                  isFollower={isFollower}
-                  isFollowing={isFollowing}
-                  foundUser={user}
-                />
-              );
-            }
-          })}
+                }
+                if (
+                  room.type === "personal" &&
+                  followData?.following?.length > 0
+                ) {
+                  const anotherUserArr = room?.users.filter(
+                    (user) => user?.id != profile?.account?.accountId
+                  );
+                  const foundIndex = followData?.following?.findIndex(
+                    (user) => user?.accountId == anotherUserArr[0].id
+                  );
+                  const foundUser = followData?.following[foundIndex];
+
+                  const userFullName = foundUser?.account?.firstname
+                    ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
+                    : foundUser?.username;
+
+                  loggedUsers.push(anotherUserArr[0]?.id);
+                  const isFollower =
+                    followData?.followers.findIndex(
+                      (follower) => follower?.accountId == foundUser?.accountId
+                    ) > -1;
+                  const isFollowing =
+                    followData?.following.findIndex(
+                      (follow) => follow.accountId == foundUser?.accountId
+                    ) > -1;
+
+                  if (isFollowing) {
+                    if (
+                      availableChats.findIndex(
+                        (chat) => chat.accountId === foundUser?.accountId
+                      ) < 0
+                    ) {
+                      availableChats.push(foundUser);
+                    }
+                    return (
+                      <ConversationItem
+                        key={foundUser?.accountId}
+                        roomId={foundUser?.accountId}
+                        picture={foundUser?.avatar}
+                        roomName={userFullName}
+                        fullName={fullName}
+                        foundUser={foundUser}
+                        bio=""
+                        type="personal"
+                        lastMessage={room?.lastMessage?.text}
+                        time={
+                          room?.lastMessage &&
+                          room?.lastMessage.time?.length > 0
+                            ? parseMessageTime(room?.lastMessage?.time)
+                            : ""
+                        }
+                        notification="3"
+                        isBlocked
+                        isMuted
+                        // hasStory
+                        isFollower={isFollower}
+                        isFollowing={isFollowing}
+                        isFriend={true}
+                        members={[]}
+                        isOnline={
+                          onlineUsers.findIndex(
+                            (onlUser) => foundUser?.accountId == onlUser.id
+                          ) > -1
+                        }
+                      />
+                    );
+                  }
+                }
+              })}
+            {/* User renders */}
+            {followData?.following?.length > 0 &&
+              followData?.following?.map((user) => {
+                const userFullName = user?.account?.firstname
+                  ? `${user?.account?.firstname} ${user?.account?.lastname}`
+                  : user?.username;
+                const isLogged =
+                  loggedUsers.findIndex((userId) => userId == user?.accountId) >
+                  -1;
+                const isFollower =
+                  followData?.followers.findIndex(
+                    (follower) => follower.accountId == user.accountId
+                  ) > -1;
+                const isFollowing =
+                  followData?.following.findIndex(
+                    (follow) => follow.accountId == user?.accountId
+                  ) > -1;
+
+                if (!isLogged && isFollowing) {
+                  if (
+                    availableChats.findIndex(
+                      (chat) => chat.accountId === user?.accountId
+                    ) < 0
+                  ) {
+                    availableChats.push(user);
+                  }
+                  return (
+                    <ConversationItem
+                      key={user?.accountId}
+                      roomId={user?.accountId}
+                      picture={user?.user?.avatar}
+                      roomName={userFullName}
+                      fullName={fullName}
+                      bio=""
+                      type="personal"
+                      lastMessage=""
+                      time=""
+                      notification="3"
+                      isBlocked
+                      isMuted
+                      // hasStory
+                      isFriend={false}
+                      members={[]}
+                      isOnline={
+                        onlineUsers.findIndex(
+                          (onlUser) => user?.accountId == onlUser.id
+                        ) > -1
+                      }
+                      isFollower={isFollower}
+                      isFollowing={isFollowing}
+                      foundUser={user}
+                    />
+                  );
+                }
+              })}
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -181,109 +257,179 @@ const Conversations = ({ children }) => {
   const WaitingTab = () => (
     <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
       <ScrollView>
-        {/* Group renders */}
-        {userRooms?.length > 0 &&
-          userRooms?.map((room) => {
-            if (room.type === "personal" && followData?.following?.length > 0) {
-              const anotherUserArr = room?.users.filter(
-                (user) => user?.id != profile?.account?.accountId
-              );
-              const foundIndex = followData?.followers?.findIndex(
-                (user) => user?.accountId == anotherUserArr[0].id
-              );
-              const foundUser = followData?.followers[foundIndex];
+        {searchValue != "" ? (
+          <>
+            {availableChats.length > 0 &&
+              availableChats.map((chat) => {
+                const userFullName = chat?.account?.firstname
+                  ? `${chat?.account?.firstname} ${chat?.account?.lastname}`
+                  : chat?.username;
+                const isFollower =
+                  followData?.followers.findIndex(
+                    (follower) => follower.accountId == chat.accountId
+                  ) > -1;
+                const isFollowing =
+                  followData?.following.findIndex(
+                    (follow) => follow.accountId == chat?.accountId
+                  ) > -1;
 
-              const userFullName = foundUser?.account?.firstname
-                ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
-                : foundUser?.username;
+                if (
+                  userFullName
+                    ?.trim()
+                    ?.toLowerCase()
+                    ?.includes(searchValue.toLowerCase())
+                ) {
+                  return (
+                    <ConversationItem
+                      key={chat?.id}
+                      roomId={chat?.accountId}
+                      picture={chat.avatar}
+                      roomName={userFullName}
+                      fullName={fullName}
+                      foundUser={chat}
+                      bio=""
+                      type="personal"
+                      lastMessage={""}
+                      time={""}
+                      notification="3"
+                      isBlocked
+                      isMuted
+                      // hasStory
+                      isFollower={isFollower}
+                      isFollowing={isFollowing}
+                      isFriend={true}
+                      members={[]}
+                      isOnline={
+                        onlineUsers.findIndex(
+                          (onlUser) => chat?.accountId == onlUser.id
+                        ) > -1
+                      }
+                    />
+                  );
+                }
+              })}
+          </>
+        ) : (
+          <>
+            {/* Group renders */}
+            {userRooms?.length > 0 &&
+              userRooms?.map((room) => {
+                if (
+                  room.type === "personal" &&
+                  followData?.following?.length > 0
+                ) {
+                  const anotherUserArr = room?.users.filter(
+                    (user) => user?.id != profile?.account?.accountId
+                  );
+                  const foundIndex = followData?.followers?.findIndex(
+                    (user) => user?.accountId == anotherUserArr[0].id
+                  );
+                  const foundUser = followData?.followers[foundIndex];
 
-              loggedUsers.push(anotherUserArr[0]?.id);
-              const isFollower =
-                followData?.followers.findIndex(
-                  (follower) => follower?.accountId == foundUser?.accountId
-                ) > -1;
-              const isFollowing =
-                followData?.following.findIndex(
-                  (follow) => follow.accountId == foundUser?.accountId
-                ) > -1;
-              if (!isFollowing && isFollower) {
-                return (
-                  <ConversationItem
-                    key={foundUser?.accountId}
-                    roomId={foundUser?.accountId}
-                    picture={foundUser?.avatar}
-                    roomName={userFullName}
-                    fullName={fullName}
-                    bio=""
-                    type="personal"
-                    lastMessage={room?.lastMessage?.text}
-                    time={
-                      room?.lastMessage && room?.lastMessage.time?.length > 0
-                        ? parseMessageTime(room?.lastMessage?.time)
-                        : ""
+                  const userFullName = foundUser?.account?.firstname
+                    ? `${foundUser?.account?.firstname} ${foundUser?.account?.lastname}`
+                    : foundUser?.username;
+
+                  loggedUsers.push(anotherUserArr[0]?.id);
+                  const isFollower =
+                    followData?.followers.findIndex(
+                      (follower) => follower?.accountId == foundUser?.accountId
+                    ) > -1;
+                  const isFollowing =
+                    followData?.following.findIndex(
+                      (follow) => follow.accountId == foundUser?.accountId
+                    ) > -1;
+                  if (!isFollowing && isFollower) {
+                    if (
+                      availableChats.findIndex(
+                        (chat) => chat.accountId === foundUser?.accountId
+                      ) < 0
+                    ) {
+                      availableChats.push(foundUser);
                     }
-                    notification="3"
-                    isBlocked
-                    isMuted
-                    // hasStory
-                    isFollower={isFollower}
-                    isFollowing={isFollowing}
-                    isFriend={true}
-                    members={[]}
-                    isOnline={
-                      onlineUsers.findIndex(
-                        (onlUser) => foundUser?.accountId == onlUser.id
-                      ) > -1
-                    }
-                  />
-                );
-              }
-            }
-          })}
-        {/* User renders */}
-        {followData?.followers?.length > 0 &&
-          followData?.followers?.map((user) => {
-            const userFullName = user?.account?.firstname
-              ? `${user?.account?.firstname} ${user?.account?.lastname}`
-              : user?.username;
-            const isFollower =
-              followData?.followers.findIndex(
-                (follower) => follower?.accountId == user?.accountId
-              ) > -1;
-            const isFollowing =
-              followData?.following.findIndex(
-                (follow) => follow.accountId == user?.accountId
-              ) > -1;
-            const isLogged =
-              loggedUsers.findIndex((userId) => userId == user?.accountId) > -1;
-            if (isFollower && !isLogged) {
-              return (
-                <ConversationItem
-                  key={user?.accountId}
-                  roomId={user?.accountId}
-                  picture={user?.avatar}
-                  roomName={userFullName}
-                  fullName={fullName}
-                  bio=""
-                  type="personal"
-                  lastMessage=""
-                  time=""
-                  notification="3"
-                  isBlocked
-                  isMuted
-                  // hasStory
-                  isFriend={false}
-                  members={[]}
-                  isOnline={
-                    onlineUsers.findIndex(
-                      (onlUser) => user?.accountId === onlUser?.id
-                    ) > -1
+                    return (
+                      <ConversationItem
+                        key={foundUser?.accountId}
+                        roomId={foundUser?.accountId}
+                        picture={foundUser?.avatar}
+                        roomName={userFullName}
+                        fullName={fullName}
+                        bio=""
+                        type="personal"
+                        lastMessage={room?.lastMessage?.text}
+                        time={
+                          room?.lastMessage &&
+                          room?.lastMessage.time?.length > 0
+                            ? parseMessageTime(room?.lastMessage?.time)
+                            : ""
+                        }
+                        notification="3"
+                        isBlocked
+                        isMuted
+                        // hasStory
+                        isFollower={isFollower}
+                        isFollowing={isFollowing}
+                        isFriend={true}
+                        members={[]}
+                        isOnline={
+                          onlineUsers.findIndex(
+                            (onlUser) => foundUser?.accountId == onlUser.id
+                          ) > -1
+                        }
+                        foundUser={foundUser}
+                      />
+                    );
                   }
-                  isFollowing={isFollowing}
-                />
-              );
-            }
-          })}
+                }
+              })}
+            {/* User renders */}
+            {followData?.followers?.length > 0 &&
+              followData?.followers?.map((user) => {
+                const userFullName = user?.account?.firstname
+                  ? `${user?.account?.firstname} ${user?.account?.lastname}`
+                  : user?.username;
+                const isFollower =
+                  followData?.followers.findIndex(
+                    (follower) => follower?.accountId == user?.accountId
+                  ) > -1;
+                const isFollowing =
+                  followData?.following.findIndex(
+                    (follow) => follow.accountId == user?.accountId
+                  ) > -1;
+                const isLogged =
+                  loggedUsers.findIndex((userId) => userId == user?.accountId) >
+                  -1;
+                if (isFollower && !isLogged) {
+                  return (
+                    <ConversationItem
+                      key={user?.accountId}
+                      roomId={user?.accountId}
+                      picture={user?.avatar}
+                      roomName={userFullName}
+                      fullName={fullName}
+                      bio=""
+                      type="personal"
+                      lastMessage=""
+                      time=""
+                      notification="3"
+                      isBlocked
+                      isMuted
+                      // hasStory
+                      isFriend={false}
+                      members={[]}
+                      isOnline={
+                        onlineUsers.findIndex(
+                          (onlUser) => user?.accountId === onlUser?.id
+                        ) > -1
+                      }
+                      isFollowing={isFollowing}
+                      foundUser={user}
+                    />
+                  );
+                }
+              })}
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -337,7 +483,7 @@ const Conversations = ({ children }) => {
       });
       setUserRooms(data);
     });
-  }, [socket]);
+  }, [socket, followData]);
 
   useEffect(() => {
     fetch();

@@ -11,6 +11,7 @@ import {
   getSuggestionAccountByAccountId,
 } from "../../app/Account/actions";
 import ROUTES from "../../constants/routes";
+import { fecthListFollow } from "../../features/userSlice";
 const HeaderFriend = ({ navigation, accountSuggestion }) => {
   // const navigation = useNavigation();
   const SettingFriends = () => {
@@ -40,6 +41,7 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           await fetchAccountSuggestion();
           await fetchAllAccountSuggestion();
+          await dispatch(fecthListFollow());
         }
       });
     } catch (error) {}
