@@ -54,7 +54,7 @@ const ChatHeader = ({
   };
   const navigateToFriend = () => {
     if (foundUser) {
-      navigation.navigate(ROUTES.FRIENDS, { item: foundUser });
+      navigation.navigate(ROUTES.FRIENDS, { item: foundUser, toFollow: true });
     }
   };
   const onChangeGroupName = async () => {

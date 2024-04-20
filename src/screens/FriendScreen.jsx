@@ -19,7 +19,7 @@ import {
 const FriendScreen = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { item } = route?.params;
+  const { item, toFollow } = route?.params;
 
   const accountSuggestion = useSelector(
     (state) => state.account.accountSuggestion
@@ -45,6 +45,7 @@ const FriendScreen = ({ route }) => {
       <HeaderFriend
         navigation={navigation}
         accountSuggestion={accountSuggestion}
+        toFollow={toFollow}
       />
       <View style={styles.hr} />
       {/* <CartFriends /> */}

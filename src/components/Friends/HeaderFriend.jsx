@@ -12,7 +12,7 @@ import {
 } from "../../app/Account/actions";
 import ROUTES from "../../constants/routes";
 import { fecthListFollow } from "../../features/userSlice";
-const HeaderFriend = ({ navigation, accountSuggestion }) => {
+const HeaderFriend = ({ navigation, accountSuggestion, toFollow }) => {
   // const navigation = useNavigation();
   const SettingFriends = () => {
     // Chuyển đến trang Setting khi người dùng nhấn vào icon Setting
@@ -21,7 +21,11 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
 
   const authenticated = useSelector((state) => state.user.authenticated);
   const dispatch = useDispatch();
-  console.log("accountSuggestion", accountSuggestion);
+
+  const navigateToConversation = () => {
+    navigation.navigate(ROUTES.CONVERSATIONS);
+  };
+
   const fetchAllAccountSuggestion = async () => {
     await dispatch(getSuggestionAccount()).then((res) => {
       // console.log("res", JSON.stringify(res, null, 2));
@@ -41,10 +45,12 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
         if (res?.meta?.requestStatus === "fulfilled") {
           await fetchAccountSuggestion();
           await fetchAllAccountSuggestion();
-          await dispatch(fecthListFollow());
         }
       });
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      await dispatch(fecthListFollow());
+    }
   };
 
   function navigateToFollower() {
@@ -58,7 +64,11 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
   return (
     <View style={styles.header}>
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() =>
+            toFollow ? navigateToConversation() : navigation.goBack()
+          }
+        >
           <Icon source={"chevron-left"} size={40} />
         </TouchableOpacity>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 0 }}>
