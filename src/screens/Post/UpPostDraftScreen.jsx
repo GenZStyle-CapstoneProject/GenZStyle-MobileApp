@@ -150,7 +150,11 @@ const UpPostDraftScreen = () => {
             routes: [{ name: ROUTES.HOME_NAVIGATOR }],
           });
         } else {
-          alert(`Dang bai that bai ${res?.payload?.message}`);
+          if (res?.payload?.status === 405) {
+            Alert.alert("Cảnh báo", "Không được đăng hình ảnh nhạy cảm!");
+            return navigation.goBack();
+          }
+          alert(`Đăng bài thất bại!`);
         }
       });
     } catch (error) {
@@ -194,7 +198,11 @@ const UpPostDraftScreen = () => {
               routes: [{ name: ROUTES.HOME_NAVIGATOR }],
             });
           } else {
-            alert(`Dang bai that bai ${res?.payload?.message}`);
+            if (res?.payload?.status === 405) {
+              Alert.alert("Cảnh báo", "Không được đăng hình ảnh nhạy cảm!");
+              return navigation.goBack();
+            }
+            alert(`Đăng bài thất bại!`);
           }
         });
       } else {
@@ -207,7 +215,7 @@ const UpPostDraftScreen = () => {
 
   const handleSaveToStorage = async () => {
     try {
-      const existingData = await AsyncStorage.getItem("DRAFT_ARRAY");
+      const existingData = await AsyncStorage.getItem(`DRAFT_ARRAY_${accountId}`);
       let dataArray = [];
 
       if (existingData) {
@@ -222,7 +230,7 @@ const UpPostDraftScreen = () => {
         link: link,
       });
 
-      await AsyncStorage.setItem("DRAFT_ARRAY", JSON.stringify(dataArray)).then(
+      await AsyncStorage.setItem(`DRAFT_ARRAY_${accountId}`, JSON.stringify(dataArray)).then(
         (res) => {
           navigation.navigate("Bản nháp");
         }

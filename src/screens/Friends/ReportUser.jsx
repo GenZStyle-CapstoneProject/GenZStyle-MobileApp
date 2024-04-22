@@ -20,14 +20,14 @@ const ReportUser = () => {
     behavior: false,
     notSuitable: false,
     spamOrScam: false,
-    other: false,
+    // other: false,
   });
   const reasonMappings = {
     dislike: "Tôi không thích người dùng này",
     behavior: "Hành vi của người dùng này không hợp với tôi",
     notSuitable: "Người dùng này không nên xuất hiện GenZStyle",
     spamOrScam: "Người dùng này gửi thư rác hoặc lừa đảo",
-    other: `Lý do khác: ${otherReason}`,
+    // other: `Lý do khác: ${otherReason}`,
   };
 
   const [otherReason, setOtherReason] = useState("");
@@ -96,7 +96,7 @@ const ReportUser = () => {
           checked={reasons.spamOrScam}
           onPress={() => toggleReason("spamOrScam")}
         />
-        <ReasonCheckbox
+        {/* <ReasonCheckbox
           label="Lý do khác"
           checked={reasons.other}
           onPress={() => toggleReason("other")}
@@ -108,7 +108,7 @@ const ReportUser = () => {
             value={otherReason}
             onChangeText={setOtherReason}
           />
-        )}
+        )} */}
       </View>
     </View>
   );

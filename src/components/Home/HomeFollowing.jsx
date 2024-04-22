@@ -9,10 +9,12 @@ import {
   RefreshControl,
   Alert,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 import CartHomeFollowing from "./CartHomeFollowing";
 import images from "../../data/Image";
-import { useNavigation } from "@react-navigation/native";
-import { Card, Icon, Badge } from "react-native-paper";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { Card, Badge } from "react-native-paper";
 import { Avatar, Button } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScreenWidth } from "react-native-elements/dist/helpers";
@@ -26,11 +28,13 @@ import {
 import { imageUrlTest } from "../../utils/testData";
 import ROUTES from "../../constants/routes";
 import AuthenFollow from "./AuthenFollow";
+import { fetchLikePost } from "../../app/LikePost/action";
+import Skeleton from "../Skeleton/Skeleton";
 
 const HomeFollowing = () => {
   const navigation = useNavigation();
   const navigateToCartDetail = (item) => {
-    navigation.navigate("CartDetail", { item });
+    navigation.navigate(ROUTES.CARTDETAIL, { item });
   };
   const navigateToFriend = (item) => {
     navigation.navigate(ROUTES.FRIENDS, { item });
@@ -57,18 +61,20 @@ const HomeFollowing = () => {
     (state) => state.account.accountFollowingList
   );
   const authenticated = useSelector((state) => state.user.authenticated);
-
+  const accountId = useSelector((state) => state.user.accountId);
   // ** React hooks state
   const [isFollowed, setIsFollowed] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const fetch = async () => {
-      await fetchAllAccountSuggestionForCheck();
-      await fetchAllFetFollowingAccountWithPosts();
-    };
-    fetch();
-  }, [authenticated]);
+  useFocusEffect(
+    useCallback(() => {
+      const fetch = async () => {
+        await fetchAllAccountSuggestionForCheck();
+        await fetchAllFetFollowingAccountWithPosts();
+      };
+      fetch();
+    }, [authenticated])
+  );
 
   // Dispatch functions
   const followOneAccountById = async (accountId) => {
@@ -82,12 +88,26 @@ const HomeFollowing = () => {
     } catch (error) {}
   };
 
+  const handleLikePress = async (postId) => {
+    try {
+      await dispatch(
+        fetchLikePost({
+          postId: postId,
+        })
+      );
+      await fetchAllFetFollowingAccountWithPosts();
+    } catch (error) {
+      console.error("Error dispatching likePost:", error.message);
+    }
+  };
+
   const fetchAllAccountSuggestion = async () => {
     await dispatch(getSuggestionAccount());
   };
 
   const fetchAccountSuggestion = async (accountId) => {
-    await dispatch(getSuggestionAccountByAccountId(accountId));
+    const res = await dispatch(getSuggestionAccountByAccountId(accountId));
+    return res;
   };
 
   const fetchAllAccountSuggestionForCheck = async () => {
@@ -123,7 +143,15 @@ const HomeFollowing = () => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() => null}
+        onPress={() => {
+          fetchAccountSuggestion(item?.accountId).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+              navigateToFriend(item);
+            } else {
+              Alert.alert("Đã xảy ra sự cố khi xem chi tiết tài khoản này!");
+            }
+          });
+        }}
         style={{ marginTop: 5, marginHorizontal: 15, marginBottom: 10 }}
       >
         <View
@@ -142,13 +170,19 @@ const HomeFollowing = () => {
             }}
             onPress={() => {
               fetchAccountSuggestion(item?.accountId).then((res) => {
-                navigateToFriend(item);
+                if (res?.meta?.requestStatus === "fulfilled") {
+                  navigateToFriend(item);
+                } else {
+                  Alert.alert(
+                    "Đã xảy ra sự cố khi xem chi tiết tài khoản này!"
+                  );
+                }
               });
             }}
             rounded
             size="medium"
             source={{
-              uri: item?.user?.avatar || imageUrlTest,
+              uri: item?.user?.avatar ?? imageUrlTest,
             }}
           />
           <View style={{ flex: 1 }}>
@@ -201,11 +235,11 @@ const HomeFollowing = () => {
             renderItem={({}) => {
               return (
                 <Avatar
-                  onPress={() => navigateToCartDetail(item)}
+                  onPress={() => navigateToCartDetail(item?.posts?.[0])}
                   containerStyle={{ width: "33%", height: 170 }}
                   avatarStyle={{ borderRadius: 2 }}
                   source={{
-                    uri: item?.posts?.[0]?.image,
+                    uri: item?.posts?.[0]?.image ?? imageUrlTest,
                   }}
                 />
               );
@@ -227,14 +261,34 @@ const HomeFollowing = () => {
           }}
         >
           <Avatar
+            onPress={() => navigateToCartDetail(item)}
             style={{ borderRadius: 0, height: 550 }}
-            source={{ uri: item?.image || imageUrlTest }}
+            source={{ uri: item?.image ?? imageUrlTest }}
           />
           <View style={{ marginHorizontal: 15 }}>
             <View style={{ gap: 10 }}>
               <View style={{ flexDirection: "row", marginTop: 10 }}>
                 <View style={{ flexDirection: "row" }}>
-                  <Icon source="heart-outline" color={"black"} size={24} />
+                  <Icon
+                    onPress={() => handleLikePress(item?.postId)}
+                    name={
+                      item.likes.some(
+                        (like) =>
+                          like.isLike === true && like.likeBy == accountId
+                      )
+                        ? "heart"
+                        : "heart-outline"
+                    }
+                    size={27}
+                    style={{
+                      color: item.likes.some(
+                        (like) =>
+                          like.isLike === true && like.likeBy == accountId
+                      )
+                        ? "red"
+                        : "black",
+                    }}
+                  />
                   <Badge
                     style={{
                       alignSelf: "flex-start",
@@ -247,7 +301,7 @@ const HomeFollowing = () => {
                   </Badge>
                 </View>
                 <View style={{ flexDirection: "row" }}>
-                  <Icon source="chat-outline" color={"black"} size={24} />
+                  <Icon name="chat-outline" color={"black"} size={24} />
                   <Badge
                     style={{
                       alignSelf: "flex-start",
@@ -260,7 +314,7 @@ const HomeFollowing = () => {
                   </Badge>
                 </View>
                 <View style={{ flexDirection: "row" }}>
-                  <Icon source="bookmark-outline" color={"black"} size={24} />
+                  <Icon name="bookmark-outline" color={"black"} size={24} />
                   <Badge
                     style={{
                       alignSelf: "flex-start",
@@ -279,8 +333,8 @@ const HomeFollowing = () => {
                 </Text>
               </View>
               <View style={{ flexDirection: "row", gap: 10 }}>
-                {item?.hashPosts?.map((item, index) => (
-                  <Text key={index}>{item?.hashtag?.name + " "}</Text>
+                {item?.hashtags?.map((item, index) => (
+                  <Text key={index}>{item + " "}</Text>
                 ))}
               </View>
               <TouchableOpacity
@@ -305,7 +359,7 @@ const HomeFollowing = () => {
                 >
                   <Icon
                     size={28}
-                    source="account"
+                    name="account"
                     color="black"
                     style={{ backgroundColor: "grey" }}
                   />
@@ -375,7 +429,11 @@ const HomeFollowing = () => {
       <TouchableOpacity
         onPress={() => {
           fetchAccountSuggestion(item?.accountId).then((res) => {
-            navigateToFriend(item);
+            if (res?.meta?.requestStatus === "fulfilled") {
+              navigateToFriend(item);
+            } else {
+              Alert.alert("Đã xảy ra sự cố khi xem chi tiết tài khoản này!");
+            }
           });
         }}
         style={{
@@ -387,7 +445,7 @@ const HomeFollowing = () => {
       >
         <Avatar
           style={{ borderRadius: 0, height: 300, width: 240 }}
-          source={{ uri: item?.posts?.[0]?.image || imageUrlTest }}
+          source={{ uri: item?.posts?.[0]?.image ?? imageUrlTest }}
         />
         <View style={{ borderWidth: 1, borderColor: "grey" }}>
           <View>
@@ -404,7 +462,7 @@ const HomeFollowing = () => {
               <Avatar
                 style={{ height: 55, width: 55 }}
                 avatarStyle={{ borderRadius: 100 }}
-                source={{ uri: item?.user?.avatar || imageUrlTest }}
+                source={{ uri: item?.user?.avatar ?? imageUrlTest }}
               />
             </View>
             <View
@@ -419,7 +477,7 @@ const HomeFollowing = () => {
               }}
             >
               <Text style={{ fontSize: 13, fontWeight: 600 }}>
-                {item?.username || "user"}
+                {item?.username?.slice(0, 15) || "user"}
               </Text>
               <Text style={{ fontSize: 11, color: "grey" }}>
                 {item?.user?.height +
@@ -482,6 +540,17 @@ const HomeFollowing = () => {
   }, [accountSuggestionList]);
 
   console.log(authenticated);
+  if (isFollowed === null) {
+    return (
+      <View>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+        <Skeleton />
+      </View>
+    );
+  }
   return isFollowed !== null && authenticated ? (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ flex: 1 }}>

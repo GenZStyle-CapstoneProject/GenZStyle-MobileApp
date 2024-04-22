@@ -4,6 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { IconButton } from "react-native-paper";
 import ROUTES from "../../constants/routes";
+import kol_icon from "../../../assets/kol-icon.jpg";
+import player_icon from "../../../assets/player-icon.png";
 
 const HeaderProfile = ({ userInfo, profile, followersData }) => {
   const navigation = useNavigation();
@@ -71,11 +73,44 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
           />
         </View>
         <View style={styles.userInfo}>
-          <Text style={styles.username}>
-            <Text style={styles.username}>
-              {profile?.data?.account?.username || "Thông tin cá nhân"}
-            </Text>
-          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <View>
+              <Text style={styles.username}>
+                {(() => {
+                  let fullname = "Thông tin cá nhân";
+                  if (
+                    profile?.data?.account?.firstname &&
+                    profile?.data?.account?.lastname
+                  ) {
+                    fullname = `${profile?.data?.account?.firstname} ${profile?.data?.account?.lastname}`;
+                  }
+
+                  return fullname.length > 20
+                    ? `${fullname.slice(0, 20)}...`
+                    : fullname;
+                })()}
+              </Text>
+              {profile?.data?.role && (
+                <View style={{ position: "absolute", top: -10, right: -35 }}>
+                  <Image
+                    source={
+                      profile?.data?.role === "KOL" ? kol_icon : player_icon
+                    }
+                    style={{
+                      height: 30,
+                      width: 30,
+                      borderRadius: 100,
+                      borderWidth: 0.5,
+                      borderColor:
+                        profile?.data?.role === "KOL"
+                          ? "transparent"
+                          : "#1C6758",
+                    }}
+                  />
+                </View>
+              )}
+            </View>
+          </View>
 
           <Text style={styles.account}>
             <Text style={styles.account}>
@@ -83,11 +118,11 @@ const HeaderProfile = ({ userInfo, profile, followersData }) => {
             </Text>
           </Text>
           <Text style={styles.account}>
-            {profile?.data?.height || "xxx cm"}
+            {profile?.data?.height || "xxx cm"} cm
           </Text>
         </View>
       </View>
-      <Text style={styles.bioContent}>Just do it </Text>
+      {/* <Text style={styles.bioContent}>Just do it </Text> */}
       <View style={styles.bioContainer}>
         <View style={styles.bioColumn}>
           <TouchableOpacity onPress={handleFollowers}>

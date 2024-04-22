@@ -3,37 +3,78 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { ScreenWidth } from "react-native-elements/dist/helpers";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { imageUrlTest } from "../../utils/testData";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLikePost } from "../../app/LikePost/action";
 
-const CartFriends = ({ item, index }) => (
-  <View style={[styles.postContainer, { marginLeft: index % 2 === 0 ? 0 : 2 }]}>
-    <Image
-      source={{ uri: item?.image || imageUrlTest }}
-      style={styles.postImage}
-    />
-    <View style={styles.postFooter}>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity style={styles.icon}>
-          <Icon name="heart-outline" size={24} color="black" />
-          <Text style={styles.iconText}>{`(${item?.likes?.length || 0})`}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.icon}>
-          <Icon name="chat-outline" size={24} color="black" />
-          <Text style={styles.iconText}></Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.textContainer}>
-        <View style={styles.textRow}>
-          <Text numberOfLines={2} style={styles.titleText}>
-            {item?.content || "No value"}
-          </Text>
+const CartFriends = ({ item, index, fetchAccountSuggestion }) => {
+  const dispatch = useDispatch();
+  const accountId = useSelector((state) => state.user.accountId);
+
+  const handleLikePress = async (postId) => {
+    try {
+      await dispatch(
+        fetchLikePost({
+          postId: postId,
+        })
+      );
+      fetchAccountSuggestion();
+    } catch (error) {
+      console.error("Error dispatching likePost:", error.message);
+    }
+  };
+
+  return (
+    <View
+      style={[styles.postContainer, { marginLeft: index % 2 === 0 ? 0 : 2 }]}
+    >
+      <Image
+        source={{ uri: item?.image ?? imageUrlTest }}
+        style={styles.postImage}
+      />
+      <View style={styles.postFooter}>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity style={styles.icon}>
+            <Icon
+              onPress={() => handleLikePress(item?.postId)}
+              name={
+                item?.likes?.some(
+                  (like) => like?.isLike === true && like?.likeBy == accountId
+                )
+                  ? "heart"
+                  : "heart-outline"
+              }
+              size={27}
+              style={{
+                color: item?.likes?.some(
+                  (like) => like?.isLike === true && like?.likeBy == accountId
+                )
+                  ? "red"
+                  : "black",
+              }}
+            />
+            <Text style={styles.iconText}>{`(${
+              item?.likes?.length || 0
+            })`}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.icon}>
+            <Icon name="chat-outline" size={24} color="black" />
+            <Text style={styles.iconText}></Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.textRow}>
-          <Text style={styles.hashtagText}>{item.hashtag}</Text>
+        <View style={styles.textContainer}>
+          <View style={styles.textRow}>
+            <Text numberOfLines={1} style={styles.titleText}>
+              {item?.content || "No value"}
+            </Text>
+          </View>
+          <View style={styles.textRow}>
+            <Text style={styles.hashtagText}>{item.hashtag}</Text>
+          </View>
         </View>
       </View>
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   postContainerScrollView: {
@@ -76,6 +117,7 @@ const styles = StyleSheet.create({
   textRow: {
     flexDirection: "row",
     alignItems: "center",
+    maxWidth: (ScreenWidth - 10) / 2,
   },
   titleText: {
     fontWeight: "bold",

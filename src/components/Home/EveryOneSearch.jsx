@@ -173,7 +173,7 @@ const EveryOneSearch = () => {
             rounded
             size="medium"
             source={{
-              uri: item?.user?.avatar || imageUrlTest,
+              uri: item?.user?.avatar ?? imageUrlTest,
             }}
           />
           <View style={{ flex: 1 }}>
@@ -257,7 +257,7 @@ const EveryOneSearch = () => {
         >
           <Avatar
             style={{ borderRadius: 0, height: 550 }}
-            source={{ uri: item?.image || imageUrlTest }}
+            source={{ uri: item?.image ?? imageUrlTest }}
           />
           <View style={{ marginHorizontal: 15 }}>
             <View style={{ gap: 10 }}>
@@ -416,7 +416,7 @@ const EveryOneSearch = () => {
       >
         <Avatar
           style={{ borderRadius: 0, height: 300, width: 240 }}
-          source={{ uri: item?.posts?.[0]?.image || imageUrlTest }}
+          source={{ uri: item?.posts?.[0]?.image ?? imageUrlTest }}
         />
         <View style={{ borderWidth: 1, borderColor: "grey" }}>
           <View>
@@ -433,7 +433,7 @@ const EveryOneSearch = () => {
               <Avatar
                 style={{ height: 55, width: 55 }}
                 avatarStyle={{ borderRadius: 100 }}
-                source={{ uri: item?.user?.avatar || imageUrlTest }}
+                source={{ uri: item?.user?.avatar ?? imageUrlTest }}
               />
             </View>
             <View

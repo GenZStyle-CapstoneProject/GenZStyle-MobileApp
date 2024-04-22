@@ -4,6 +4,7 @@ import {
   getAccountWithPostList,
   getFollowerAndFollowingByAccountId,
   getFollowingAccountWithPosts,
+  getPostByAccountId,
   getSuggestionAccount,
   getSuggestionAccountByAccountId,
   resetAccountWithPostList,
@@ -19,7 +20,9 @@ const accountSlice = createSlice({
     accountSuggestion: null,
     accountFollowingList: [],
     accountFollowInfo: null,
+    postInAccount: [],
     loading: null,
+    loadingFriend: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -62,14 +65,14 @@ const accountSlice = createSlice({
       })
       // NGăn cách
       .addCase(getSuggestionAccountByAccountId.pending, (state) => {
-        state.loading = true;
+        state.loadingFriend = null;
       })
       .addCase(getSuggestionAccountByAccountId.fulfilled, (state, action) => {
         state.accountSuggestion = action.payload;
-        state.loading = false;
+        state.loadingFriend = "a";
       })
       .addCase(getSuggestionAccountByAccountId.rejected, (state, action) => {
-        state.loading = false;
+        state.loadingFriend = "a";
       })
       // NGăn cách
       .addCase(getFollowingAccountWithPosts.pending, (state) => {
@@ -84,16 +87,27 @@ const accountSlice = createSlice({
       })
       // Ngăn cách
       .addCase(getFollowerAndFollowingByAccountId.pending, (state) => {
-        state.loading = true;
+        state.loadingFriend = null;
       })
       .addCase(
         getFollowerAndFollowingByAccountId.fulfilled,
         (state, action) => {
           state.accountFollowInfo = action.payload;
-          state.loading = false;
+          state.loadingFriend = "a";
         }
       )
       .addCase(getFollowerAndFollowingByAccountId.rejected, (state, action) => {
+        state.loadingFriend = "a";
+      })
+      // Ngăn cách
+      .addCase(getPostByAccountId.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getPostByAccountId.fulfilled, (state, action) => {
+        state.postInAccount = action.payload;
+        state.loading = false;
+      })
+      .addCase(getPostByAccountId.rejected, (state, action) => {
         state.loading = false;
       })
       .addCase(updatePassword.pending, (state) => {

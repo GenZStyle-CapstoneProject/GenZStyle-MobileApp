@@ -609,8 +609,7 @@ const styles = StyleSheet.create({
   },
   moreOptionsIcon: {
     position: "absolute",
-
-    right: 10,
+    right: 25,
   },
   modalOverlay: {
     flex: 1,

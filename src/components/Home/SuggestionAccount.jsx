@@ -83,8 +83,7 @@ const SuggestionAccount = ({ navigation }) => {
             rounded
             size="medium"
             source={{
-              // uri: item?.user?.avatar || imageUrlTest,
-              uri: item?.user?.avatar,
+              uri: item?.user?.avatar ?? imageUrlTest,
             }}
           />
           <View style={{ flex: 1 }}>

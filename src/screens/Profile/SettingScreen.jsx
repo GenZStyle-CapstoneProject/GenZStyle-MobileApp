@@ -97,19 +97,20 @@ const SettingScreen = () => {
             <Text style={styles.boldText}>Gói hệ thống</Text>
           </Text>
           <View style={styles.settingItem}>
-            <TouchableOpacity onPress={navigateToPackageHistory}>
-              <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.hr} />
-
-          <View style={styles.settingItem}>
             <TouchableOpacity onPress={navigateToSettingPackage}>
               <Text style={styles.settingText}>Gói thành viên</Text>
             </TouchableOpacity>
 
-            <Text style={styles.settingText1}>Premium</Text>
+            {/* <Text style={styles.settingText1}>Premium</Text> */}
+          </View>
+
+          <View style={styles.hr} />
+
+          
+          <View style={styles.settingItem}>
+            <TouchableOpacity onPress={navigateToPackageHistory}>
+              <Text style={styles.settingText}>Lịch sử mua gói thành viên</Text>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.hr} /></>
@@ -118,10 +119,10 @@ const SettingScreen = () => {
         <Text style={styles.boldText}>Giới thiệu</Text>
       </Text>
 
-      <View>
+      {/* <View>
         <Text style={styles.settingText}>Nhận xét</Text>
         <View style={styles.hr} />
-      </View>
+      </View> */}
 
       <View>
         <Text style={styles.settingText}>Điều khoản sử dụng</Text>
@@ -135,7 +136,7 @@ const SettingScreen = () => {
 
       <View style={styles.settingItem}>
         <Text style={styles.settingText}>Phiên bản</Text>
-        <Text style={styles.settingText1}>1.0.22</Text>
+        <Text style={styles.settingText1}>1.0.24</Text>
       </View>
       <View style={styles.hr} />
       {

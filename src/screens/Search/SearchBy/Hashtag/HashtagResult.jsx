@@ -152,7 +152,7 @@ const HashtagResult = () => {
                       width: SCREEN_WIDTH / 2 - GAP,
                       height: 250,
                     }}
-                    source={{ uri: item?.image || imageUrlTest }}
+                    source={{ uri: item?.image ?? imageUrlTest }}
                   />
                 </TouchableOpacity>
                 <View style={{ marginHorizontal: 5 }}>

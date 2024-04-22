@@ -12,10 +12,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { ScreenWidth } from "./CameraScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ROUTES from "../../constants/routes";
+import { useSelector } from "react-redux";
 
 const DraftScreen = () => {
   const navigation = useNavigation();
-
+  const accountId = useSelector((state) => state.user.accountId)
   const goBack = () => {
     navigation.goBack();
   };
@@ -28,7 +29,7 @@ const DraftScreen = () => {
 
   const fetchAllDraftInStorage = async () => {
     try {
-      const res = await AsyncStorage.getItem("DRAFT_ARRAY");
+      const res = await AsyncStorage.getItem(`DRAFT_ARRAY_${accountId}`);
       let dataArray = [];
       if (res) {
         dataArray = JSON.parse(res);
@@ -42,7 +43,7 @@ const DraftScreen = () => {
 
   const removeDraftItem = async (item) => {
     try {
-      const res = await AsyncStorage.getItem("DRAFT_ARRAY");
+      const res = await AsyncStorage.getItem(`DRAFT_ARRAY_${accountId}`);
       let dataArray = [];
 
       if (res) {
@@ -50,7 +51,7 @@ const DraftScreen = () => {
       }
 
       dataArray = dataArray.filter((itemA) => itemA.id !== item?.id);
-      await AsyncStorage.setItem("DRAFT_ARRAY", JSON.stringify(dataArray));
+      await AsyncStorage.setItem(`DRAFT_ARRAY_${accountId}`, JSON.stringify(dataArray));
       setDraftData(dataArray);
 
       fetchAllDraftInStorage();
@@ -61,7 +62,7 @@ const DraftScreen = () => {
 
   const removeAllDraft = async () => {
     try {
-      await AsyncStorage.removeItem("DRAFT_ARRAY").finally(() => {
+      await AsyncStorage.removeItem(`DRAFT_ARRAY_${accountId}`).finally(() => {
         fetchAllDraftInStorage();
       });
     } catch (error) {

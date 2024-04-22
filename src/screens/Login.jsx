@@ -16,6 +16,7 @@ import { login } from "../features/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 import ROUTES from "../constants/routes";
+import { useSelector } from "react-redux";
 
 const Login = ({ navigation }) => {
   let [fontsLoaded] = useFonts({
@@ -28,6 +29,8 @@ const Login = ({ navigation }) => {
     await AsyncStorage.setItem("appLaunched", "true");
     navigation.replace("tab");
   };
+  const auth = useSelector((state) => state.user.authenticated)
+  console.log(auth)
   const handleLogin = async () => {
     try {
       await dispatch(

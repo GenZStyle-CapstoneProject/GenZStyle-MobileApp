@@ -1,34 +1,55 @@
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon, Searchbar } from "react-native-paper";
 import { Avatar } from "react-native-elements";
 import { imageUrlTest } from "../../../utils/testData";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import {
   followOneAccount,
   getFollowerAndFollowingByAccountId,
+  getSuggestionAccountByAccountId,
 } from "../../../app/Account/actions";
+import ROUTES from "../../../constants/routes";
+import Skeleton from "../../Skeleton/Skeleton";
 
 const Following = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const account = route.params?.account;
   const dispatch = useDispatch();
+
+  const navigateToFriend = (item) => {
+    navigation.push(ROUTES.FRIENDS, { item });
+  };
+
   const accountFollowInfo = useSelector(
     (state) => state.account.accountFollowInfo
   );
   const accountId = useSelector((state) => state.user.accountId);
-  console.log(accountFollowInfo);
+  // console.log(accountFollowInfo);
 
   const fetchFollowerAndFollowingByAccountId = async () => {
-    dispatch(getFollowerAndFollowingByAccountId(account?.accountId));
+    const res = await dispatch(
+      getFollowerAndFollowingByAccountId(account?.accountId)
+    );
+    return res;
+  };
+
+  const fetchAccountSuggestion = async (accountId) => {
+    const res = await dispatch(getSuggestionAccountByAccountId(accountId));
+    return res;
   };
 
   const followOneAccountById = async (accountId) => {
@@ -36,7 +57,11 @@ const Following = () => {
       await dispatch(followOneAccount(accountId)).then(async (res) => {
         console.log(res?.payload?.isfollow === true ? "Following" : "Unfollow");
         if (res?.meta?.requestStatus === "fulfilled") {
-          await fetchFollowerAndFollowingByAccountId();
+          const res = await fetchFollowerAndFollowingByAccountId();
+          res?.payload?.following?.map((item) => console.log(item?.isfollow));
+          console.log("Thành công khi follow")
+        } else {
+          console.log("Lỗi khi follow")
         }
       });
     } catch (error) {
@@ -44,9 +69,31 @@ const Following = () => {
     }
   };
 
+  const [loading, setLoading] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(null);
+      const fetch = async () => {
+        await fetchFollowerAndFollowingByAccountId();
+        setLoading("");
+      };
+      fetch();
+    }, [account])
+  );
+  console.log("loading", loading);
   const renderItem = ({ item }) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          fetchAccountSuggestion(item?.accountId).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+              navigateToFriend(item);
+            } else {
+              Alert.alert("Đã xảy ra sự cố khi xem chi tiết tài khoản này!");
+            }
+          });
+        }}
         style={{
           flexDirection: "row",
           alignItems: "center",
@@ -93,7 +140,7 @@ const Following = () => {
               <Text style={{ color: "black" }}>Đang theo dõi</Text>
             </TouchableOpacity>
           ))}
-      </View>
+      </TouchableOpacity>
     );
   };
   return (
@@ -101,7 +148,7 @@ const Following = () => {
       <View
         style={{
           flexDirection: "row",
-          marginTop: 40,
+          marginTop: 0,
           alignItems: "center",
           justifyContent: "space-between",
         }}
@@ -128,9 +175,23 @@ const Following = () => {
           placeholderTextColor={"grey"}
         />
       </View>
-      <View style={{ flex: 1, marginTop: 10 }}>
-        <FlatList data={accountFollowInfo?.following} renderItem={renderItem} />
-      </View>
+      {loading !== null ? (
+        <View style={{ flex: 1, marginTop: 10 }}>
+          <FlatList
+            data={accountFollowInfo?.following}
+            renderItem={renderItem}
+          />
+        </View>
+      ) : (
+        <View>
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+        </View>
+      )}
     </View>
   );
 };

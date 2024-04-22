@@ -117,7 +117,7 @@ const Signup = ({ navigation }) => {
 
       if (response.status === 200) {
         alert("Đăng ký thành công!");
-        navigation.navigate("Home");
+        navigation.navigate("Login");
       } else {
         alert("Đăng ký không thành công. Vui lòng thử lại.");
       }

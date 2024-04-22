@@ -1,22 +1,28 @@
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Icon, Searchbar } from "react-native-paper";
 import { Avatar } from "react-native-elements";
 import { imageUrlTest } from "../../../utils/testData";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import {
   followOneAccount,
   getFollowerAndFollowingByAccountId,
   getSuggestionAccountByAccountId,
 } from "../../../app/Account/actions";
 import ROUTES from "../../../constants/routes";
+import Skeleton from "../../Skeleton/Skeleton";
 
 const Follower = () => {
   const navigation = useNavigation();
@@ -33,7 +39,7 @@ const Follower = () => {
   };
 
   const fetchFollowerAndFollowingByAccountId = async () => {
-    dispatch(getFollowerAndFollowingByAccountId(account?.accountId));
+    await dispatch(getFollowerAndFollowingByAccountId(account?.accountId));
   };
 
   const followOneAccountById = async (accountId) => {
@@ -50,16 +56,34 @@ const Follower = () => {
   };
 
   const fetchAccountSuggestion = async (accountId) => {
-    await dispatch(getSuggestionAccountByAccountId(accountId));
+    const res = await dispatch(getSuggestionAccountByAccountId(accountId));
+    return res;
   };
+
+  const [loading, setLoading] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(null);
+      const fetch = async () => {
+        await fetchFollowerAndFollowingByAccountId();
+        setLoading("");
+      };
+      fetch();
+    }, [account])
+  );
 
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-        //   fetchAccountSuggestion(item?.accountId).then((res) => {
-        //     navigateToFriend(item);
-        //   });
+          fetchAccountSuggestion(item?.accountId).then((res) => {
+            if (res?.meta?.requestStatus === "fulfilled") {
+              navigateToFriend(item);
+            } else {
+              Alert.alert("Đã xảy ra sự cố khi xem chi tiết tài khoản này!");
+            }
+          });
         }}
         style={{
           flexDirection: "row",
@@ -115,7 +139,7 @@ const Follower = () => {
       <View
         style={{
           flexDirection: "row",
-          marginTop: 40,
+          marginTop: 0,
           alignItems: "center",
           justifyContent: "space-between",
         }}
@@ -142,9 +166,23 @@ const Follower = () => {
           placeholderTextColor={"grey"}
         />
       </View>
-      <View style={{ flex: 1, marginTop: 10 }}>
-        <FlatList data={accountFollowInfo?.followers} renderItem={renderItem} />
-      </View>
+      {loading !== null ? (
+        <View style={{ flex: 1, marginTop: 10 }}>
+          <FlatList
+            data={accountFollowInfo?.followers}
+            renderItem={renderItem}
+          />
+        </View>
+      ) : (
+        <View>
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+          <Skeleton numberOfLines={1} />
+        </View>
+      )}
     </View>
   );
 };

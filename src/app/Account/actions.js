@@ -91,12 +91,24 @@ export const getFollowerAndFollowingByAccountId = createAsyncThunk(
     }
   }
 );
+export const getPostByAccountId = createAsyncThunk(
+  "account/getPostByAccountId",
+  async (accountId, { rejectWithValue }) => {
+    try {
+      const response = await accountService.getPostByAccountId(accountId);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error);
+    }
+  }
+);
 export const updatePassword = createAsyncThunk(
   "account/updatePassword",
   async (data) => {
     try {
       const response = await accountService.updatePassword(data);
-      console.log(data)
+      console.log(data);
       return response.data;
     } catch (error) {
       console.log(error);

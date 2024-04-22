@@ -56,7 +56,7 @@ const ProfileScreen = () => {
   return (
     //  getToken != null ? (
     <>
-      <Spinner visible={loading} />
+      {/* <Spinner visible={loading} /> */}
       <ProfileLoggedIn profile={profile} followersData={followersData} />
     </>
     // ) : (

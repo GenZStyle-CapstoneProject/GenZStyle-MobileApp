@@ -27,9 +27,9 @@ const SettingPackage = () => {
   const [lastSelectedButton, setLastSelectedButton] = useState(null);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const subscriptionDescriptions = {
-    VIP: "This is the VIP subscription description:\n- Save time + storage space.\n- VIP manual + automatic edit tools in the GenZ mobile app.\n- Post an article with a product link",
+    VIP: "This is the VIP subscription description:\n- VIP manual + automatic edit tools in the GenZ mobile app.\n- Post an article with a product link",
     Premium:
-      "This is the Premium subscription description:\n- Save time + storage space.\n- Premium manual + automatic edit tools in the GenZ mobile app.\n- Post an article with a product link and followers",
+      "This is the Premium subscription description:\n- Premium manual + automatic edit tools in the GenZ mobile app.\n- Post an article with a product link and followers",
   };
   const windowWidth = Dimensions.get("window").width;
   const windowHeight = Dimensions.get("window").height;
@@ -222,12 +222,12 @@ const SettingPackage = () => {
               <Text style={styles.buttonText}>Premium</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.subscribeButton}
             onPress={handlePayment}
           >
             <Text style={styles.buttonText}>Subscribe to StyleGenZ</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* Hiển thị Modal khi nút được chọn */}
           <Modal visible={selectedSubscription !== null} animationType="slide">
@@ -242,7 +242,7 @@ const SettingPackage = () => {
                   style={styles.registerButton}
                   onPress={handleRegisterPress}
                 >
-                  <Text style={styles.buttonText1}>Register</Text>
+                  <Text style={styles.buttonText1}>Đăng ký gói</Text>
                 </TouchableOpacity>
 
                 <Modal
@@ -308,7 +308,7 @@ const SettingPackage = () => {
                   style={styles.closeButton2}
                   onPress={closeRegisterModal}
                 >
-                  <Text style={styles.closeButtonText1}>Close</Text>
+                  <Text style={styles.closeButtonText1}>Đóng</Text>
                 </TouchableOpacity>
               </ScrollView>
             </View>
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: "lightgray",
+    backgroundColor: "#1C6758",
     padding: 10,
     marginHorizontal: 5,
     alignItems: "center",
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   closeButton2: {
-    backgroundColor: "#99A1E8",
+    backgroundColor: "#1C6758",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   registerButton: {
-    backgroundColor: "#99A1E8",
+    backgroundColor: "#1C6758",
     padding: 10,
     marginBottom: 10,
     borderRadius: 10,
@@ -457,6 +457,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 25,
+    color: "white",
   },
 });
 

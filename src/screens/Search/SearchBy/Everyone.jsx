@@ -69,7 +69,7 @@ const Everyone = ({
           <Image
             style={{ height: 45, width: 45, borderRadius: 100 }}
             source={{
-              uri: item?.user?.avatar || imageUrlTest,
+              uri: item?.user?.avatar ?? imageUrlTest,
             }}
           />
           <View style={{ flex: 1, marginLeft: 10, gap: 3 }}>
@@ -143,7 +143,7 @@ const Everyone = ({
   return (
     <TouchableWithoutFeedback onPress={handleBlurWhenTouchEmpty}>
       <View style={{ flex: 1, backgroundColor: "white" }}>
-        <Spinner visible={loadingEveryone} />
+        {/* <Spinner visible={loadingEveryone} /> */}
         {accountList?.length === 0 ? (
           <View style={{ flex: 1, marginTop: 10 }}>
             <View

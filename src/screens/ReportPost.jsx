@@ -25,7 +25,7 @@ const ReportPost = () => {
     spamOrScam: false,
     dangerousContent: false,
     notSuitable: false,
-    other: false,
+    // other: false,
   });
   const reasonMappings = {
     behavior: "Bài đăng này không phù hợp",
@@ -33,7 +33,7 @@ const ReportPost = () => {
     spamOrScam: "Bài đăng này là thư rác hoặc lừa đảo",
     dangerousContent: "Bài đăng này khiến mọi người gặp nguy hiểm",
     notSuitable: "Bài đăng này không nên có trên GenZStyle",
-    other: `Lý do khác: ${otherReason}`,
+    // other: `Lý do khác: ${otherReason}`,
   };
 
   const [otherReason, setOtherReason] = useState("");
@@ -106,7 +106,7 @@ const ReportPost = () => {
           checked={reasons.notSuitable}
           onPress={() => toggleReason("notSuitable")}
         />
-        <ReasonCheckbox
+        {/* <ReasonCheckbox
           label="Lý do khác"
           checked={reasons.other}
           onPress={() => toggleReason("other")}
@@ -118,7 +118,7 @@ const ReportPost = () => {
             value={otherReason}
             onChangeText={setOtherReason}
           />
-        )}
+        )} */}
       </View>
     </View>
   );

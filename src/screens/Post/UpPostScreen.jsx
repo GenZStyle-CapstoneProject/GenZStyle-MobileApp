@@ -114,7 +114,7 @@ const UpPostScreen = () => {
           Link: link,
         })
       ).then((res) => {
-        console.log(JSON.stringify(res, null, 2));
+        // console.log(JSON.stringify(res, null, 2));
         if (res?.meta?.requestStatus === "fulfilled") {
           alert(`Dang bai thanh cong ${res?.payload}`);
           Alert.alert("Thông báo", "Bài đăng đã được đăng thành công.");
@@ -123,7 +123,11 @@ const UpPostScreen = () => {
             routes: [{ name: ROUTES.HOME_NAVIGATOR }],
           });
         } else {
-          alert(`Dang bai that bai ${res?.payload?.message}`);
+          if (res?.payload?.status === 405) {
+            Alert.alert("Cảnh báo", "Không được đăng hình ảnh nhạy cảm!");
+            return navigation.goBack();
+          }
+          alert(`Đăng bài thất bại!`);
         }
       });
     } catch (error) {
@@ -156,7 +160,11 @@ const UpPostScreen = () => {
               routes: [{ name: ROUTES.HOME_NAVIGATOR }],
             });
           } else {
-            alert(`Dang bai that bai ${res?.payload?.message}`);
+            if (res?.payload?.status === 405) {
+              Alert.alert("Cảnh báo", "Không được đăng hình ảnh nhạy cảm!");
+              return navigation.goBack();
+            }
+            alert(`Đăng bài thất bại!`);
           }
         });
       } else {
@@ -169,7 +177,9 @@ const UpPostScreen = () => {
 
   const handleSaveToStorage = async () => {
     try {
-      const existingData = await AsyncStorage.getItem("DRAFT_ARRAY");
+      const existingData = await AsyncStorage.getItem(
+        `DRAFT_ARRAY_${accountId}`
+      );
       let dataArray = [];
 
       if (existingData) {
@@ -184,11 +194,12 @@ const UpPostScreen = () => {
         link: link,
       });
 
-      await AsyncStorage.setItem("DRAFT_ARRAY", JSON.stringify(dataArray)).then(
-        (res) => {
-          navigation.navigate("Bản nháp");
-        }
-      );
+      await AsyncStorage.setItem(
+        `DRAFT_ARRAY_${accountId}`,
+        JSON.stringify(dataArray)
+      ).then((res) => {
+        navigation.navigate("Bản nháp");
+      });
 
       Alert.alert("Thông báo", "Bản nháp đã được tạo thành công.");
     } catch (error) {

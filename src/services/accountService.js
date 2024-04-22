@@ -29,4 +29,8 @@ export const accountService = {
     const url = `/odata/AccountProfile/Follow?AccountId=${accountId}`;
     return axiosClient.get(url);
   },
+  getPostByAccountId: (accountId) => {
+    const url = `/odata/Posts/${accountId}/GetPostByAccountIdFollow`;
+    return axiosClient.get(url);
+  }
 };

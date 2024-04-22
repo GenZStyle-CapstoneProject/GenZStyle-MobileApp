@@ -21,7 +21,7 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
 
   const authenticated = useSelector((state) => state.user.authenticated);
   const dispatch = useDispatch();
-  console.log("accountSuggestion", accountSuggestion);
+  // console.log("accountSuggestion", accountSuggestion);
   const fetchAllAccountSuggestion = async () => {
     await dispatch(getSuggestionAccount()).then((res) => {
       // console.log("res", JSON.stringify(res, null, 2));
@@ -93,7 +93,7 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
         <View style={styles.topRow}>
           <View style={styles.avatarContainer}>
             <Image
-              source={{ uri: accountSuggestion?.user?.avatar || imageUrlTest }}
+              source={{ uri: accountSuggestion?.user?.avatar ?? imageUrlTest }}
               style={styles.profileImage}
             />
           </View>
@@ -164,7 +164,7 @@ const HeaderFriend = ({ navigation, accountSuggestion }) => {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "column",
-    marginTop: 50,
+    marginTop: 0,
   },
   iconContainer: {
     flexDirection: "row",
