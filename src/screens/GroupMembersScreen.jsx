@@ -42,17 +42,20 @@ const GroupMembersScreen = ({ children, route }) => {
   };
 
   const onAddMember = async () => {
-    if (selectedUsers.length > 0) {
-      for (let user of selectedUsers) {
+    try {
+      if (selectedUsers.length > 0) {
         await socket.emit("add_to_group", {
           roomId: roomId,
-          userId: user,
+          users: selectedUsers,
         });
+
+        setSelectedUsers([]);
+        setModalVisible(false);
+      } else {
+        setError("Enter member name.");
       }
-      setSelectedUsers([]);
-      setModalVisible(false);
-    } else {
-      setError("Enter member name.");
+    } catch (err) {
+      console.log("onAddMember error", err);
     }
   };
 

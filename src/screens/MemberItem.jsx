@@ -100,7 +100,13 @@ const MemberItem = ({
               />
             )}
           </View>
-          {isOnline && <View style={styles.online} />}
+          {isSelected ? (
+            <View style={styles.check}>
+              <Icon name="check" size={15} color={"green"} />
+            </View>
+          ) : (
+            isOnline && <View style={styles.online} />
+          )}
         </View>
         <View
           style={{
@@ -117,26 +123,23 @@ const MemberItem = ({
             <View>
               <Text numerOfLine={1} style={styles.username}>
                 {username}
-                {isSelected && (
-                  <View style={{ paddingLeft: 12 }}>
-                    <Icon name="check" size={20} color={theme.colors.primary} />
-                  </View>
-                )}
               </Text>
             </View>
 
-            {isHost && (
-              <Text style={{ fontSize: 16, color: theme.colors.primary }}>
-                Chủ nhóm
-              </Text>
-            )}
-            {hostId === profile?.account?.accountId && !isHost && (
-              <Button
-                title="Xóa"
-                color={theme.colors.danger}
-                onPress={() => removerGroupMember()}
-              />
-            )}
+            <View>
+              {isHost && (
+                <Text style={{ fontSize: 16, color: theme.colors.primary }}>
+                  Chủ nhóm
+                </Text>
+              )}
+              {hostId === profile?.account?.accountId && !isHost && (
+                <Button
+                  title="Xóa"
+                  color={theme.colors.danger}
+                  onPress={() => removerGroupMember()}
+                />
+              )}
+            </View>
           </View>
         </View>
       </TouchableOpacity>
@@ -218,6 +221,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     backgroundColor: "#09be02",
     position: "absolute",
+  },
+  check: {
+    width: 20,
+    height: 20,
+    right: 15,
+    bottom: 5,
+    zIndex: 99,
+    borderRadius: 24,
+    borderStyle: "solid",
+    borderWidth: 2,
+    position: "absolute",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "green",
+    backgroundColor: "white",
   },
 });
 

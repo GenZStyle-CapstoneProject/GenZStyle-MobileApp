@@ -1,5 +1,11 @@
-import React, { useRef, useState } from "react";
-import { ScrollView, Text, View, useWindowDimensions } from "react-native";
+import React, { useCallback, useState } from "react";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 
 import ConversationItem from "./ConversationItem";
 import { useEffect } from "react";
@@ -11,22 +17,33 @@ import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 import { theme } from "../constants/theme";
 import SearchInput from "./common/SearchInput";
 import { useAppSelector } from "../app/hooks";
+import {
+  getFollowingAccountWithPosts,
+  getSuggestionAccount,
+} from "../app/Account/actions";
+import { fecthListFollow } from "../features/userSlice";
 
 const Conversations = ({ children }) => {
   const layout = useWindowDimensions();
+  const dispatch = useDispatch();
   const [index, setIndex] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const loggedUsers = [];
-  const dispatch = useDispatch();
   const profile = useSelector((state) => state?.user?.profile?.data);
   const followData = useSelector((state) => state?.user?.data);
   const [availableChats, setAvailableChats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [userRooms, setUserRooms] = useState([]);
   const fullName = `${profile?.account?.firstname} ${profile?.account?.lastname}`;
+  const [refreshing, setRefreshing] = useState(false);
+
   const HomeTab = () => (
     <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {searchValue != "" ? (
           <>
             {availableChats.length > 0 &&
@@ -256,7 +273,11 @@ const Conversations = ({ children }) => {
 
   const WaitingTab = () => (
     <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {searchValue != "" ? (
           <>
             {availableChats.length > 0 &&
@@ -438,13 +459,20 @@ const Conversations = ({ children }) => {
     { key: "second", title: "Chờ" },
   ]);
 
-  const fetchAllAccountSuggestionForCheck = async () => {
-    await dispatch(getSuggestionAccount()).then((res) => {});
+  const fetchFollowData = async () => {
+    await dispatch(fecthListFollow()).then((res) => {});
   };
 
-  const fetchAllFetFollowingAccountWithPosts = async () => {
+  const fetchAllFollowingAccountWithPosts = async () => {
     await dispatch(getFollowingAccountWithPosts()).then((res) => {});
   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetch();
+    socket.emit("get_rooms");
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     if (profile) {
@@ -466,8 +494,16 @@ const Conversations = ({ children }) => {
   }, []);
 
   const fetch = async () => {
-    await fetchAllAccountSuggestionForCheck();
-    await fetchAllFetFollowingAccountWithPosts();
+    await fetchFollowData();
+  };
+
+  const getUserRooms = async () => {
+    socket.on("user_rooms", (data) => {
+      data.sort(function (a, b) {
+        return b.lastMessage.id - a.lastMessage.id;
+      });
+      setUserRooms(data);
+    });
   };
 
   useEffect(() => {
@@ -477,12 +513,7 @@ const Conversations = ({ children }) => {
   }, [socket]);
 
   useEffect(() => {
-    socket.on("user_rooms", (data) => {
-      data.sort(function (a, b) {
-        return b.lastMessage.id - a.lastMessage.id;
-      });
-      setUserRooms(data);
-    });
+    getUserRooms();
   }, [socket, followData]);
 
   useEffect(() => {
