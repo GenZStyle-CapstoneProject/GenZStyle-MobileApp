@@ -34,7 +34,8 @@ const GroupMembersScreen = ({ children, route }) => {
   const followData = useAppSelector((state) => state.user.data);
 
   const goBack = () => {
-    navigation.goBack();
+    // navigation.goBack();
+    navigation.navigate(ROUTES.HOME);
   };
 
   const navigateToFriend = (user) => {
@@ -178,17 +179,24 @@ const GroupMembersScreen = ({ children, route }) => {
           {children}
           {members?.length > 0 &&
             members.map((member) => {
+              const userList = [
+                ...followData.following,
+                ...followData.followers,
+              ];
+              const isCurrentUser = member.id == profile?.account?.accountId;
               const memberInfo =
-                member.id == profile?.account?.accountId
+                member?.id == profile?.account?.accountId
                   ? profile?.account
-                  : followData.following?.find(
-                      (user) => user.accountId == member.id
-                    );
+                  : userList?.find((user) => user?.accountId == member?.id);
 
               return (
                 <MemberItem
                   key={member.id}
-                  picture={memberInfo?.avatar}
+                  picture={
+                    isCurrentUser
+                      ? memberInfo?.user?.avatar
+                      : memberInfo?.avatar
+                  }
                   username={member.name}
                   userId={member.id}
                   isHost={member.isHost}
